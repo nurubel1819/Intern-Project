@@ -12,6 +12,7 @@ public class Java_Regex_2_Duplicate_Words {
             String input = sc.nextLine();
 
             Matcher m = pattern.matcher(input);
+
             while (m.find()) {
                 input = input.replaceAll(m.group(), m.group(1));
             }
