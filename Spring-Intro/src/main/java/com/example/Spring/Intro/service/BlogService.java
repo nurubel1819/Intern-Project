@@ -1,5 +1,10 @@
-package com.example.Spring.Intro;
+package com.example.Spring.Intro.service;
 
+import com.example.Spring.Intro.repository.BlogRepo;
+import com.example.Spring.Intro.repository.UserRepo;
+import com.example.Spring.Intro.model.dto.BlogDto;
+import com.example.Spring.Intro.model.entity.Blog;
+import com.example.Spring.Intro.model.entity.UserEntity;
 import org.springframework.stereotype.Service;
 
 @Service

@@ -1,4 +1,4 @@
-package com.example.Spring.Intro;
+package com.example.Spring.Intro.model.entity;
 
 
 import jakarta.persistence.*;
@@ -19,6 +19,10 @@ public class BlogComment {
     @OneToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
     private UserEntity viewer;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "blog_id")
+    private Blog blog;
 
     @Column(nullable = false)
     private String content;

@@ -1,4 +1,7 @@
-package com.example.Spring.Intro;
+package com.example.Spring.Intro.model.mapper;
+
+import com.example.Spring.Intro.model.dto.BlogDto;
+import com.example.Spring.Intro.model.entity.Blog;
 
 public class MapperBlogAndComment {
     public static Blog mapBlogDtoToBlogDto(BlogDto blogDto) {

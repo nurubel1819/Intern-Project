@@ -1,4 +1,4 @@
-package com.example.Spring.Intro;
+package com.example.Spring.Intro.model.entity;
 
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,15 +25,15 @@ public class Blog {
     @Column(nullable = false, columnDefinition = "Text")
     private String content;
 
-    @OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(nullable = false, name = "user_id")
+    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH, CascadeType.DETACH})
+    @JoinColumn(name = "user_id")
     private UserEntity author;
 
     private LocalDateTime createdAt;
 
     private LocalDateTime updatedAt;
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL, mappedBy = "blog")
     private List<BlogComment> comment;
 
     private Double rating;

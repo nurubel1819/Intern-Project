@@ -1,8 +1,11 @@
-package com.example.Spring.Intro;
+package com.example.Spring.Intro.service;
 
+import com.example.Spring.Intro.repository.BlogCommentRepo;
+import com.example.Spring.Intro.repository.UserRepo;
+import com.example.Spring.Intro.model.dto.BlogCommentDto;
+import com.example.Spring.Intro.model.entity.BlogComment;
+import com.example.Spring.Intro.model.entity.UserEntity;
 import org.springframework.stereotype.Service;
-
-import java.util.List;
 
 @Service
 public class BlogCommentService {

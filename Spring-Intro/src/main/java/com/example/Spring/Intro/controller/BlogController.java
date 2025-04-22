@@ -1,5 +1,7 @@
-package com.example.Spring.Intro;
+package com.example.Spring.Intro.controller;
 
+import com.example.Spring.Intro.service.BlogService;
+import com.example.Spring.Intro.model.dto.BlogDto;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;

@@ -1,4 +1,4 @@
-package com.example.Spring.Intro;
+package com.example.Spring.Intro.model.dto;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
