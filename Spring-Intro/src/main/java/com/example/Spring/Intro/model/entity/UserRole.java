@@ -1,29 +1,35 @@
 package com.example.Spring.Intro.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
-import java.util.List;
+import java.util.Set;
 
 @Entity
-@Data
-@Table(name = "user_roles")
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
+@Table(name="user_roles")
+@Builder
+@Getter
+@Setter
+@EqualsAndHashCode(onlyExplicitlyIncluded = true)
+
+/*@Entity
+@Data
+@NoArgsConstructor
+@AllArgsConstructor*/
+
 public class UserRole {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    private String roleName;
     @ManyToMany()
     @JoinTable(name = "user_roles_users",
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private List<UserEntity> users;
-
-    private String roleName;
-
+    private Set<User> user;
     private String description;
+
 }

@@ -15,9 +15,9 @@ public class BlogController {
         this.blogService = blogService;
     }
 
-    @PostMapping("/upload/{id}")
-    private ResponseEntity<String> upload_new_blog(@RequestBody BlogDto blogDto, @PathVariable Long id) {
-        return new ResponseEntity<>(blogService.addBlog(blogDto,id), HttpStatus.OK);
+    @PostMapping("/upload")
+    private ResponseEntity<String> upload_new_blog(@RequestBody BlogDto blogDto) {
+        return new ResponseEntity<>(blogService.addBlog(blogDto), HttpStatus.OK);
     }
 
     @DeleteMapping("/delete/{id}")

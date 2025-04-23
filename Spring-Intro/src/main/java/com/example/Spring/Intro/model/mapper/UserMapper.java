@@ -1,15 +1,35 @@
 package com.example.Spring.Intro.model.mapper;
 
 import com.example.Spring.Intro.model.dto.UserDto;
-import com.example.Spring.Intro.model.entity.UserEntity;
+import com.example.Spring.Intro.model.entity.User;
+import lombok.RequiredArgsConstructor;
+import org.springframework.stereotype.Component;
 
+@Component
+@RequiredArgsConstructor
 public class UserMapper {
-    public static UserEntity mapEntity(UserDto userDto)
+    /*public final UserService userService;
+    public final BlogService blogService;*/
+
+    public User mapToEntity(UserDto userDto)
     {
-        return new UserEntity(userDto.getId(),userDto.getName());
+        User user = new User();
+        user.setId(userDto.getId());
+        user.setName(userDto.getName());
+
+        //user.setBlogs(blogService.getAllThisUserBlogs(userDto.getId()));
+        return user;
     }
-    public static UserDto mapToDto(UserEntity userEntity)
+    public UserDto mapToDto(User user)
+    {
+        UserDto userDto = new UserDto();
+        userDto.setId(user.getId());
+        userDto.setName(user.getName());
+        return userDto;
+    }
+
+   /* public static UserDto mapToDto(UserEntity userEntity)
     {
         return new UserDto(userEntity.getId(),userEntity.getName());
-    }
+    }*/
 }

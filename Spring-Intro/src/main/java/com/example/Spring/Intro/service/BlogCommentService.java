@@ -1,27 +1,31 @@
 package com.example.Spring.Intro.service;
 
+import com.example.Spring.Intro.model.entity.Blog;
 import com.example.Spring.Intro.repository.BlogCommentRepo;
+import com.example.Spring.Intro.repository.BlogRepo;
 import com.example.Spring.Intro.repository.UserRepo;
 import com.example.Spring.Intro.model.dto.BlogCommentDto;
 import com.example.Spring.Intro.model.entity.BlogComment;
-import com.example.Spring.Intro.model.entity.UserEntity;
+import com.example.Spring.Intro.model.entity.User;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 @Service
+@RequiredArgsConstructor
 public class BlogCommentService {
-    BlogCommentRepo repo;
-    UserRepo userRepo;
+    private final BlogCommentRepo repo;
+    private final UserRepo userRepo;
+    private final BlogRepo blogRepo;
 
-    public BlogCommentService(BlogCommentRepo repo, UserRepo userRepo) {
-        this.repo = repo;
-        this.userRepo = userRepo;
-    }
 
-    public String addComment(BlogCommentDto commentDto, Long userId) {
-        UserEntity user = userRepo.findById(userId).get();
+
+    public String addComment(BlogCommentDto commentDto) {
+        User user = userRepo.findById(commentDto.getUserId()).get();
+        Blog blog = blogRepo.findById(commentDto.getBlogId()).get();
         BlogComment comment = new BlogComment();
         comment.setContent(commentDto.getContent());
         comment.setViewer(user);
+        comment.setBlog(blog);
         BlogComment flag = repo.save(comment);
         if (flag != null) return "Comment added successfully";
         else return "Comment not added";

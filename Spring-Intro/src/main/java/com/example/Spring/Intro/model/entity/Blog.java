@@ -25,9 +25,10 @@ public class Blog {
     @Column(nullable = false, columnDefinition = "Text")
     private String content;
 
-    @ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH, CascadeType.DETACH})
+    //@ManyToOne(fetch = FetchType.LAZY, cascade = {CascadeType.REFRESH, CascadeType.DETACH})
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
-    private UserEntity author;
+    private User author;
 
     private LocalDateTime createdAt;
 

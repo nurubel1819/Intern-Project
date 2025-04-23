@@ -16,9 +16,9 @@ public class BlogComment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @OneToOne(fetch = FetchType.EAGER)
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id")
-    private UserEntity viewer;
+    private User viewer;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "blog_id")

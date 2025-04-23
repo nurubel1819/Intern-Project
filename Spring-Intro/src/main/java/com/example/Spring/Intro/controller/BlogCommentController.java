@@ -15,9 +15,9 @@ public class BlogCommentController {
         this.blogCommentService = blogCommentService;
     }
 
-    @PostMapping("/upload/{id}")
-    private ResponseEntity<String> upload(@RequestBody BlogCommentDto commentDto, @PathVariable Long id) {
-        return new ResponseEntity<>(blogCommentService.addComment(commentDto,id), HttpStatus.OK);
+    @PostMapping("/upload")
+    private ResponseEntity<String> upload(@RequestBody BlogCommentDto commentDto) {
+        return new ResponseEntity<>(blogCommentService.addComment(commentDto), HttpStatus.OK);
     }
     @GetMapping("/see/{id}")
     private ResponseEntity<String> getAllComments(@PathVariable Long id) {

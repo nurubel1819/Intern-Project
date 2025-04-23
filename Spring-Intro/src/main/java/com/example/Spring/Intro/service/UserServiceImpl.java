@@ -2,7 +2,7 @@ package com.example.Spring.Intro.service;
 
 import com.example.Spring.Intro.repository.UserRepo;
 import com.example.Spring.Intro.model.dto.UserDto;
-import com.example.Spring.Intro.model.entity.UserEntity;
+import com.example.Spring.Intro.model.entity.User;
 import com.example.Spring.Intro.model.mapper.UserMapper;
 import org.springframework.stereotype.Service;
 
@@ -11,18 +11,25 @@ import java.util.stream.Collectors;
 
 @Service
 public class UserServiceImpl implements UserService {
-    UserRepo userRepo;
+    private final UserRepo userRepo;
+     private final UserMapper userMapper;
 
-    public UserServiceImpl(UserRepo userRepo) {
+    public UserServiceImpl(UserRepo userRepo, UserMapper userMapper) {
         this.userRepo = userRepo;
+        this.userMapper = userMapper;
     }
 
     @Override
     public String add_user(UserDto userDto) {
-        UserEntity userEntity = UserMapper.mapEntity(userDto);
-        UserEntity save_entity = userRepo.save(userEntity);
-        if(save_entity == null) return "Not Successfully Added User";
-        else return "Successfully Added User";
+
+        User new_user = new User();
+        new_user.setName(userDto.getName());
+        try {
+            userRepo.save(new_user);
+            return "Save successfully";
+        } catch (Exception e) {
+            return "Rubel ex : "+e.getMessage();
+        }
     }
 
     @Override
@@ -38,16 +45,27 @@ public class UserServiceImpl implements UserService {
 
     @Override
     public List<UserDto> all_users() {
-        List<UserEntity> all_users = userRepo.findAll();
-        return all_users.stream().map(UserMapper::mapToDto).collect(Collectors.toList());
+        List<User> all_users = userRepo.findAll();
+        //return all_users.stream().map(UserMapper::mapDto).collect(Collectors.toList());
+        return all_users.stream().map(userMapper::mapToDto).collect(Collectors.toList());
     }
 
     @Override
     public String update_user(Long id, UserDto userDto) {
-        UserEntity user = new UserEntity(id,userDto.getName());
-        UserEntity update_user = userRepo.save(user);
-        if(update_user==null) return "Not Successfully Updated User";
-        else return "Successfully Updated User";
+        //UserEntity user = new UserEntity(id,userDto.getName());
+        if(!userRepo.existsById(id)) return "This user does not exist in database";
+        else
+        {
+            User user = userRepo.findById(id).get();
+            user.setName(userDto.getName());
+            try {
+                userRepo.save(user);
+                return "Successfully Updated User";
+            } catch (Exception e) {
+                return "Not Successfully Updated User";
+            }
+        }
+
 
     }
 

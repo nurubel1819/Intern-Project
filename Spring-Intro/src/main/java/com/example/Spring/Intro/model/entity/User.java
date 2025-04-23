@@ -6,18 +6,25 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.util.List;
+import java.util.Set;
 
 @Entity
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class UserEntity {
+public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
 
-    /*@OneToMany(mappedBy = "author")
-    private List<Blog> blogs;*/
+    @OneToMany(mappedBy = "author")
+    private List<Blog> blogs;
+
+    @OneToMany(mappedBy = "viewer")
+    private List<BlogComment> comments;
+
+    @ManyToMany(mappedBy = "user")
+    private Set<UserRole> roles;
 
 }
