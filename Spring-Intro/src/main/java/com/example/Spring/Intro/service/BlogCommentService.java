@@ -30,6 +30,17 @@ public class BlogCommentService {
         if (flag != null) return "Comment added successfully";
         else return "Comment not added";
     }
+    public String editComment(BlogCommentDto commentDto) {
+        User user = userRepo.findById(commentDto.getUserId()).get();
+        Blog blog = blogRepo.findById(commentDto.getBlogId()).get();
+        BlogComment comment = repo.findById(commentDto.getId()).get();
+        comment.setContent(commentDto.getContent());
+        comment.setViewer(user);
+        comment.setBlog(blog);
+        BlogComment flag = repo.save(comment);
+        if (flag != null) return "Comment edited successfully";
+        else return "Comment not edited";
+    }
     public String getComments(Long id) {
         return "Comment is : "+ repo.findById(id).get().getContent();
     }

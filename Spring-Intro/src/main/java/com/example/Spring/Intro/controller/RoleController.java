@@ -37,4 +37,10 @@ public class RoleController {
     {
         return ResponseEntity.ok(roleService.GetRole(roleDto));
     }
+
+    @PostMapping("/set_user_role")
+    private ResponseEntity<String> set_user_role(RoleDto roleDto)
+    {
+        return ResponseEntity.ok(roleService.SetRole(roleDto));
+    }
 }

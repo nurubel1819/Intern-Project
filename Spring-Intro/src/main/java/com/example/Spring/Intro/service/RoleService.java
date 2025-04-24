@@ -24,19 +24,40 @@ public class RoleService {
         UserRole userRole = new UserRole();
         userRole.setRoleName(roleDto.getRoleName());
         userRole.setDescription(roleDto.getDescription());
+        try {
+            UserRole save_role = roleRepo.save(userRole);
+            return "Role added successfully"+" Role Id : "+save_role.getId()+" Role Name : "+save_role.getRoleName();
+        }catch (Exception e)
+        {
+            return "Role not added"+" Exception : "+e.getMessage();
+        }
+    }
 
-       try {
-           //find role user and add to role user set
-           List<User> roleUser = userRepo.findAllByIdIn(roleDto.getUserIds());
-           Set<User> someRoleUser = new HashSet<>(roleUser);
-           userRole.setUser(someRoleUser);
-           UserRole save_role = roleRepo.save(userRole);
-           return "Role added successfully"+" Role Id : "+save_role.getId()+" Role Name : "+save_role.getRoleName();
-       }
-       catch (Exception e)
-       {
-           return "Role not added"+" Exception : "+e.getMessage();
-       }
+    public String SetRole(RoleDto roleDto)
+    {
+        try {
+            UserRole userRole = roleRepo.findByRoleName(roleDto.getRoleName());
+            if (userRole == null) {
+                return "Role not found!";
+            }
+
+            List<User> roleUser = userRepo.findAllByIdIn(roleDto.getUserIds());
+
+            Set<User> updatedUserSet = userRole.getUser();
+            if (updatedUserSet == null) {
+                updatedUserSet = new HashSet<>();
+            }
+            updatedUserSet.addAll(roleUser);
+            userRole.setUser(updatedUserSet);
+
+            UserRole save_role = roleRepo.save(userRole);
+
+            return "Role set successfully"+" Role Id : "+save_role.getId()+" User Id : "+save_role.getUser().stream().map(User::getId).toList();
+        }
+        catch (Exception e)
+        {
+            return "Role not added"+" Exception : "+e.getMessage();
+        }
     }
 
     public String DeleteRole(RoleDto roleDto)
@@ -80,6 +101,18 @@ public class RoleService {
             return "Role Id : "+role.getId()+" Role Name : "+role.getRoleName()+" Description : "+role.getDescription();
         }
         else return "Role can't exist in database";
+    }
+
+    public boolean access_authority(Long userId, String roleName) {
+        //return userRepo.findById(userId).map(user -> user.getRoles().stream().anyMatch(role -> role.getRoleName().equalsIgnoreCase(roleName))).orElse(false);
+        return userRepo.findById(userId)
+                .map(user -> user.getRoles().stream()
+                        .anyMatch(role ->
+                                role.getRoleName() != null &&
+                                        role.getRoleName().equalsIgnoreCase(roleName)
+                        )
+                )
+                .orElse(false);
     }
 
 }

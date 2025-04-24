@@ -28,8 +28,4 @@ public class UserMapper {
         return userDto;
     }
 
-   /* public static UserDto mapToDto(UserEntity userEntity)
-    {
-        return new UserDto(userEntity.getId(),userEntity.getName());
-    }*/
 }
