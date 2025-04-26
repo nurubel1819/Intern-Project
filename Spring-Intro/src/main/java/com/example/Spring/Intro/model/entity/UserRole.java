@@ -14,11 +14,6 @@ import java.util.Set;
 @Setter
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
 
-/*@Entity
-@Data
-@NoArgsConstructor
-@AllArgsConstructor*/
-
 public class UserRole {
 
     @Id

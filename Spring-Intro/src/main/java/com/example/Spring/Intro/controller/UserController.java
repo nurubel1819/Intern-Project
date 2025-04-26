@@ -8,8 +8,6 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
-
 @RestController
 @RequestMapping("/user")
 @RequiredArgsConstructor
@@ -18,42 +16,36 @@ public class UserController {
     private final RoleService roleService;
 
     @PostMapping("/add")
-    private ResponseEntity<String> add_user(@RequestBody UserDto userDto)
+    private ResponseEntity<String> addUser(@RequestBody UserDto userDto)
     {
-        if(roleService.access_authority(userDto.getId(),"ADMIN")
-        || roleService.access_authority(userDto.getId(),"USER"))
-        {
-            return ResponseEntity.ok(userService.add_user(userDto));
-        }
-        else return new ResponseEntity<>("You don't have access to create blog", HttpStatus.FORBIDDEN);
-
+        return ResponseEntity.ok(userService.addUser(userDto));
     }
 
-    @PutMapping("/update")
-    private ResponseEntity<String> update_user(@RequestBody UserDto userDto)
+    @PatchMapping("/update")
+    private ResponseEntity<String> updateUser(@RequestBody UserDto userDto)
     {
-        if(roleService.access_authority(userDto.getId(),"USER")
-        || roleService.access_authority(userDto.getId(),"ADMIN"))
+        if(roleService.accessAuthority(userDto.getId(),"USER")
+        || roleService.accessAuthority(userDto.getId(),"ADMIN"))
         {
-            return ResponseEntity.ok(userService.update_user(userDto.getId(), userDto));
+            return ResponseEntity.ok(userService.updateUser(userDto.getId(), userDto));
         }
         else return new ResponseEntity<>("You don't have access to create blog", HttpStatus.FORBIDDEN);
     }
 
-    @DeleteMapping("/delete")
-    private ResponseEntity<String> delete_user(UserDto userDto)
+    @DeleteMapping("/delete/id={id}")
+    private ResponseEntity<String> deleteUser(@PathVariable("id") Long id)
     {
-        if(roleService.access_authority(userDto.getId(),"ADMIN")
-        || roleService.access_authority(userDto.getId(),"USER"))
+        if(roleService.accessAuthority(id,"ADMIN")
+        || roleService.accessAuthority(id,"USER"))
         {
-            return ResponseEntity.ok(userService.delete_user(userDto.getId()));
+            return ResponseEntity.ok(userService.delete_user(id));
         }
         else return new ResponseEntity<>("You don't have access to create blog", HttpStatus.FORBIDDEN);
     }
-    @GetMapping("/get")
-    private ResponseEntity<UserDto> get_user(UserDto userDto)
+    @GetMapping("/get/id={id}")
+    private ResponseEntity<UserDto> getUser(@PathVariable("id") Long id)
     {
-        return ResponseEntity.ok(userService.getUserById(userDto.getId()));
+        return ResponseEntity.ok(userService.getUserById(id));
     }
 
 

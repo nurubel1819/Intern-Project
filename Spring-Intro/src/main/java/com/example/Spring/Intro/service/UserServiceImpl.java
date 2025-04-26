@@ -20,7 +20,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String add_user(UserDto userDto) {
+    public String addUser(UserDto userDto) {
 
         User new_user = new User();
         new_user.setName(userDto.getName());
@@ -51,7 +51,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public String update_user(Long id, UserDto userDto) {
+    public String updateUser(Long id, UserDto userDto) {
         //UserEntity user = new UserEntity(id,userDto.getName());
         if(!userRepo.existsById(id)) return "This user does not exist in database";
         else

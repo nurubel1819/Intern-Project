@@ -6,7 +6,6 @@ import com.example.Spring.Intro.repository.RoleRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
-import java.util.Set;
 
 @Component
 @RequiredArgsConstructor
@@ -19,10 +18,6 @@ public class RoleMapper {
         userRole.setId(roleDto.getId());
         userRole.setRoleName(roleDto.getRoleName());
         userRole.setDescription(roleDto.getDescription());
-        /*
-        Set<UserRole> userRoles = roleRepo.findByRoleName(roleDto.getRoleName());
-        userRole.setUser(userRoles.addAll());
-        userRole.setUser(roleRepo.findByRoleName(roleDto.getRoleName()));*/
 
         return userRole;
     }

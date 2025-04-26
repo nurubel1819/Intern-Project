@@ -15,31 +15,31 @@ public class RoleController {
     private final RoleService roleService;
 
     @PostMapping("/upload")
-    private ResponseEntity<String> upload_new_role(RoleDto roleDto)
+    private ResponseEntity<String> uploadNewRole(RoleDto roleDto)
     {
         return new ResponseEntity<>(roleService.AddRole(roleDto), HttpStatus.OK);
     }
 
-    @DeleteMapping ( "/delete")
-    private ResponseEntity<String> delete_role(RoleDto roleDto)
+    @DeleteMapping ( "/delete/id={id}")
+    private ResponseEntity<String> deleteRole(@PathVariable("id") Long id)
     {
-        return ResponseEntity.ok(roleService.DeleteRole(roleDto));
+        return ResponseEntity.ok(roleService.DeleteRole(id));
     }
 
-    @PutMapping("/update")
-    private ResponseEntity<String> update_role(RoleDto roleDto)
+    @PatchMapping("/update")
+    private ResponseEntity<String> updateRole(RoleDto roleDto)
     {
         return ResponseEntity.ok(roleService.UpdateRole(roleDto));
     }
 
-    @GetMapping("/get")
-    private ResponseEntity<String> get_role(RoleDto roleDto)
+    @GetMapping("/get/id={id}")
+    private ResponseEntity<String> getRole(@PathVariable("id") Long id)
     {
-        return ResponseEntity.ok(roleService.GetRole(roleDto));
+        return ResponseEntity.ok(roleService.GetRole(id));
     }
 
     @PostMapping("/set_user_role")
-    private ResponseEntity<String> set_user_role(RoleDto roleDto)
+    private ResponseEntity<String> setUserRole(RoleDto roleDto)
     {
         return ResponseEntity.ok(roleService.SetRole(roleDto));
     }

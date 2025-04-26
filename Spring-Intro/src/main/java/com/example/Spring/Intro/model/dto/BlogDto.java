@@ -15,7 +15,7 @@ public class BlogDto {
     private String title;
     private String content;*/
 
-    @JsonProperty(namespace = "id")
+    @JsonProperty("id")
     private Long id;
 
     @JsonProperty(value = "title",required = true,defaultValue = "Default Title")  //, access = JsonProperty.Access.WRITE_ONLY
@@ -24,13 +24,13 @@ public class BlogDto {
     @JsonProperty(value = "content",required = true,defaultValue = "Default Content")
     String content;
 
-    @JsonProperty(namespace = "author_user_id")
+    @JsonProperty("author_user_id")
     private Long authorUserId;
 
-    @JsonProperty(namespace = "created_at")
+    @JsonProperty("created_at")
     private LocalDateTime createdAt;
 
-    @JsonProperty(namespace = "updated_att")
+    @JsonProperty("updated_att")
     private LocalDateTime updatedAt;
 
     /*@JsonProperty(namespace = "rating")

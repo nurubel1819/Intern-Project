@@ -60,12 +60,11 @@ public class RoleService {
         }
     }
 
-    public String DeleteRole(RoleDto roleDto)
+    public String DeleteRole(Long roleId)
     {
-        Long id = roleDto.getId();
-        if(roleRepo.existsById(id))
+        if(roleRepo.existsById(roleId))
         {
-            roleRepo.deleteById(id);
+            roleRepo.deleteById(roleId);
             return "Role deleted successfully";
         }
         else return "Role can't exist in database";
@@ -92,9 +91,8 @@ public class RoleService {
         }
     }
 
-    public String GetRole(RoleDto roleDto)
+    public String GetRole(Long id)
     {
-        Long id = roleDto.getId();
         if(roleRepo.existsById(id))
         {
             UserRole role = roleRepo.findById(id).get();
@@ -103,7 +101,7 @@ public class RoleService {
         else return "Role can't exist in database";
     }
 
-    public boolean access_authority(Long userId, String roleName) {
+    public boolean accessAuthority(Long userId, String roleName) {
         //return userRepo.findById(userId).map(user -> user.getRoles().stream().anyMatch(role -> role.getRoleName().equalsIgnoreCase(roleName))).orElse(false);
         return userRepo.findById(userId)
                 .map(user -> user.getRoles().stream()

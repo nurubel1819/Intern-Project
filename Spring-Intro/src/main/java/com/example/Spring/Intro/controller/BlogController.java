@@ -16,11 +16,11 @@ public class BlogController {
     private final RoleService roleService;
 
 
-    @PostMapping("/upload")
-    private ResponseEntity<String> upload_new_blog(@RequestBody BlogDto blogDto) {
-        if(roleService.access_authority(blogDto.getAuthorUserId(),"ADMIN")
-        || roleService.access_authority(blogDto.getAuthorUserId(),"AUTHOR")
-        || roleService.access_authority(blogDto.getAuthorUserId(),"MODERATOR"))
+    @PostMapping("/create")
+    private ResponseEntity<String> uploadNewBlog(@RequestBody BlogDto blogDto) {
+        if(roleService.accessAuthority(blogDto.getAuthorUserId(),"ADMIN")
+        || roleService.accessAuthority(blogDto.getAuthorUserId(),"AUTHOR")
+        || roleService.accessAuthority(blogDto.getAuthorUserId(),"MODERATOR"))
         {
             return new ResponseEntity<>(blogService.addBlog(blogDto), HttpStatus.OK);
         }
@@ -29,27 +29,27 @@ public class BlogController {
 
     }
 
-    @DeleteMapping("/delete/{id}")
-    private ResponseEntity<String> delete_blog(@PathVariable Long id) {
-        if(roleService.access_authority(id,"ADMIN")
-        || roleService.access_authority(id,"AUTHOR"))
+    @DeleteMapping("/delete/user={userId}/comment={commentId}")
+    private ResponseEntity<String> delete_blog(@PathVariable("userId") Long userId, @PathVariable Long commentId) {
+        if(roleService.accessAuthority(userId,"ADMIN")
+        || roleService.accessAuthority(userId,"AUTHOR"))
         {
-            return ResponseEntity.ok(blogService.deleteBlog(id));
+            return ResponseEntity.ok(blogService.deleteBlog(commentId));
         }
         else return new ResponseEntity<>("You don't have access to create blog", HttpStatus.FORBIDDEN);
     }
-    @PutMapping("/update/{id}")
+    @PatchMapping("/update/id={id}")
     private ResponseEntity<String> update_blog(@RequestBody BlogDto blogDto, @PathVariable Long id) {
-        if(roleService.access_authority(blogDto.getAuthorUserId(),"ADMIN")
-                || roleService.access_authority(blogDto.getAuthorUserId(),"AUTHOR")
-                || roleService.access_authority(blogDto.getAuthorUserId(),"MODERATOR"))
+        if(roleService.accessAuthority(blogDto.getAuthorUserId(),"ADMIN")
+                || roleService.accessAuthority(blogDto.getAuthorUserId(),"AUTHOR")
+                || roleService.accessAuthority(blogDto.getAuthorUserId(),"MODERATOR"))
         {
             return ResponseEntity.ok(blogService.updateBlog(blogDto,id));
         }
         else return new ResponseEntity<>("You don't have access to create blog", HttpStatus.FORBIDDEN);
 
     }
-    @GetMapping("/get/{id}")
+    @GetMapping("/get/id={id}")
     private ResponseEntity<String> get_blog(@PathVariable Long id) {
         return ResponseEntity.ok(blogService.get_blog_by_id(id));
     }

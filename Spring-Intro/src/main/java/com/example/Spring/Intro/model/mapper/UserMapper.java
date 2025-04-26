@@ -8,16 +8,12 @@ import org.springframework.stereotype.Component;
 @Component
 @RequiredArgsConstructor
 public class UserMapper {
-    /*public final UserService userService;
-    public final BlogService blogService;*/
 
     public User mapToEntity(UserDto userDto)
     {
         User user = new User();
         user.setId(userDto.getId());
         user.setName(userDto.getName());
-
-        //user.setBlogs(blogService.getAllThisUserBlogs(userDto.getId()));
         return user;
     }
     public UserDto mapToDto(User user)

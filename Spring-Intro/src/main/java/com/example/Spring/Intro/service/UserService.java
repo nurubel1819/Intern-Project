@@ -7,9 +7,9 @@ import java.util.List;
 
 @Component
 public interface UserService {
-    public String add_user(UserDto userDto);
+    public String addUser(UserDto userDto);
     public String delete_user(Long id);
     public List<UserDto> all_users();
-    public String update_user(Long id, UserDto userDto);
+    public String updateUser(Long id, UserDto userDto);
     public UserDto getUserById(Long id);
 }
