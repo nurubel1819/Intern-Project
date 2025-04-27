@@ -1,5 +1,6 @@
 package com.example.Spring.Intro.controller;
 
+import com.example.Spring.Intro.security.JwtService;
 import com.example.Spring.Intro.service.RoleService;
 import com.example.Spring.Intro.service.UserService;
 import com.example.Spring.Intro.model.dto.UserDto;
@@ -14,6 +15,17 @@ import org.springframework.web.bind.annotation.*;
 public class UserController {
     private final UserService userService;
     private final RoleService roleService;
+    private final JwtService jwtService;
+
+    @PostMapping("/login")
+    public String login(@RequestParam String username, @RequestParam String password) {
+        // Simple Logic: username = admin, password = admin
+        if ("admin".equals(username) && "admin".equals(password)) {
+            return jwtService.generateToken(username);
+        } else {
+            return "Invalid credentials!";
+        }
+    }
 
     @PostMapping("/add")
     private ResponseEntity<String> addUser(@RequestBody UserDto userDto)
