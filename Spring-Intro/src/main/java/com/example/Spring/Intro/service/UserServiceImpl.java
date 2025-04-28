@@ -76,4 +76,17 @@ public class UserServiceImpl implements UserService {
         return userDto;
     }
 
+    @Override
+    public String registerUser(String username, String password) {
+        User user = new User();
+        user.setName(username);
+        user.setPassword(password);
+        try {
+            userRepo.save(user);
+            return "Successfully Registered User";
+        } catch (Exception e) {
+            return "Not Successfully Registered User";
+        }
+    }
+
 }

@@ -12,4 +12,5 @@ public interface UserService {
     public List<UserDto> all_users();
     public String updateUser(Long id, UserDto userDto);
     public UserDto getUserById(Long id);
+    public String registerUser(String username, String password);
 }
