@@ -13,14 +13,14 @@ public class UserMapper {
     {
         User user = new User();
         user.setId(userDto.getId());
-        user.setName(userDto.getName());
+        user.setName(userDto.getUsername());
         return user;
     }
     public UserDto mapToDto(User user)
     {
         UserDto userDto = new UserDto();
         userDto.setId(user.getId());
-        userDto.setName(user.getName());
+        userDto.setUsername(user.getName());
         return userDto;
     }
 

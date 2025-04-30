@@ -1,13 +1,16 @@
 package com.example.Spring.Intro.controller;
 
+import ch.qos.logback.core.model.Model;
 import com.example.Spring.Intro.model.dto.RoleDto;
+import com.example.Spring.Intro.model.dto.UserDto;
 import com.example.Spring.Intro.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
-@RestController
+@Controller
 @RequestMapping("/role")
 @RequiredArgsConstructor
 public class RoleController {
@@ -38,9 +41,9 @@ public class RoleController {
         return ResponseEntity.ok(roleService.GetRole(id));
     }
 
-    @PostMapping("/set_user_role")
+    /*@PostMapping("/set_user_role")
     private ResponseEntity<String> setUserRole(RoleDto roleDto)
     {
         return ResponseEntity.ok(roleService.SetRole(roleDto));
-    }
+    }*/
 }

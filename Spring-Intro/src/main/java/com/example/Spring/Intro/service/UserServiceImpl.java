@@ -1,29 +1,31 @@
 package com.example.Spring.Intro.service;
 
+import com.example.Spring.Intro.model.dto.UserRoleDto;
+import com.example.Spring.Intro.model.entity.Role;
 import com.example.Spring.Intro.repository.UserRepo;
 import com.example.Spring.Intro.model.dto.UserDto;
 import com.example.Spring.Intro.model.entity.User;
 import com.example.Spring.Intro.model.mapper.UserMapper;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 @Service
+@RequiredArgsConstructor
 public class UserServiceImpl implements UserService {
     private final UserRepo userRepo;
-     private final UserMapper userMapper;
-
-    public UserServiceImpl(UserRepo userRepo, UserMapper userMapper) {
-        this.userRepo = userRepo;
-        this.userMapper = userMapper;
-    }
+    private final UserMapper userMapper;
 
     @Override
     public String addUser(UserDto userDto) {
 
         User new_user = new User();
-        new_user.setName(userDto.getName());
+        new_user.setName(userDto.getUsername());
+        new_user.setPassword(userDto.getPassword());
         try {
             userRepo.save(new_user);
             return "Save successfully";
@@ -57,7 +59,7 @@ public class UserServiceImpl implements UserService {
         else
         {
             User user = userRepo.findById(id).get();
-            user.setName(userDto.getName());
+            user.setName(userDto.getUsername());
             try {
                 userRepo.save(user);
                 return "Successfully Updated User";
@@ -86,6 +88,25 @@ public class UserServiceImpl implements UserService {
             return "Successfully Registered User";
         } catch (Exception e) {
             return "Not Successfully Registered User";
+        }
+    }
+
+    @Override
+    public UserRoleDto getRoles(Long userId) {
+        UserRoleDto userRoleDto = new UserRoleDto();
+
+        if(!userRepo.existsById(userId)) return null;
+        else {
+            User user = userRepo.findById(userId).get();
+            Set<Role> roles = user.getRoles();
+
+            Set<String> allRolesName = new HashSet<>();
+
+            for(Role it : roles) allRolesName.add(it.getRoleName());
+
+            userRoleDto.setUserId(userId);
+            userRoleDto.setRoleName(allRolesName);
+            return userRoleDto;
         }
     }
 

@@ -6,25 +6,23 @@ import lombok.*;
 import java.util.Set;
 
 @Entity
+@Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name="user_roles")
-@Builder
-@Getter
-@Setter
+@Table(name="roles")
 @EqualsAndHashCode(onlyExplicitlyIncluded = true)
+public class Role {
 
-public class UserRole {
-
+    @EqualsAndHashCode.Include
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String roleName;
-    @ManyToMany()
-    @JoinTable(name = "user_roles_users",
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(name = "role_and_user",
             joinColumns = @JoinColumn(name = "role_id"),
             inverseJoinColumns = @JoinColumn(name = "user_id"))
-    private Set<User> user;
+    private Set<User> users;
     private String description;
 
 }

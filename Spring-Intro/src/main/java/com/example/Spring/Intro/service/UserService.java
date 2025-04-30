@@ -1,6 +1,8 @@
 package com.example.Spring.Intro.service;
 
+import com.example.Spring.Intro.model.dto.RoleDto;
 import com.example.Spring.Intro.model.dto.UserDto;
+import com.example.Spring.Intro.model.dto.UserRoleDto;
 import org.springframework.stereotype.Component;
 
 import java.util.List;
@@ -13,4 +15,5 @@ public interface UserService {
     public String updateUser(Long id, UserDto userDto);
     public UserDto getUserById(Long id);
     public String registerUser(String username, String password);
+    public UserRoleDto getRoles(Long userId);
 }

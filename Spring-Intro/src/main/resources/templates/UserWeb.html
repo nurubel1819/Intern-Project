@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>User Details</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            padding: 30px;
+        }
+
+        .container {
+            width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0px 0px 10px rgba(0,0,0,0.1);
+        }
+
+        h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            color: #555;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        .button-group {
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+        }
+
+        button {
+            padding: 10px 15px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-weight: bold;
+            color: white;
+        }
+
+        .upload-btn {
+            background-color: #28a745;
+        }
+
+        .find-btn {
+            background-color: #007bff;
+        }
+
+        .delete-btn {
+            background-color: #dc3545;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h2>User Details</h2>
+
+    <form th:action="@{/user/save}" method="post">
+        <label for="id">ID</label>
+        <input type="text" id="id" name="id" th:value="${user.id}"/>
+
+        <label for="username">User Name</label>
+        <input type="text" id="username" name="username" th:value="${user.username}"/>
+
+        <label for="password">Password</label>
+        <input type="password" id="password" name="password" th:value="${user.password}"/>
+
+        <div class="button-group">
+            <button type="submit" class="upload-btn">Upload</button>
+            <button type="submit" formaction="/user/find" class="find-btn">Find</button>
+            <button type="submit" formaction="/user/delete" class="delete-btn">Delete</button>
+        </div>
+    </form>
+</div>
+
+</body>
+</html>

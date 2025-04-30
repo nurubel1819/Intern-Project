@@ -1,7 +1,7 @@
 package com.example.Spring.Intro.model.mapper;
 
 import com.example.Spring.Intro.model.dto.RoleDto;
-import com.example.Spring.Intro.model.entity.UserRole;
+import com.example.Spring.Intro.model.entity.Role;
 import com.example.Spring.Intro.repository.RoleRepo;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
@@ -12,13 +12,13 @@ import org.springframework.stereotype.Component;
 public class RoleMapper {
     private final RoleRepo roleRepo;
 
-    public UserRole mapToUserRole(RoleDto roleDto)
+    public Role mapToUserRole(RoleDto roleDto)
     {
-        UserRole userRole = new UserRole();
-        userRole.setId(roleDto.getId());
-        userRole.setRoleName(roleDto.getRoleName());
-        userRole.setDescription(roleDto.getDescription());
+        Role role = new Role();
+        role.setId(roleDto.getId());
+        role.setRoleName(roleDto.getRoleName());
+        role.setDescription(roleDto.getDescription());
 
-        return userRole;
+        return role;
     }
 }

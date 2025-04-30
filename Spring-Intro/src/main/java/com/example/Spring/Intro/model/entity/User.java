@@ -25,7 +25,6 @@ public class User {
     @OneToMany(mappedBy = "viewer")
     private List<BlogComment> comments;
 
-    @ManyToMany(mappedBy = "user")
-    private Set<UserRole> roles;
-
+    @ManyToMany(mappedBy = "users", fetch = FetchType.EAGER)
+    private Set<Role> roles;
 }

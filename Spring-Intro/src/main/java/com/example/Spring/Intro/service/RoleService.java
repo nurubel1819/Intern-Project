@@ -2,7 +2,7 @@ package com.example.Spring.Intro.service;
 
 import com.example.Spring.Intro.model.dto.RoleDto;
 import com.example.Spring.Intro.model.entity.User;
-import com.example.Spring.Intro.model.entity.UserRole;
+import com.example.Spring.Intro.model.entity.Role;
 import com.example.Spring.Intro.repository.RoleRepo;
 import com.example.Spring.Intro.repository.UserRepo;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +21,11 @@ public class RoleService {
 
     public String AddRole(RoleDto roleDto)
     {
-        UserRole userRole = new UserRole();
-        userRole.setRoleName(roleDto.getRoleName());
-        userRole.setDescription(roleDto.getDescription());
+        Role role = new Role();
+        role.setRoleName(roleDto.getRoleName());
+        role.setDescription(roleDto.getDescription());
         try {
-            UserRole save_role = roleRepo.save(userRole);
+            Role save_role = roleRepo.save(role);
             return "Role added successfully"+" Role Id : "+save_role.getId()+" Role Name : "+save_role.getRoleName();
         }catch (Exception e)
         {
@@ -36,23 +36,23 @@ public class RoleService {
     public String SetRole(RoleDto roleDto)
     {
         try {
-            UserRole userRole = roleRepo.findByRoleName(roleDto.getRoleName());
-            if (userRole == null) {
+            Role role = roleRepo.findByRoleName(roleDto.getRoleName());
+            if (role == null) {
                 return "Role not found!";
             }
 
             List<User> roleUser = userRepo.findAllByIdIn(roleDto.getUserIds());
 
-            Set<User> updatedUserSet = userRole.getUser();
+            Set<User> updatedUserSet = role.getUsers();
             if (updatedUserSet == null) {
                 updatedUserSet = new HashSet<>();
             }
             updatedUserSet.addAll(roleUser);
-            userRole.setUser(updatedUserSet);
+            role.setUsers(updatedUserSet);
 
-            UserRole save_role = roleRepo.save(userRole);
+            Role save_role = roleRepo.save(role);
 
-            return "Role set successfully"+" Role Id : "+save_role.getId()+" User Id : "+save_role.getUser().stream().map(User::getId).toList();
+            return "Role set successfully"+" Role Id : "+save_role.getId()+" User Id : "+save_role.getUsers().stream().map(User::getId).toList();
         }
         catch (Exception e)
         {
@@ -72,17 +72,17 @@ public class RoleService {
 
     public String UpdateRole(RoleDto roleDto)
     {
-        UserRole userRole = new UserRole();
-        userRole.setId(roleDto.getId());
-        userRole.setRoleName(roleDto.getRoleName());
-        userRole.setDescription(roleDto.getDescription());
+        Role role = new Role();
+        role.setId(roleDto.getId());
+        role.setRoleName(roleDto.getRoleName());
+        role.setDescription(roleDto.getDescription());
 
         try {
             //find role user and add to role user set
             List<User> roleUser = userRepo.findAllByIdIn(roleDto.getUserIds());
             Set<User> someRoleUser = new HashSet<>(roleUser);
-            userRole.setUser(someRoleUser);
-            UserRole save_role = roleRepo.save(userRole);
+            role.setUsers(someRoleUser);
+            Role save_role = roleRepo.save(role);
             return "Role added successfully"+" Role Id : "+save_role.getId()+" Role Name : "+save_role.getRoleName();
         }
         catch (Exception e)
@@ -95,7 +95,7 @@ public class RoleService {
     {
         if(roleRepo.existsById(id))
         {
-            UserRole role = roleRepo.findById(id).get();
+            Role role = roleRepo.findById(id).get();
             return "Role Id : "+role.getId()+" Role Name : "+role.getRoleName()+" Description : "+role.getDescription();
         }
         else return "Role can't exist in database";
