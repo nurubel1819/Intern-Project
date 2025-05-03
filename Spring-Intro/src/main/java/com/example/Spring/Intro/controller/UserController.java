@@ -1,9 +1,7 @@
 package com.example.Spring.Intro.controller;
 
-import com.example.Spring.Intro.model.dto.UserRoleDto;
 import com.example.Spring.Intro.model.entity.User;
 import com.example.Spring.Intro.repository.UserRepo;
-import com.example.Spring.Intro.security.JwtService;
 import com.example.Spring.Intro.service.RoleService;
 import com.example.Spring.Intro.service.UserService;
 import com.example.Spring.Intro.model.dto.UserDto;
@@ -38,7 +36,7 @@ public class UserController {
     @PostMapping("/find")
     public String findUser(@ModelAttribute UserDto user, Model model) {
         User foundUser = userRepo.findById(user.getId()).orElse(null);
-        user.setUsername(foundUser.getName());
+        user.setUsername(foundUser.getUsername());
         user.setPassword(foundUser.getPassword());
         model.addAttribute("user", user);
         return "UserWeb";

@@ -24,5 +24,4 @@ public class Role {
             inverseJoinColumns = @JoinColumn(name = "user_id"))
     private Set<User> users;
     private String description;
-
 }

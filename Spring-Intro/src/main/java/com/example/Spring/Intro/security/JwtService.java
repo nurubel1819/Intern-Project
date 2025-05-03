@@ -1,52 +1,48 @@
 package com.example.Spring.Intro.security;
 
-
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Service;
 
-import java.security.Key;
 import java.util.Date;
+import java.util.stream.Collectors;
 
 @Service
 public class JwtService {
 
-    private final Key key = Keys.secretKeyFor(SignatureAlgorithm.HS256); // Random secure key
+    @Value("${jwt.secret}")
+    private String secret;
 
-    private final long EXPIRATION = 86400000; // 1 day (milliseconds)
+    @Value("${jwt.expiration}")
+    private long expiration;
 
-    //Token generate
-    public String generateToken(String username) {
+    public String generateToken(UserDetails userDetails) {
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(userDetails.getUsername())
+                .claim("roles", userDetails.getAuthorities().stream()
+                        .map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + EXPIRATION))
-                .signWith(key)
+                .setExpiration(new Date(System.currentTimeMillis() + expiration))
+                .signWith(Keys.hmacShaKeyFor(secret.getBytes()), SignatureAlgorithm.HS256)
                 .compact();
     }
 
-    //Username extract from Token
     public String extractUsername(String token) {
         return Jwts.parserBuilder()
-                .setSigningKey(key)
+                .setSigningKey(secret.getBytes())
                 .build()
                 .parseClaimsJws(token)
                 .getBody()
                 .getSubject();
     }
 
-    //Token validate
-    public boolean isTokenValid(String token) {
-        try {
-            Jwts.parserBuilder()
-                    .setSigningKey(key)
-                    .build()
-                    .parseClaimsJws(token);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
+    public boolean isTokenValid(String token, UserDetails userDetails) {
+        String username = extractUsername(token);
+        return username.equals(userDetails.getUsername());
     }
 }
 
