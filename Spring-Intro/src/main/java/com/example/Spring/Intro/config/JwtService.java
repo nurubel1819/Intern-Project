@@ -1,4 +1,4 @@
-package com.example.Spring.Intro.security;
+package com.example.Spring.Intro.config;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;

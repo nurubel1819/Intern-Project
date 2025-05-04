@@ -1,5 +1,6 @@
-package com.example.Spring.Intro.security;
+package com.example.Spring.Intro.config;
 
+import com.example.Spring.Intro.security.CustomUserDetailsService;
 import io.jsonwebtoken.io.IOException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
