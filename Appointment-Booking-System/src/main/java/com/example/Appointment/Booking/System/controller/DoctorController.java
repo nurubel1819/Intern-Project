@@ -2,7 +2,6 @@ package com.example.Appointment.Booking.System.controller;
 
 import com.example.Appointment.Booking.System.model.dto.DoctorDto;
 import com.example.Appointment.Booking.System.model.entity.Doctor;
-import com.example.Appointment.Booking.System.model.entity.User;
 import com.example.Appointment.Booking.System.model.mapper.DoctorMapper;
 import com.example.Appointment.Booking.System.service.DoctorService;
 import com.example.Appointment.Booking.System.validation.ImportantValidation;

@@ -1,6 +1,6 @@
 package com.example.Appointment.Booking.System.service;
 
-import com.example.Appointment.Booking.System.model.entity.User;
+import com.example.Appointment.Booking.System.model.entity.Patient;
 import com.example.Appointment.Booking.System.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,9 +10,9 @@ import org.springframework.stereotype.Service;
 public class UserService {
     private final UserRepository userRepository;
 
-    public User saveNewUser(User user){
+    public Patient saveNewUser(Patient patient){
         try {
-            return userRepository.save(user);
+            return userRepository.save(patient);
         }catch (Exception e){
             return null;
         }

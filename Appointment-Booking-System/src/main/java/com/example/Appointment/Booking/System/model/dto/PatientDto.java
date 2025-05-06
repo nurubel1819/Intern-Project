@@ -3,10 +3,10 @@ package com.example.Appointment.Booking.System.model.dto;
 import lombok.Data;
 
 import java.time.LocalDate;
-import java.util.Date;
+
 
 @Data
-public class UserDto {
+public class PatientDto {
 
     private Long id;
     private String name;
