@@ -18,6 +18,11 @@
             border-radius: 10px;
             box-shadow: 0 2px 10px rgba(0,0,0,0.1);
         }
+        .logo {
+            display: block;
+            margin: 0 auto 20px;
+            width: 100px;
+        }
 
         h2 {
             text-align: center;
@@ -72,8 +77,9 @@
 <body>
 
 <div class="container">
+    <img th:src="@{/image/loginLogo.png}" alt="Logo" class="logo">
     <h2>Create an account</h2>
-    <form th:action="@{/test/register}" method="post" th:object="${patient}">
+    <form th:action="@{/test/register}" method="post" th:object="${MUser}">
         <input type="text" th:field="*{name}" placeholder="Full Name" required>
         <input type="text" th:field="*{phonNumber}" placeholder="Phone Number" required>
         <input type="email" th:field="*{email}" placeholder="Email" required>
@@ -89,7 +95,7 @@
 
         <div class="btn-group">
             <button type="submit" class="btn btn-register">Register</button>
-            <a th:href="@{/login}" class="btn btn-login">Login</a>
+            <a th:href="@{/test/login}" class="btn btn-login">Login</a>
         </div>
     </form>
 </div>

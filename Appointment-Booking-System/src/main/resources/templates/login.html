@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f4f4f4;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .login-container {
+            background: white;
+            padding: 40px;
+            border-radius: 16px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            width: 400px;
+            text-align: center;
+        }
+
+        .logo {
+            display: block;
+            margin: 0 auto 20px;
+            width: 100px;
+        }
+
+        h2 {
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        form {
+            text-align: left;
+        }
+
+        label {
+            display: block;
+            margin: 10px 0 5px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+
+        .checkbox-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 0.9em;
+        }
+
+        .forgot-link {
+            text-decoration: none;
+            color: #3b82f6;
+        }
+
+        .login-button {
+            width: 100%;
+            padding: 12px;
+            background-color: #3b82f6;
+            border: none;
+            color: white;
+            font-size: 16px;
+            border-radius: 8px;
+            cursor: pointer;
+        }
+
+        .register-link {
+            margin-top: 15px;
+            font-size: 0.9em;
+        }
+
+        .register-link a {
+            color: #3b82f6;
+            text-decoration: none;
+        }
+    </style>
+</head>
+<body>
+<div class="login-container">
+    <img th:src="@{/image/loginLogo.png}" alt="Logo" class="logo">
+    <h2>Log in to your account</h2>
+    <p>Welcome back! Please enter your details.</p>
+    <form th:action="@{test/login}" method="post" th:object="${login_request}">
+        <label >Mobile Number</label>
+        <input type="text" th:field="*{phone}" placeholder="Enter Phone Number" required>
+        <label >Password</label>
+        <input type="password" th:field="*{password}" placeholder="Enter Password" required>
+
+        <div class="checkbox-container">
+            <div>
+                <input type="checkbox" id="staySignedIn" name="remember-me">
+                <label for="staySignedIn">Stay signed in</label>
+            </div>
+            <a href="#" class="forgot-link">Forgot password</a>
+        </div>
+
+        <a th:href="@{/test/user_profile}">
+            <button type="submit" class="login-button" >Login</button>
+        </a>
+
+
+    </form>
+    <p class="register-link">Don’t have an account? <a th:href="@{/test/register}">Register</a></p>
+</div>
+</body>
+</html>

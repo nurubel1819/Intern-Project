@@ -6,7 +6,7 @@ import java.time.LocalDate;
 
 
 @Data
-public class PatientDto {
+public class MUserDto {
 
     private Long id;
     private String name;

@@ -1,10 +1,12 @@
 package com.example.Appointment.Booking.System.repository;
 
-import com.example.Appointment.Booking.System.model.entity.Patient;
+import com.example.Appointment.Booking.System.model.entity.MUser;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
-public interface UserRepository extends JpaRepository<Patient, Long> {
-    Patient findByPhonNumber(String phonNumber);
+public interface UserRepository extends JpaRepository<MUser, Long> {
+    Optional<MUser> findByPhonNumber(String phonNumber);
 }
