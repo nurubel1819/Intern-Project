@@ -1,15 +1,16 @@
 package com.example.Appointment.Booking.System.controller;
 
+import com.example.Appointment.Booking.System.model.dto.DoctorAvailabilityDto;
 import com.example.Appointment.Booking.System.model.dto.DoctorDto;
+import com.example.Appointment.Booking.System.model.entity.CountAppointment;
 import com.example.Appointment.Booking.System.model.entity.Doctor;
 import com.example.Appointment.Booking.System.model.mapper.DoctorMapper;
+import com.example.Appointment.Booking.System.repository.CountAppointmentRepository;
 import com.example.Appointment.Booking.System.service.DoctorService;
 import com.example.Appointment.Booking.System.validation.ImportantValidation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/doctors")
@@ -18,6 +19,7 @@ public class DoctorController {
 
     private final DoctorService doctorService;
     private final DoctorMapper doctorMapper;
+    private final CountAppointmentRepository countAppointmentRepository;
 
     @PostMapping("/registration")
     private ResponseEntity<DoctorDto> registration(DoctorDto doctorDto){
@@ -38,4 +40,28 @@ public class DoctorController {
         }
         else return ResponseEntity.badRequest().body(null);
     }
+
+    @PostMapping("/set_appointment_number/doctor_id={id}")
+    private ResponseEntity<String> setAppointmentNumber(@PathVariable("id") Long id){
+        Doctor doctor = doctorService.findDoctorById(id);
+        if(doctor==null) return ResponseEntity.ok("doctor not found");
+        else
+        {
+            CountAppointment countAppointment = new CountAppointment();
+            countAppointment.setDoctorId(doctor.getId());
+            countAppointment.setTotalPatient(10);
+            try {
+                countAppointmentRepository.save(countAppointment);
+                return ResponseEntity.ok("set appointment number successfully");
+            }catch (Exception e){
+                return ResponseEntity.ok("set appointment number failed");
+            }
+        }
+    }
+
+    @PostMapping("/set_appointment_status")
+    private ResponseEntity<String> setAppointmentStatus(@RequestBody DoctorAvailabilityDto dto){
+        return ResponseEntity.ok(doctorService.setAppointment(dto.getDoctorId(),dto.getTotalPossibilityPatient()));
+    }
+
 }

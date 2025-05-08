@@ -33,6 +33,7 @@ public class SecurityConfiguration {
 
     public static final String[] PUBLIC_URLS = {
             "/test/**",
+            "/doctors/**",
             "users/**",
             "/roles/**",
             "/swagger-ui/**",

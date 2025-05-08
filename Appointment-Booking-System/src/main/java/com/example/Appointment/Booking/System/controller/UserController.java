@@ -1,5 +1,6 @@
 package com.example.Appointment.Booking.System.controller;
 
+import com.example.Appointment.Booking.System.model.dto.DoctorAppointmentDto;
 import com.example.Appointment.Booking.System.model.dto.JwtAuthenticationResponseDto;
 import com.example.Appointment.Booking.System.model.dto.MUserDto;
 import com.example.Appointment.Booking.System.model.dto.SignInRequestDto;
@@ -53,5 +54,11 @@ public class UserController {
             return ResponseEntity.ok(authenticationService.signIn(signInRequestDto));
         }
         else return ResponseEntity.badRequest().body(null);
+    }
+
+    @PostMapping("/doctor_appointment")
+    private ResponseEntity<String> doctorAppointment(@RequestBody DoctorAppointmentDto doctorAppointmentDto){
+        return ResponseEntity.ok(userService.bookDoctor(doctorAppointmentDto.getDoctor_id(),doctorAppointmentDto.getPatient_id()));
+
     }
 }

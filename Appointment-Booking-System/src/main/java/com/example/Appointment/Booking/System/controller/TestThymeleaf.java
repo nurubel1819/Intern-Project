@@ -1,5 +1,6 @@
 package com.example.Appointment.Booking.System.controller;
 
+import com.example.Appointment.Booking.System.model.dto.DoctorAppointmentDto;
 import com.example.Appointment.Booking.System.model.dto.LoginRequestDto;
 import com.example.Appointment.Booking.System.model.dto.MUserDto;
 import com.example.Appointment.Booking.System.model.mapper.MUserMapper;
@@ -45,6 +46,17 @@ public class TestThymeleaf {
     public String loginUser(@ModelAttribute("login_request") LoginRequestDto loginRequestDto){
         System.out.println(loginRequestDto.getPassword()+" "+loginRequestDto.getPhone());
         return "redirect:/";
+    }
+    // Registration page দেখাবে
+    @GetMapping("/appointment/confirm")
+    public String confirmAppointment(Model model) {
+        model.addAttribute("confirm", new DoctorAppointmentDto());
+        return "appointment";
+    }
+    @GetMapping("/user_profile")
+    public String showUserProfile(Model model) {
+        //model.addAttribute("user_profile", new MUserDto());
+        return "profile";
     }
 
 }

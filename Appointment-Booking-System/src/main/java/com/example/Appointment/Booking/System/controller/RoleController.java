@@ -23,8 +23,9 @@ public class RoleController {
     private String setRole(@RequestBody RoleSetDto roleSetDto){
         MUser user = userService.getUserByPhone(roleSetDto.getUserPhone());
         UserRole role = roleService.findRoleByName(roleSetDto.getRoleName());
+        System.out.println("user = "+user+" role = "+role);
         if(user != null && role != null){
-            return roleService.setRoleInUser(user.getId(),role.getId());
+            return roleService.SetRole(user.getId(),role.getId());
         }
         else return "role can't be set ";
     }

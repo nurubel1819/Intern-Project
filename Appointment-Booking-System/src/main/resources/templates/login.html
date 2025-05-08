@@ -97,7 +97,7 @@
     <img th:src="@{/image/loginLogo.png}" alt="Logo" class="logo">
     <h2>Log in to your account</h2>
     <p>Welcome back! Please enter your details.</p>
-    <form th:action="@{test/login}" method="post" th:object="${login_request}">
+    <form th:action="@{/test/user_profile}" method="post" th:object="${login_request}">
         <label >Mobile Number</label>
         <input type="text" th:field="*{phone}" placeholder="Enter Phone Number" required>
         <label >Password</label>

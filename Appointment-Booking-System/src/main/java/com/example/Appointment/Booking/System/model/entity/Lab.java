@@ -5,6 +5,9 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.HashSet;
+import java.util.Set;
+
 @Entity
 @Table(name = "hospital")
 @Data
@@ -19,4 +22,16 @@ public class Lab {
     @Column(nullable = false)
     private String address;
     private double rating;
+
+    @ManyToMany
+    @JoinTable(
+            name = "lab_test_map",
+            joinColumns = @JoinColumn(name = "lab_id"),
+            inverseJoinColumns = @JoinColumn(name = "test_id")
+    )
+    private Set<LabTest> labTests = new HashSet<>();
+
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL,mappedBy = "lab")
+    private Set<LabTestAppointment> labTestAppointments = new HashSet<>();
+
 }

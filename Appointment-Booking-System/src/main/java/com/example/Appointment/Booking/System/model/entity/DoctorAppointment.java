@@ -18,4 +18,12 @@ public class DoctorAppointment {
     private Long id;
     private LocalDateTime bookingDate;
     private LocalDateTime appointmentDate;
+
+    @ManyToOne
+    @JoinColumn(name = "doctor_id")
+    private Doctor doctor;
+
+    @ManyToOne
+    @JoinColumn(name = "user_id")
+    private MUser user;
 }

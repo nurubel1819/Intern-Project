@@ -28,4 +28,10 @@ public class MUser {
     @ManyToMany(mappedBy = "users",fetch=FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @ToString.Exclude
     private Set<UserRole> userRoles=new HashSet<>();
+
+    @ManyToMany(mappedBy = "users")
+    private Set<Doctor> doctors = new HashSet<>();
+
+    @OneToMany(mappedBy = "user")
+    private Set<DoctorAppointment> doctorAppointments = new HashSet<>();
 }

@@ -7,6 +7,7 @@ import com.example.Appointment.Booking.System.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Set;
 
 @Service
@@ -26,6 +27,32 @@ public class RoleService {
             return "Role Added Successfully";
         }
         else return "Role Already Exists";
+    }
+    public String SetRole(/*RoleDto roleDto*/ Long userId,Long roleId)
+    {
+        try {
+            UserRole role = roleRepository.findById(roleId).get();
+            if (role == null) {
+                return "Role not found!";
+            }
+
+            MUser roleUser = userRepository.findById(userId).get();
+
+            Set<MUser> updatedUserSet = role.getUsers();
+            if (updatedUserSet == null) {
+                updatedUserSet = new HashSet<>();
+            }
+            updatedUserSet.add(roleUser);
+            role.setUsers(updatedUserSet);
+
+            UserRole save_role = roleRepository.save(role);
+
+            return "Role set successfully"+" Role Id : "+save_role.getId()+" User Id : "+save_role.getUsers().stream().map(MUser::getId).toList();
+        }
+        catch (Exception e)
+        {
+            return "Role not added"+" Exception : "+e.getMessage();
+        }
     }
     public String setRoleInUser(Long userId,Long roleId)
     {

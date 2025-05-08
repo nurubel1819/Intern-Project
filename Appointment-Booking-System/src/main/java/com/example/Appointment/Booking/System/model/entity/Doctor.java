@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Data
@@ -30,6 +32,17 @@ public class Doctor {
     private String qualification;//description
     private LocalDate dateOfBirth;
     private String image;//optional
+
+    @ManyToMany
+    @JoinTable(
+            name = "doctor_patient",
+            joinColumns = @JoinColumn(name = "doctor_id"),
+            inverseJoinColumns = @JoinColumn(name = "patient_id")
+    )
+    private Set<MUser> users = new HashSet<>();
+
+    @OneToMany(mappedBy = "doctor")
+    private Set<DoctorAppointment> appointments = new HashSet<>();
 
 
 }

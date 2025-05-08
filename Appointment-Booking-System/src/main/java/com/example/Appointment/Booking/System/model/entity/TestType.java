@@ -4,6 +4,10 @@ import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.aspectj.weaver.ast.Test;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "test_category")
@@ -17,4 +21,7 @@ public class TestType {
     @Column(nullable = false, unique = true)
     private String name;
     private String description;
+
+    @OneToMany(mappedBy = "testType")
+    private Set<LabTest> tests = new HashSet<>();
 }
