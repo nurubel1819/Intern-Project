@@ -32,11 +32,3 @@ Here are some core entities and their relationships:
 - `Role` ⟶ One-to-Many ⟶ `User`
 - `User` ⟶ Many-to-One ⟶ `Role`
 
-> All foreign keys are properly maintained with referential integrity.
-
-## ⚙️ How to Run
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/yourusername/doctor-booking-system.git
-   cd doctor-booking-system

@@ -21,19 +21,20 @@ public class SecurityConfiguration {
     @Autowired
     JwtAuthFilter jwtAuthFilter;
     public static final String[] ADMIN_URLS = {
-            "/roles/**"
+            "/roles/**",
+            "/labs/**",
+            "test-types/**"
     };
     public static final String[] PATIENT_URLS = {
 
 
     };
     public static final String[] DOCTOR_URLS = {
-            "api/doctor"
+           "/doctors/**"
     };
 
     public static final String[] PUBLIC_URLS = {
             "/test/**",
-            "/doctors/**",
             "users/**",
             "/swagger-ui/**",
             "/v3/api-docs/**",

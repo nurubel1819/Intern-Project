@@ -8,12 +8,14 @@ import com.example.Appointment.Booking.System.model.mapper.DoctorMapper;
 import com.example.Appointment.Booking.System.repository.CountAppointmentRepository;
 import com.example.Appointment.Booking.System.service.DoctorService;
 import com.example.Appointment.Booking.System.validation.ImportantValidation;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/doctors")
+@SecurityRequirement(name = "bearerAuth")
 @RequiredArgsConstructor
 public class DoctorController {
 
