@@ -2,6 +2,7 @@ package com.example.Appointment.Booking.System.model.entity;
 
 import jakarta.persistence.*;
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import lombok.ToString;
 
 import java.time.LocalDate;
@@ -27,6 +28,7 @@ public class MUser {
 
     @ManyToMany(mappedBy = "users",fetch=FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @ToString.Exclude
+    @EqualsAndHashCode.Exclude
     private Set<UserRole> userRoles=new HashSet<>();
 
     @ManyToMany(mappedBy = "users")

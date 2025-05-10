@@ -5,16 +5,18 @@ import com.example.Appointment.Booking.System.model.dto.JwtAuthenticationRespons
 import com.example.Appointment.Booking.System.model.dto.MUserDto;
 import com.example.Appointment.Booking.System.model.dto.SignInRequestDto;
 import com.example.Appointment.Booking.System.model.entity.MUser;
+import com.example.Appointment.Booking.System.model.entity.UserRole;
 import com.example.Appointment.Booking.System.model.mapper.MUserMapper;
+import com.example.Appointment.Booking.System.repository.RoleRepository;
 import com.example.Appointment.Booking.System.service.AuthenticationService;
 import com.example.Appointment.Booking.System.service.UserService;
 import com.example.Appointment.Booking.System.validation.ImportantValidation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import java.util.HashSet;
+import java.util.Set;
 
 @RestController
 @RequiredArgsConstructor
@@ -23,6 +25,7 @@ public class UserController {
     private final AuthenticationService authenticationService;
     private final UserService userService;
     private final MUserMapper MUserMapper;
+    private final RoleRepository roleRepository;
 
     @PostMapping("/registration")
     private ResponseEntity<MUserDto> registration(MUserDto userDto){
@@ -34,8 +37,22 @@ public class UserController {
             userDto.setPhonNumber(phonNumber);
 
             MUser user = MUserMapper.mapToEntity(userDto);
+            System.out.println("user = "+user);
             if(userDto.getEmail() != null && ImportantValidation.isValidEmail(userDto.getEmail()))
             {
+
+                UserRole userRole = roleRepository.findByRole("USER");
+                if(userRole==null)
+                {
+                    userRole = new UserRole();
+                    userRole.setRole("USER");
+                }
+                Set<MUser> users = userRole.getUsers();
+                users.add(user);
+                userRole.setUsers(users);
+
+                user.setUserRoles(Set.of(userRole));
+
                 return ResponseEntity.ok(MUserMapper.mapToDto(authenticationService.sinUp(user)));
             }
             else if(userDto.getEmail() == null) return ResponseEntity.ok(MUserMapper.mapToDto(authenticationService.sinUp(user)));
@@ -60,5 +77,15 @@ public class UserController {
     private ResponseEntity<String> doctorAppointment(@RequestBody DoctorAppointmentDto doctorAppointmentDto){
         return ResponseEntity.ok(userService.bookDoctor(doctorAppointmentDto.getDoctor_id(),doctorAppointmentDto.getPatient_id()));
 
+    }
+    //for testing
+    @GetMapping("/get_user_role={id}")
+    private ResponseEntity<Set<String>> getUserRole(@PathVariable("id") Long id){
+        MUser user = userService.getUserById(id);
+        Set<String> roles = new HashSet<>();
+        for (UserRole userRole : user.getUserRoles()) {
+            roles.add(userRole.getRole());
+        }
+        return ResponseEntity.ok(roles);
     }
 }

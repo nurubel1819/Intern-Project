@@ -21,7 +21,7 @@ public class SecurityConfiguration {
     @Autowired
     JwtAuthFilter jwtAuthFilter;
     public static final String[] ADMIN_URLS = {
-            "/api/user/role/**"
+            "/roles/**"
     };
     public static final String[] PATIENT_URLS = {
 
@@ -35,7 +35,6 @@ public class SecurityConfiguration {
             "/test/**",
             "/doctors/**",
             "users/**",
-            "/roles/**",
             "/swagger-ui/**",
             "/v3/api-docs/**",
             "/swagger-ui.html"

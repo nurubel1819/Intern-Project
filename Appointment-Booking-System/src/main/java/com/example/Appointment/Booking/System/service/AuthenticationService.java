@@ -27,7 +27,8 @@ public class AuthenticationService {
     }
 
     public JwtAuthenticationResponseDto signIn(SignInRequestDto signInRequestDto) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
                 signInRequestDto.getPhone(),signInRequestDto.getPassword()
         ));
 

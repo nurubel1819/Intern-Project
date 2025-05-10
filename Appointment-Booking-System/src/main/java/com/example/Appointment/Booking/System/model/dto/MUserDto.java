@@ -3,6 +3,7 @@ package com.example.Appointment.Booking.System.model.dto;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.Set;
 
 
 @Data
@@ -16,4 +17,5 @@ public class MUserDto {
     private String email;
     private String gender;
     private LocalDate dateOfBirth;
+    private Set<String> roles;
 }

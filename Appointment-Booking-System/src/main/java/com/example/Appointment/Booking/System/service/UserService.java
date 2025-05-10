@@ -20,6 +20,7 @@ public class UserService {
         try {
             return userRepository.save(MUser);
         }catch (Exception e){
+            System.out.println("save user Error : "+e.getMessage());
             return null;
         }
     }

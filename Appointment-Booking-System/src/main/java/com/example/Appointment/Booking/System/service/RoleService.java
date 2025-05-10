@@ -28,61 +28,23 @@ public class RoleService {
         }
         else return "Role Already Exists";
     }
-    public String SetRole(/*RoleDto roleDto*/ Long userId,Long roleId)
+
+    public String setUserRole(Long userId,Long roleId)
     {
         try {
-            UserRole role = roleRepository.findById(roleId).get();
-            if (role == null) {
-                return "Role not found!";
-            }
-
-            MUser roleUser = userRepository.findById(userId).get();
-
-            Set<MUser> updatedUserSet = role.getUsers();
-            if (updatedUserSet == null) {
-                updatedUserSet = new HashSet<>();
-            }
-            updatedUserSet.add(roleUser);
-            role.setUsers(updatedUserSet);
-
-            UserRole save_role = roleRepository.save(role);
-
-            return "Role set successfully"+" Role Id : "+save_role.getId()+" User Id : "+save_role.getUsers().stream().map(MUser::getId).toList();
-        }
-        catch (Exception e)
-        {
-            return "Role not added"+" Exception : "+e.getMessage();
-        }
-    }
-    public String setRoleInUser(Long userId,Long roleId)
-    {
-        MUser user = userRepository.findById(userId).get();
-        if(user==null)
-        {
-            return "User not found";
-        }
-        else
-        {
             UserRole userRole = roleRepository.findById(roleId).get();
-            if(userRole==null)
-            {
-                return "Role not found";
-            }
-            else
-            {
-                try {
-                    Set<UserRole> allRole = user.getUserRoles();
-                    allRole.add(userRole);
-                    user.setUserRoles(allRole);
-                    MUser role_user = userRepository.save(user);
-                    return "Role set successfully"+role_user;
-                }catch (Exception e){
-                    return "Role not set. exception : "+e.getMessage();
-                }
-            }
+            MUser user = userRepository.findById(userId).get();
+            Set<MUser> users = userRole.getUsers();
+            users.add(user);
+            userRole.setUsers(users);
+            roleRepository.save(userRole);
+            return "User Role Set Successfully";
+        }catch (Exception e){
+            return "User Role Not set. Exception = "+e.getMessage();
         }
 
     }
+
     public UserRole findRoleByName(String roleName)
     {
         return roleRepository.findByRole(roleName);

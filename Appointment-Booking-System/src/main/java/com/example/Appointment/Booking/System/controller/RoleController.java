@@ -5,11 +5,13 @@ import com.example.Appointment.Booking.System.model.entity.MUser;
 import com.example.Appointment.Booking.System.model.entity.UserRole;
 import com.example.Appointment.Booking.System.service.RoleService;
 import com.example.Appointment.Booking.System.service.UserService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/roles")
+@SecurityRequirement(name = "bearerAuth")
 @RequiredArgsConstructor
 public class RoleController {
 
@@ -25,7 +27,7 @@ public class RoleController {
         UserRole role = roleService.findRoleByName(roleSetDto.getRoleName());
         System.out.println("user = "+user+" role = "+role);
         if(user != null && role != null){
-            return roleService.SetRole(user.getId(),role.getId());
+            return roleService.setUserRole(user.getId(),role.getId());
         }
         else return "role can't be set ";
     }
