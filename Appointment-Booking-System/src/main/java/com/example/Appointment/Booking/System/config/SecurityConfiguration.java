@@ -23,7 +23,8 @@ public class SecurityConfiguration {
     public static final String[] ADMIN_URLS = {
             "/roles/**",
             "/labs/**",
-            "test-types/**"
+            "test-types/**",
+            "lab_test/**"
     };
     public static final String[] PATIENT_URLS = {
 

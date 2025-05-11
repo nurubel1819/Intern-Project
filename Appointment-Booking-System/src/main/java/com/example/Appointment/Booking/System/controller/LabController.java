@@ -3,6 +3,7 @@ package com.example.Appointment.Booking.System.controller;
 import com.example.Appointment.Booking.System.model.dto.LabDto;
 import com.example.Appointment.Booking.System.model.mapper.LabMapper;
 import com.example.Appointment.Booking.System.service.LabService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -11,6 +12,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/labs")
+@SecurityRequirement(name = "bearerAuth")
 @RequiredArgsConstructor
 public class LabController {
 

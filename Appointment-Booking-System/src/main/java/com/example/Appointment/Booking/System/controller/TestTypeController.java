@@ -4,6 +4,7 @@ import com.example.Appointment.Booking.System.model.dto.TestTypeDto;
 import com.example.Appointment.Booking.System.model.entity.TestType;
 import com.example.Appointment.Booking.System.model.mapper.TestTypeMapper;
 import com.example.Appointment.Booking.System.service.TestTypeService;
+import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -13,6 +14,7 @@ import java.util.List;
 @RestController
 @RequestMapping("/test-types")
 @RequiredArgsConstructor
+@SecurityRequirement(name = "bearerAuth")
 public class TestTypeController {
     private final TestTypeService testTypeService;
     private final TestTypeMapper testTypeMapper;

@@ -22,6 +22,6 @@ public class TestType {
     private String name;
     private String description;
 
-    @OneToMany(mappedBy = "testType")
-    private Set<LabTest> tests = new HashSet<>();
+    /*@OneToMany(mappedBy = "testType")
+    private Set<LabTest> tests = new HashSet<>();*/
 }

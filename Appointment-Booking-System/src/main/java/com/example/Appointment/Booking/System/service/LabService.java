@@ -22,6 +22,9 @@ public class LabService {
     public Lab getLabDetails(String labName){
         return labRepository.findByLabName(labName);
     }
+    public List<Lab> getLabDetailsLike(String labName){
+        return labRepository.findByLabNameLike(labName);
+    }
     public Lab getLabDetailsById(Long id){
         return labRepository.findById(id).get();
     }

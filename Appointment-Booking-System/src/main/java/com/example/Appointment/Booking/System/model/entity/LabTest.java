@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.Duration;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -22,7 +23,7 @@ public class LabTest {
     @Column(nullable = false)
     private String price;
     private String description;
-    private String duration;
+    private Duration durationInHours;
 
     @ManyToMany(mappedBy = "labTests")
     private Set<Lab> labs = new HashSet<>();
@@ -30,5 +31,6 @@ public class LabTest {
     @ManyToOne
     @JoinColumn(name = "test_type_id")
     private TestType testType;
+    //private String testType;
 
 }

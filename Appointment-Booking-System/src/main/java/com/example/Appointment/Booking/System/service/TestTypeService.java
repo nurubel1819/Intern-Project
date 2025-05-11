@@ -27,6 +27,10 @@ public class TestTypeService {
         return testTypeRepository.findByName(testTypeName);
     }
 
+    public List<TestType> getTestTypeByNameLike(String testTypeName){
+        return testTypeRepository.findByNameLike(testTypeName);
+    }
+
     public String deleteTestType(Long id){
         if(testTypeRepository.existsById(id))
         {
