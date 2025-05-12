@@ -23,8 +23,8 @@ public class SecurityConfiguration {
     public static final String[] ADMIN_URLS = {
             "/roles/**",
             "/labs/**",
-            "test-types/**",
-            "lab_test/**"
+            "/test-types/**",
+            "/lab_test/**"
     };
     public static final String[] PATIENT_URLS = {
 
@@ -36,7 +36,7 @@ public class SecurityConfiguration {
 
     public static final String[] PUBLIC_URLS = {
             "/test/**",
-            "users/**",
+            "/users/**",
             "/swagger-ui/**",
             "/v3/api-docs/**",
             "/swagger-ui.html"
@@ -49,9 +49,9 @@ public class SecurityConfiguration {
         http.
                 csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(PATIENT_URLS).hasAnyRole("PATIENT","ADMIN")
-                        .requestMatchers(ADMIN_URLS).hasAnyRole("ADMIN")
-                        .requestMatchers(DOCTOR_URLS).hasAnyRole("DOCTOR","ADMIN")
+                        .requestMatchers(PATIENT_URLS).hasAnyRole("USER","ADMIN")
+                        .requestMatchers(ADMIN_URLS).hasAnyRole("ADMIN","USER")
+                        .requestMatchers(DOCTOR_URLS).hasAnyRole("DOCTOR","ADMIN","USER")
                         .requestMatchers(PUBLIC_URLS).permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

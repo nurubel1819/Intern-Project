@@ -25,33 +25,41 @@ public class LabTestMapper {
 
     public LabTest mapToEntity(LabTestDto dto)
     {
-        LabTest labTest = new LabTest();
-        labTest.setTestName(dto.getTestName());
-        labTest.setPrice(dto.getPrice());
-        labTest.setDescription(dto.getDescription());
+
         try {
 
-            Lab lab = labService.getLabDetails(dto.getLabName());
-            Set<Lab> labs;
             if(labTestService.getLabTestByName(dto.getTestName()) != null)
             {
                 LabTest test = labTestService.getLabTestByName(dto.getTestName());
-                labs = test.getLabs();
-                labs.add(lab);
-                labTest.setLabs(labs);
+                Set<Lab> labs = test.getLabs();
+                labs.add(labService.getLabDetails(dto.getLabName()));
+                test.setLabs(labs);
+                System.out.println("labTest = "+test);
+                return test;
             }
-            else labTest.setLabs(Set.of(lab));
-            TestType testType = testTypeService.getTestTypeByName(dto.getTestType());
-            labTest.setTestType(testType);
-            labTest.setDurationInHours(Duration.ofHours(dto.getDurationInHours()));
-            //System.out.println("Duration = "+labTest.getDurationInHours().toHours()+" hours" ); //it user for test to show duration in hour
+            else
+            {
+                LabTest labTest = new LabTest();
+                labTest.setTestName(dto.getTestName());
+                labTest.setPrice(dto.getPrice());
+                labTest.setDescription(dto.getDescription());
 
+                Lab lab = labService.getLabDetails(dto.getLabName());
+                Set<Lab> labs = Set.of(lab);
+                labTest.setLabs(labs);
+
+                TestType testType = testTypeService.getTestTypeByName(dto.getTestType());
+                labTest.setTestType(testType);
+                labTest.setDurationInHours(Duration.ofHours(dto.getDurationInHours()));
+                System.out.println("labTest = "+labTest);
+                return labTest;
+            }
         }catch (Exception e)
         {
             System.out.println("Exception in LabTest Mapper error = "+e.getMessage());
             //return null;
         }
 
-        return labTest;
+        return null;
     }
 }

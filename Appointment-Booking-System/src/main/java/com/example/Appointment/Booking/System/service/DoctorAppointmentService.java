@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -27,5 +28,17 @@ public class DoctorAppointmentService {
         doctorAppointment.setDoctor(doctor);
         doctorAppointment.setUser(user);
         return doctorAppointmentRepository.save(doctorAppointment);
+    }
+    public List<DoctorAppointment> getHistory(Long userId)
+    {
+        try {
+            System.out.println("before user");
+            MUser user = userRepository.findById(userId).get();
+            System.out.println("user = "+user);
+            return doctorAppointmentRepository.findByUser(user);
+        }catch (Exception e){
+            System.out.println("Exception get history = "+e.getMessage());
+            return null;
+        }
     }
 }

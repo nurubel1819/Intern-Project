@@ -7,6 +7,8 @@ import com.example.Appointment.Booking.System.repository.DoctorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class DoctorService {
@@ -22,6 +24,10 @@ public class DoctorService {
         }catch (Exception e){
             return null;
         }
+    }
+
+    public List<Doctor> getAllDoctors(){
+        return doctorRepository.findAll();
     }
 
     public Doctor findDoctorById(Long id){

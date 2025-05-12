@@ -1,14 +1,14 @@
 package com.example.Appointment.Booking.System.controller;
 
-import com.example.Appointment.Booking.System.model.dto.DoctorAppointmentDto;
-import com.example.Appointment.Booking.System.model.dto.JwtAuthenticationResponseDto;
-import com.example.Appointment.Booking.System.model.dto.MUserDto;
-import com.example.Appointment.Booking.System.model.dto.SignInRequestDto;
+import com.example.Appointment.Booking.System.model.dto.*;
+import com.example.Appointment.Booking.System.model.entity.LabTestAppointment;
 import com.example.Appointment.Booking.System.model.entity.MUser;
 import com.example.Appointment.Booking.System.model.entity.UserRole;
+import com.example.Appointment.Booking.System.model.mapper.LabTestAppointmentMapper;
 import com.example.Appointment.Booking.System.model.mapper.MUserMapper;
 import com.example.Appointment.Booking.System.repository.RoleRepository;
 import com.example.Appointment.Booking.System.service.AuthenticationService;
+import com.example.Appointment.Booking.System.service.LabTestAppointmentService;
 import com.example.Appointment.Booking.System.service.UserService;
 import com.example.Appointment.Booking.System.validation.ImportantValidation;
 import lombok.RequiredArgsConstructor;
@@ -26,6 +26,8 @@ public class UserController {
     private final UserService userService;
     private final MUserMapper MUserMapper;
     private final RoleRepository roleRepository;
+    private final LabTestAppointmentMapper labTestAppointmentMapper;
+    private final LabTestAppointmentService labTestAppointmentService;
 
     @PostMapping("/registration")
     private ResponseEntity<MUserDto> registration(MUserDto userDto){
@@ -75,8 +77,22 @@ public class UserController {
 
     @PostMapping("/doctor_appointment")
     private ResponseEntity<String> doctorAppointment(@RequestBody DoctorAppointmentDto doctorAppointmentDto){
-        return ResponseEntity.ok(userService.bookDoctor(doctorAppointmentDto.getDoctor_id(),doctorAppointmentDto.getPatient_id()));
+        return ResponseEntity.ok(userService.bookDoctor(doctorAppointmentDto.getDoctorId(),doctorAppointmentDto.getPatientId()));
 
+    }
+
+    @PostMapping("/lab-test-appointment")
+    private ResponseEntity<String> bookNewAppointment(LabTestAppointmentDto labTestAppointmentDto){
+        System.out.println("labTestAppointmentDto = "+labTestAppointmentDto);
+        LabTestAppointment labTestAppointment = labTestAppointmentMapper.mapToEntity(labTestAppointmentDto);
+        System.out.println("labTestAppointment = "+labTestAppointment);
+        try {
+            labTestAppointmentService.bookNewAppointment(labTestAppointment);
+            return ResponseEntity.ok("Appointment booked successfully");
+        }catch (Exception e){
+            System.out.println("Exception lab test appointment book save = "+e.getMessage());
+            return ResponseEntity.badRequest().body("Appointment booked unsuccessfully");
+        }
     }
     //for testing
     @GetMapping("/get_user_role={id}")

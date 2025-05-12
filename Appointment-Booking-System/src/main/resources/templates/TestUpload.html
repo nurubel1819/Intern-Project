@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Lab Test Form</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f2f2f2;
+            padding: 20px;
+        }
+
+        .form-container {
+            background-color: #ffffff;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 600px;
+            margin: auto;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        h2 {
+            text-align: center;
+            color: #333;
+        }
+
+        label {
+            display: block;
+            margin-top: 15px;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        textarea,
+        select {
+            width: 100%;
+            padding: 10px;
+            margin-top: 5px;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            box-sizing: border-box;
+        }
+
+        button {
+            margin-top: 20px;
+            padding: 12px 20px;
+            background-color: #28a745;
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+    </style>
+</head>
+<body>
+<div class="form-container">
+    <h2>Lab Test Entry Form</h2>
+    <form th:action="@{/test/lab-tests/save}" method="post" th:object="${labTestDto}">
+
+        <label for="testName">Test Name:</label>
+        <input type="text" id="testName" th:field="*{testName}" placeholder="Enter test name" required>
+
+        <label for="price">Price:</label>
+        <input type="text" id="price" th:field="*{price}" placeholder="Enter price" required>
+
+        <label for="description">Description:</label>
+        <textarea id="description" th:field="*{description}" placeholder="Enter description" rows="4"></textarea>
+
+        <label for="labName">Lab Name:</label>
+        <select id="labName" th:field="*{labName}">
+            <option value="" disabled selected>Select a lab</option>
+            <option th:each="lab : ${labList}"
+                    th:value="${lab.labName}"
+                    th:text="${lab.labName}"></option>
+        </select>
+
+        <label for="testType">Test Type:</label>
+        <select id="testType" th:field="*{testType}">
+            <option value="" disabled selected>Select a test type</option>
+            <option th:each="type : ${testTypeList}"
+                    th:value="${type}"
+                    th:text="${type}"></option>
+        </select>
+
+        <label for="durationInHours">Duration (in hours):</label>
+        <input type="number" id="durationInHours" th:field="*{durationInHours}" placeholder="Enter duration" required>
+
+        <button type="submit">Submit</button>
+    </form>
+</div>
+</body>
+</html>

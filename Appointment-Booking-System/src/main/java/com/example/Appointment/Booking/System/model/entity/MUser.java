@@ -34,6 +34,6 @@ public class MUser {
     @ManyToMany(mappedBy = "users")
     private Set<Doctor> doctors = new HashSet<>();
 
-    @OneToMany(mappedBy = "user")
+    @OneToMany
     private Set<DoctorAppointment> doctorAppointments = new HashSet<>();
 }

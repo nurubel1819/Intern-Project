@@ -2,7 +2,6 @@ package com.example.Appointment.Booking.System.model.dto;
 
 import lombok.Data;
 
-import java.time.Duration;
 
 @Data
 public class LabTestDto {
@@ -12,7 +11,5 @@ public class LabTestDto {
     private String description;
     private String labName;
     private String testType;
-    //private TestType testType;
     private Long durationInHours;
-
 }

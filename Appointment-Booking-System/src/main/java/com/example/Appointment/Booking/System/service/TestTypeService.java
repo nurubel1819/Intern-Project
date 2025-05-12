@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -21,6 +22,15 @@ public class TestTypeService {
         }catch (Exception e){
             return null;
         }
+    }
+
+    public List<String> getAllTestTypesName(){
+        List<String> allTypeName = new ArrayList<>();
+        List<TestType> allTestTypes = testTypeRepository.findAll();
+        for(TestType testType : allTestTypes){
+            allTypeName.add(testType.getName());
+        }
+        return allTypeName;
     }
 
     public TestType getTestTypeByName(String testTypeName){

@@ -91,7 +91,7 @@
     <p>MBBS (DU), FCPS (Medicine)</p>
     <a href="#">Internal Medicine</a>
 
-    <form th:action="@{/appointment/confirm}" method="post" th:object="${confirm}">
+    <form th:action="@{/test/user_dashboard}" method="post" th:object="${confirm}">
         <div class="form-group">
             <label for="date">Appointment Date</label>
             <input th:field="*{date}" type="date" name="date" id="date" required/>

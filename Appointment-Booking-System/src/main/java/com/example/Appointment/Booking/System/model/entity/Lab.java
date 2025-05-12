@@ -31,7 +31,4 @@ public class Lab {
     )
     private Set<LabTest> labTests = new HashSet<>();
 
-    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL,mappedBy = "lab")
-    private Set<LabTestAppointment> labTestAppointments = new HashSet<>();
-
 }

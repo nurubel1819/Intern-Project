@@ -31,6 +31,8 @@ public class LabTest {
     @ManyToOne
     @JoinColumn(name = "test_type_id")
     private TestType testType;
-    //private String testType;
+
+    @OneToMany(mappedBy = "labTest")
+    private Set<LabTestAppointment> labTestAppointments = new HashSet<>();
 
 }

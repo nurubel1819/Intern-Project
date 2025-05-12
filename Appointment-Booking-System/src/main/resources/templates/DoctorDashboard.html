@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Doctor Dashboard</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      margin: 0;
+    }
+    .sidebar {
+      width: 250px;
+      background-color: #f4f4f4;
+      padding: 20px;
+      height: 100vh;
+    }
+    .sidebar h1 {
+      font-size: 24px;
+    }
+    .menu-item {
+      margin: 20px 0;
+      font-size: 16px;
+      cursor: pointer;
+    }
+    .main-content {
+      flex: 1;
+      padding: 20px;
+    }
+    .header {
+      font-size: 28px;
+      margin-bottom: 10px;
+    }
+    .search {
+      margin: 20px 0;
+    }
+    .doctor-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 20px;
+    }
+    .doctor-card {
+      border: 1px solid #ddd;
+      border-radius: 8px;
+      padding: 15px;
+      width: 200px;
+      text-align: center;
+      box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    }
+    .doctor-card img {
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+    }
+    .btn {
+      margin-top: 10px;
+      background-color: #4f46e5;
+      color: white;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+    table {
+      width: 100%;
+      margin-top: 30px;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 8px;
+      text-align: center;
+    }
+    th {
+      background-color: #f4f4f4;
+    }
+  </style>
+</head>
+<body>
+<div class="sidebar">
+  <h1>ALPHAHEALTH</h1>
+  <div class="menu-item" th:href="@{/doctor-dashboard}">Doctor Appointment</div>
+  <div class="menu-item" th:href="@{/lab-dashboard}">Lab Test Appointment</div>
+  <div class="menu-item" th:href="@{/notifications}">Notifications</div>
+  <div class="menu-item" th:href="@{/history}">History</div>
+</div>
+
+<div class="main-content">
+  <div class="header">Welcome back, <span th:text="${username}">User</span></div>
+  <p>Book an appointment with our doctors.</p>
+
+  <div class="search">
+    <input type="text" placeholder="Search doctors...">
+  </div>
+
+  <div class="doctor-container">
+    <div class="doctor-card" th:each="doctor : ${doctors}">
+      <img th:src="@{/images/doctor-default.jpg}" alt="Doctor Photo">
+      <h3 th:text="${doctor.name}"></h3>
+      <p th:text="${doctor.qualification}"></p>
+      <p th:text="${doctor.speciality}"></p>
+      <button class="btn" th:onclick="|window.location.href='/appointment/book/${doctor.id}'|">Book Appointment</button>
+    </div>
+  </div>
+
+  <h2>Appointment History</h2>
+  <table>
+    <thead>
+    <tr>
+      <th>Appointment ID</th>
+      <th>Order Date</th>
+      <th>Appointment Date</th>
+      <th>Status</th>
+      <th>Doctor</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="history : ${appointmentHistory}">
+      <td th:text="${history.id}"></td>
+      <td th:text="${history.orderDate}"></td>
+      <td th:text="${history.appointmentDate}"></td>
+      <td th:text="${history.status}"></td>
+      <td th:text="${history.doctorName}"></td>
+    </tr>
+    </tbody>
+  </table>
+</div>
+</body>
+</html>
