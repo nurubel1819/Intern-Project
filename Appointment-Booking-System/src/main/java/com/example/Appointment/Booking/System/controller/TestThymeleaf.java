@@ -32,7 +32,7 @@ public class TestThymeleaf {
     private final AuthenticationService authenticationService;
 
     // Registration page দেখাবে
-    @GetMapping("/register")
+    /*@GetMapping("/register")
     public String showRegistrationForm(Model model) {
         model.addAttribute("MUser", new MUserDto());
         return "registration";
@@ -46,8 +46,8 @@ public class TestThymeleaf {
             e.printStackTrace(); // কোন error ঘটছে সেটা দেখাবে
         }
         return "redirect:/login";
-    }
-    @GetMapping("/login")
+    }*/
+    /*@GetMapping("/login")
     public String loginPage(Model model){
         model.addAttribute("login_request", new LoginRequestDto());
         return "login";
@@ -57,7 +57,7 @@ public class TestThymeleaf {
 
         System.out.println(loginRequestDto.getPassword()+" "+loginRequestDto.getPhone());
         return "redirect:/test/user_dashboard";
-    }
+    }*/
     // Registration page দেখাবে
     @GetMapping("/appointment/confirm/book/{id}")
     public String confirmAppointment(Model model,@PathVariable("id") Long id) {
@@ -71,11 +71,6 @@ public class TestThymeleaf {
         doctorAppointmentDto.setPatientId(1L);// here get value from context holder
         model.addAttribute("confirm",doctorAppointmentDto);
         return "redirect:/test/user_dashboard";
-    }
-    @GetMapping("/user_profile")
-    public String showUserProfile(Model model) {
-        //model.addAttribute("user_profile", new MUserDto());
-        return "profile";
     }
     @GetMapping("/upload_new_test")
     public String uploadNewTest(Model model){
@@ -98,11 +93,12 @@ public class TestThymeleaf {
         }
         return "redirect:/test/upload_new_test?success"; // success indication
     }
-    @GetMapping("/user_dashboard")
+/*    @GetMapping("/user_dashboard")
     public String userDashboard(Model model){
         model.addAttribute("doctors",doctorService.getAllDoctors());
+        model.addAttribute("allTest",labTestService.getAllLabTest());
         model.addAttribute("appointmentHistory",doctorAppointmentService.getHistory(1L));
         return "DashBoard";
-    }
+    }*/
 
 }

@@ -79,7 +79,7 @@
 <div class="container">
     <img th:src="@{/image/loginLogo.png}" alt="Logo" class="logo">
     <h2>Create an account</h2>
-    <form th:action="@{/test/register}" method="post" th:object="${MUser}">
+    <form th:action="@{/registration}" method="post" th:object="${MUser}">
         <input type="text" th:field="*{name}" placeholder="Full Name" required>
         <input type="text" th:field="*{phonNumber}" placeholder="Phone Number" required>
         <input type="email" th:field="*{email}" placeholder="Email" required>
@@ -95,9 +95,9 @@
 
         <div class="btn-group">
             <button type="submit" class="btn btn-register">Register</button>
-            <a th:href="@{/test/login}" class="btn btn-login">Login</a>
         </div>
     </form>
+    <p class="register-link">already have an account? <a th:href="@{/login}">Login</a></p>
 </div>
 
 </body>

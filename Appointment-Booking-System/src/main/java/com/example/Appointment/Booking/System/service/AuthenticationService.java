@@ -27,19 +27,26 @@ public class AuthenticationService {
     }
 
     public JwtAuthenticationResponseDto signIn(SignInRequestDto signInRequestDto) {
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                signInRequestDto.getPhone(),signInRequestDto.getPassword()
-        ));
 
-        var user = userRepository.findByPhonNumber(signInRequestDto.getPhone()).orElseThrow(()-> new IllegalArgumentException("Invalid username or password"));
-        var token = jwtUtils.generateToken(user.getPhonNumber());
-        //var refreshToken = jwtService.generateRefreshToken(new HashMap<>(),user);
+        try {
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            signInRequestDto.getPhone(),signInRequestDto.getPassword()
+                    ));
 
-        System.out.println("Token: "+token);
-        JwtAuthenticationResponseDto jwtAuthenticationResponseDto = new JwtAuthenticationResponseDto();
-        jwtAuthenticationResponseDto.setToken(token);
-        return jwtAuthenticationResponseDto;
+            var user = userRepository.findByPhonNumber(signInRequestDto.getPhone()).orElseThrow(()-> new IllegalArgumentException("Invalid username or password"));
+            var token = jwtUtils.generateToken(user.getPhonNumber());
+            //var refreshToken = jwtService.generateRefreshToken(new HashMap<>(),user);
+
+            System.out.println("Token: "+token);
+            JwtAuthenticationResponseDto jwtAuthenticationResponseDto = new JwtAuthenticationResponseDto();
+            jwtAuthenticationResponseDto.setToken(token);
+            return jwtAuthenticationResponseDto;
+        }catch (Exception e){
+            JwtAuthenticationResponseDto jwtAuthenticationResponseDto = new JwtAuthenticationResponseDto();
+            jwtAuthenticationResponseDto.setToken(null);
+            return jwtAuthenticationResponseDto;
+        }
     }
 
 }

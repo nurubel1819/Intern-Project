@@ -19,6 +19,9 @@ public class LabTestService {
             return null;
         }
     }
+    public List<LabTest> getAllLabTest(){
+        return labTestRepository.findAll();
+    }
     public LabTest getLabTestByName(String labTestName){
         return labTestRepository.findByTestName(labTestName);
     }

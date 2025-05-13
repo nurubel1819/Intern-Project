@@ -35,6 +35,10 @@ public class SecurityConfiguration {
     };
 
     public static final String[] PUBLIC_URLS = {
+            "/",
+            "/user_dashboard",
+            "/registration",
+            "/login",
             "/image/**",
             "/test/**",
             "/users/**",
@@ -50,9 +54,9 @@ public class SecurityConfiguration {
         http.
                 csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(PATIENT_URLS).hasAnyRole("USER","ADMIN")
-                        .requestMatchers(ADMIN_URLS).hasAnyRole("ADMIN","USER")
-                        .requestMatchers(DOCTOR_URLS).hasAnyRole("DOCTOR","ADMIN","USER")
+                        .requestMatchers(PATIENT_URLS).hasAnyRole("USER","ADMIN")// USER role add for test
+                        .requestMatchers(ADMIN_URLS).hasAnyRole("ADMIN","USER")// USER role add for test
+                        .requestMatchers(DOCTOR_URLS).hasAnyRole("DOCTOR","ADMIN","USER")// USER role add for test
                         .requestMatchers(PUBLIC_URLS).permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)

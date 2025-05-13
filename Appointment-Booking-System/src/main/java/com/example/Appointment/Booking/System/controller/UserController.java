@@ -16,6 +16,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 @RestController
@@ -30,9 +31,11 @@ public class UserController {
     private final LabTestAppointmentService labTestAppointmentService;
 
     @PostMapping("/registration")
-    private ResponseEntity<MUserDto> registration(MUserDto userDto){
+    private ResponseEntity<?> registration(MUserDto userDto){
         if(ImportantValidation.isValidBDPhone(userDto.getPhonNumber()))
         {
+            if(!userDto.getPassword().equals(userDto.getConfirmPassword()))
+                return ResponseEntity.badRequest().body(Map.of("message","password and confirm password not match"));
             // remove +88 from BD phone number
             String phonNumber = userDto.getPhonNumber();
             if(phonNumber.length() > 11) phonNumber = phonNumber.substring(3);
@@ -55,24 +58,31 @@ public class UserController {
 
                 user.setUserRoles(Set.of(userRole));
 
-                return ResponseEntity.ok(MUserMapper.mapToDto(authenticationService.sinUp(user)));
+                try {
+                    return ResponseEntity.ok(MUserMapper.mapToDto(authenticationService.sinUp(user)));
+                }catch (Exception e){
+                    System.out.println("Exception = "+e.getMessage());
+                    return ResponseEntity.badRequest().body(Map.of("message","Phone or email already exists in database"));
+                }
             }
             else if(userDto.getEmail() == null) return ResponseEntity.ok(MUserMapper.mapToDto(authenticationService.sinUp(user)));
-            else return ResponseEntity.badRequest().body(null);
+            else return ResponseEntity.badRequest().body(Map.of("message","invalid email id"));
         }
-        else return ResponseEntity.badRequest().body(null);
+        else return ResponseEntity.badRequest().body(Map.of("message","invalid phone number"));
     }
 
     @PostMapping("/login")
-    private ResponseEntity<JwtAuthenticationResponseDto> login(@RequestBody SignInRequestDto signInRequestDto){
+    private ResponseEntity<?> login(@RequestBody SignInRequestDto signInRequestDto){
         if(ImportantValidation.isValidBDPhone(signInRequestDto.getPhone()))
         {
             String phonNumber = signInRequestDto.getPhone();
             if(phonNumber.length() > 11) phonNumber = phonNumber.substring(3);
             signInRequestDto.setPhone(phonNumber);
-            return ResponseEntity.ok(authenticationService.signIn(signInRequestDto));
+            JwtAuthenticationResponseDto responseDto = authenticationService.signIn(signInRequestDto);
+            if(responseDto.getToken() != null) return ResponseEntity.ok(responseDto);
+            else return ResponseEntity.badRequest().body(Map.of("message","invalid phone number or password"));
         }
-        else return ResponseEntity.badRequest().body(null);
+        else return ResponseEntity.badRequest().body(Map.of("message","invalid phone number"));
     }
 
     @PostMapping("/doctor_appointment")
