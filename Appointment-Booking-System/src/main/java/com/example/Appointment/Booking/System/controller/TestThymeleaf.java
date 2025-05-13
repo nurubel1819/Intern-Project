@@ -10,6 +10,7 @@ import com.example.Appointment.Booking.System.model.mapper.LabTestMapper;
 import com.example.Appointment.Booking.System.model.mapper.MUserMapper;
 import com.example.Appointment.Booking.System.service.*;
 import lombok.RequiredArgsConstructor;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
@@ -28,6 +29,7 @@ public class TestThymeleaf {
     private final LabTestService labTestService;
     private final DoctorService doctorService;
     private final DoctorAppointmentService doctorAppointmentService;
+    private final AuthenticationService authenticationService;
 
     // Registration page দেখাবে
     @GetMapping("/register")
@@ -52,8 +54,9 @@ public class TestThymeleaf {
     }
     @PostMapping("/login")
     public String loginUser(@ModelAttribute("login_request") LoginRequestDto loginRequestDto){
+
         System.out.println(loginRequestDto.getPassword()+" "+loginRequestDto.getPhone());
-        return "redirect:/";
+        return "redirect:/test/user_dashboard";
     }
     // Registration page দেখাবে
     @GetMapping("/appointment/confirm/book/{id}")

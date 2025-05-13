@@ -97,11 +97,15 @@
     <img th:src="@{/image/loginLogo.png}" alt="Logo" class="logo">
     <h2>Log in to your account</h2>
     <p>Welcome back! Please enter your details.</p>
-    <form th:action="@{/test/user_profile}" method="post" th:object="${login_request}">
+    <form th:action="@{/test/user_dashboard}" method="post" th:object="${login_request}">
         <label >Mobile Number</label>
-        <input type="text" th:field="*{phone}" placeholder="Enter Phone Number" required>
+        <label>
+            <input type="text" th:field="*{phone}" placeholder="Enter Phone Number" required>
+        </label>
         <label >Password</label>
-        <input type="password" th:field="*{password}" placeholder="Enter Password" required>
+        <label>
+            <input type="password" th:field="*{password}" placeholder="Enter Password" required>
+        </label>
 
         <div class="checkbox-container">
             <div>
@@ -114,8 +118,6 @@
         <a th:href="@{/test/user_profile}">
             <button type="submit" class="login-button" >Login</button>
         </a>
-
-
     </form>
     <p class="register-link">Don’t have an account? <a th:href="@{/test/register}">Register</a></p>
 </div>
