@@ -32,33 +32,6 @@ public class TestThymeleaf {
     private final AuthenticationService authenticationService;
 
     // Registration page দেখাবে
-    /*@GetMapping("/register")
-    public String showRegistrationForm(Model model) {
-        model.addAttribute("MUser", new MUserDto());
-        return "registration";
-    }
-
-    @PostMapping("/register")
-    public String registerUser(@ModelAttribute("MUser") MUserDto MUserDto) {
-        try {
-            userService.saveNewUser(MUserMapper.mapToEntity(MUserDto));
-        } catch (Exception e) {
-            e.printStackTrace(); // কোন error ঘটছে সেটা দেখাবে
-        }
-        return "redirect:/login";
-    }*/
-    /*@GetMapping("/login")
-    public String loginPage(Model model){
-        model.addAttribute("login_request", new LoginRequestDto());
-        return "login";
-    }
-    @PostMapping("/login")
-    public String loginUser(@ModelAttribute("login_request") LoginRequestDto loginRequestDto){
-
-        System.out.println(loginRequestDto.getPassword()+" "+loginRequestDto.getPhone());
-        return "redirect:/test/user_dashboard";
-    }*/
-    // Registration page দেখাবে
     @GetMapping("/appointment/confirm/book/{id}")
     public String confirmAppointment(Model model,@PathVariable("id") Long id) {
         model.addAttribute("confirm", new DoctorAppointmentDto());
@@ -72,7 +45,7 @@ public class TestThymeleaf {
         model.addAttribute("confirm",doctorAppointmentDto);
         return "redirect:/test/user_dashboard";
     }
-    @GetMapping("/upload_new_test")
+/*    @GetMapping("/upload_new_test")
     public String uploadNewTest(Model model){
         model.addAttribute("labTestDto", new LabTestDto());
 
@@ -92,13 +65,6 @@ public class TestThymeleaf {
             System.out.println("Exception in save lab test = "+e.getMessage());
         }
         return "redirect:/test/upload_new_test?success"; // success indication
-    }
-/*    @GetMapping("/user_dashboard")
-    public String userDashboard(Model model){
-        model.addAttribute("doctors",doctorService.getAllDoctors());
-        model.addAttribute("allTest",labTestService.getAllLabTest());
-        model.addAttribute("appointmentHistory",doctorAppointmentService.getHistory(1L));
-        return "DashBoard";
     }*/
 
 }

@@ -4,6 +4,35 @@
   <meta charset="UTF-8">
   <title>AlphaHealth Dashboard</title>
   <style>
+    .sidebar {
+      width: 200px;
+      padding: 20px;
+      background-color: #f4f4f4;
+    }
+
+    .sidebar h1 {
+      font-size: 24px;
+      margin-bottom: 20px;
+    }
+
+    .menu-item {
+      display: block;
+      background-color: #007bff;
+      color: white;
+      padding: 10px 15px;
+      margin-bottom: 10px;
+      text-decoration: none;
+      border: none;
+      border-radius: 5px;
+      text-align: center;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .menu-item:hover {
+      background-color: #0056b3;
+    }
     body {
       font-family: 'Segoe UI', sans-serif;
       margin: 0;
@@ -90,9 +119,9 @@
 <div class="sidebar">
   <h1>ALPHAHEALTH</h1>
   <a class="menu-item" th:href="@{/doctor-dashboard}">Doctor Appointment</a>
-  <div class="menu-item" th:href="@{/lab-dashboard}">Lab Test Appointment</div>
-  <div class="menu-item">Notifications</div>
-  <div class="menu-item">History</div>
+  <a class="menu-item" th:href="@{/lab-test-dashboard}">Lab Test Appointment</a>
+  <a class="menu-item">Notifications</a>
+  <a class="menu-item">History</a>
 </div>
 <div class="content">
   <div class="header">Welcome back, <span th:text="${username}"></span></div>
@@ -113,16 +142,6 @@
   </div>
   <p>Book an appointment with our doctors.</p>
 
-  <div class="doctor-container">
-    <div class="doctor-card" th:each="test : ${allTest}">
-      <img th:src="@{/image/lab_test_image.png}" alt="Doctor" width="180">
-      <h3 th:text="${test.testName}"></h3>
-      <p th:text="${test.testType.name}"></p>
-      <p th:text="${test.price}"></p>
-      <button class="btn" th:onclick="|window.location.href='/test/appointment/confirm/book/${test.id}'|">Book Appointment</button>
-    </div>
-  </div>
-
   <div class="history-table">
     <h2>Doctor Appointment History</h2>
     <table>
@@ -142,30 +161,6 @@
         <td th:text="${history.appointmentDate}"></td>
         <td th:text="${history.getDoctor().specialization}"></td>
         <td th:text="${history.getDoctor().name}"></td>
-      </tr>
-      </tbody>
-    </table>
-  </div>
-
-  <div class="history-table">
-    <h2>Test Appointment History</h2>
-    <table>
-      <thead>
-      <tr>
-        <th>Appointment ID</th>
-        <th>Order Date</th>
-        <th>Delivery date</th>
-        <th>Test Name</th>
-        <th>Hospital Name</th>
-      </tr>
-      </thead>
-      <tbody>
-      <tr th:each="history : ${TestAppointmentHistory}">
-        <td th:text="${history.id}"></td>
-        <td th:text="${history.getBookingDate()}"></td>
-        <td th:text="${history.getAppointmentDate()}"></td>
-        <td th:text="${history.getLabTest().testName}"></td>
-        <td th:text="${history.getLabName()}"></td>
       </tr>
       </tbody>
     </table>

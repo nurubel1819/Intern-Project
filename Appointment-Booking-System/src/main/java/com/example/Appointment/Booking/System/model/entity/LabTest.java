@@ -32,7 +32,7 @@ public class LabTest {
     @JoinColumn(name = "test_type_id")
     private TestType testType;
 
-    @OneToMany(mappedBy = "labTest")
-    private Set<LabTestAppointment> labTestAppointments = new HashSet<>();
+    /*@OneToMany(mappedBy = "labTest")
+    private Set<LabTestAppointment> labTestAppointments = new HashSet<>();*/
 
 }

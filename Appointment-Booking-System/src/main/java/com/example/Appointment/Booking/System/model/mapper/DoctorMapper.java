@@ -10,10 +10,10 @@ public class DoctorMapper {
 
     public DoctorDto mapToDto(Doctor doctor){
         DoctorDto doctorDto = new DoctorDto();
+        doctorDto.setId(doctor.getId());
         doctorDto.setName(doctor.getName());
         doctorDto.setPhone(doctor.getPhone());
         doctorDto.setEmail(doctor.getEmail());
-        doctorDto.setPassword(doctor.getPassword());
         doctorDto.setGender(doctor.getGender());
         doctorDto.setAddress(doctor.getAddress());
         doctorDto.setSpecialization(doctor.getSpecialization());
@@ -30,7 +30,6 @@ public class DoctorMapper {
         doctor.setName(doctorDto.getName());
         doctor.setPhone(doctorDto.getPhone());
         doctor.setEmail(doctorDto.getEmail());
-        doctor.setPassword(doctorDto.getPassword());
         doctor.setGender(doctorDto.getGender());
         doctor.setAddress(doctorDto.getAddress());
         doctor.setSpecialization(doctorDto.getSpecialization());

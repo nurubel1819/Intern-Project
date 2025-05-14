@@ -33,13 +33,14 @@ public class LabTestAppointmentMapper {
             LabTest labTest = labTestService.getLabTestByName(dto.getTestName());
             labTestAppointment.setLabTest(labTest);
             System.out.println("labTest = "+labTest);
-            Set<Lab> labs = labTest.getLabs();
+            /*Set<Lab> labs = labTest.getLabs();
             System.out.println("labs = "+labs);
             List<String> labName = new ArrayList<>();
             for(Lab lab : labs) labName.add(lab.getLabName());//this list show in frontend
-            System.out.println("labName = "+labName);
+            System.out.println("labName = "+labName);*/
             labTestAppointment.setLabName(dto.getLabName()); // selected lab set this lab name
             MUser user = userService.getUserByPhone(dto.getUserPhone());
+
             labTestAppointment.setUser(user);
         }catch (Exception e){
             System.out.println("Exception in LabTest Appointment Mapper error = "+e.getMessage());

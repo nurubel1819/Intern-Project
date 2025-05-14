@@ -1,110 +1,82 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <title>Doctor Appointment</title>
     <style>
-        body {
-            font-family: Arial, sans-serif;
-            background: #f8f9fc;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-        }
-
-        .card {
-            background: white;
-            border-radius: 12px;
-            padding: 30px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            width: 400px;
-            text-align: center;
-        }
-
-        .card img {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-bottom: 10px;
-        }
-
-        .card h2 {
-            margin: 5px 0;
-        }
-
-        .card p {
-            margin: 2px 0;
-            color: #666;
-        }
-
-        .card a {
-            color: #4e73df;
-            text-decoration: none;
-            font-size: 14px;
-        }
-
-        .form-group {
-            margin: 15px 0;
-            text-align: left;
-        }
-
-        input, textarea {
+        /* Modal container */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed;
+            z-index: 1;
+            left: 0;
+            top: 0;
             width: 100%;
-            padding: 10px;
-            border: 1px solid #ddd;
-            border-radius: 6px;
-            margin-top: 5px;
-            font-size: 14px;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4); /* Black with opacity */
         }
 
-        .btns {
-            display: flex;
-            justify-content: space-between;
-            margin-top: 20px;
+        /* Modal content */
+        .modal-content {
+            background-color: #fff;
+            margin: 10% auto;
+            padding: 20px;
+            border-radius: 8px;
+            width: 400px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
         }
 
-        button {
-            padding: 10px 20px;
-            border: none;
-            border-radius: 6px;
+        /* Close button */
+        .close {
+            float: right;
+            font-size: 24px;
             font-weight: bold;
             cursor: pointer;
         }
 
-        .btn-cancel {
-            background: #f0f0f0;
-            color: #333;
+        .btn {
+            padding: 10px 20px;
+            background: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
         }
 
-        .btn-confirm {
-            background: #4e73df;
-            color: white;
-        }
     </style>
 </head>
 <body>
-<div class="card">
-    <img th:src="@{/images/doctor_image.jpg}" alt="Logo" class="logo"/>
-    <h2>Dr. Mahmudul Hasan</h2>
-    <p>MBBS (DU), FCPS (Medicine)</p>
-    <a href="#">Internal Medicine</a>
 
-    <form th:action="@{/test/user_dashboard}" method="post" th:object="${confirm}">
-        <div class="form-group">
-            <label for="date">Appointment Date</label>
-            <input th:field="*{date}" type="date" name="date" id="date" required/>
-        </div>
-        <div class="form-group">
-            <label for="note">Note</label>
-            <textarea th:field="*{note}" name="note" id="note" rows="3" placeholder="Write here..."></textarea>
-        </div>
-        <div class="btns">
-            <button type="button" onclick="window.history.back()" class="btn-cancel">Cancel</button>
-            <button type="submit" class="btn-confirm">Confirm</button>
-        </div>
-    </form>
+<!-- Trigger/Open Button -->
+<button class="btn" onclick="openModal()">Open Modal</button>
+
+<!-- The Modal -->
+<div id="myModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeModal()">&times;</span>
+        <h2>Modal Title</h2>
+        <p>This is a modal body content.</p>
+        <button class="btn" onclick="closeModal()">Close</button>
+    </div>
 </div>
+
+<!-- Script to open/close modal -->
+<script>
+    function openModal() {
+        document.getElementById("myModal").style.display = "block";
+    }
+
+    function closeModal() {
+        document.getElementById("myModal").style.display = "none";
+    }
+
+    // Close modal on outside click
+    window.onclick = function(event) {
+        const modal = document.getElementById("myModal");
+        if (event.target === modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+
 </body>
 </html>

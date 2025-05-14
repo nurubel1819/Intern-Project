@@ -101,7 +101,7 @@ public class UserController {
             return ResponseEntity.ok("Appointment booked successfully");
         }catch (Exception e){
             System.out.println("Exception lab test appointment book save = "+e.getMessage());
-            return ResponseEntity.badRequest().body("Appointment booked unsuccessfully");
+            return ResponseEntity.badRequest().body("Lab test appointment not booked");
         }
     }
     //for testing

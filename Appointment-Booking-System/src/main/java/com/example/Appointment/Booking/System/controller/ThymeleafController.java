@@ -1,11 +1,10 @@
 package com.example.Appointment.Booking.System.controller;
 
-import com.example.Appointment.Booking.System.model.dto.JwtAuthenticationResponseDto;
-import com.example.Appointment.Booking.System.model.dto.LoginRequestDto;
-import com.example.Appointment.Booking.System.model.dto.MUserDto;
-import com.example.Appointment.Booking.System.model.dto.SignInRequestDto;
+import com.example.Appointment.Booking.System.model.dto.*;
+import com.example.Appointment.Booking.System.model.entity.Lab;
 import com.example.Appointment.Booking.System.model.entity.MUser;
 import com.example.Appointment.Booking.System.model.entity.UserRole;
+import com.example.Appointment.Booking.System.model.mapper.LabTestMapper;
 import com.example.Appointment.Booking.System.model.mapper.MUserMapper;
 import com.example.Appointment.Booking.System.repository.RoleRepository;
 import com.example.Appointment.Booking.System.service.*;
@@ -19,6 +18,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -34,6 +34,10 @@ public class ThymeleafController {
     private final DoctorAppointmentService doctorAppointmentService;
     private final AuthenticationService authenticationService;
     private final RoleRepository roleRepository;
+    private final LabTestMapper labTestMapper;
+    private final LabService labService;
+    private final TestTypeService testTypeService;
+    private final LabTestAppointmentService labTestAppointmentService;
 
     @GetMapping("/")
     public String homePage() {
@@ -91,7 +95,7 @@ public class ThymeleafController {
 
         // Authenticate
         JwtAuthenticationResponseDto status = authenticationService.signIn(signInRequestDto);
-        if(status.getToken()!=null) return "redirect:/user_dashboard";
+        if(status.getToken()!=null) return "redirect:/lab-test-dashboard";
         model.addAttribute("login_request", signInRequestDto);
         model.addAttribute("errorMessage", "Invalid phone number or password");
         return "login";
@@ -101,6 +105,40 @@ public class ThymeleafController {
         model.addAttribute("doctors",doctorService.getAllDoctors());
         model.addAttribute("allTest",labTestService.getAllLabTest());
         model.addAttribute("appointmentHistory",doctorAppointmentService.getHistory(1L));
+        model.addAttribute("TestAppointmentHistory",labTestAppointmentService.getOneUserHistory(1L));
         return "DashBoard";
+    }
+    @GetMapping("/upload_new_test")    //-------------------------Upload New Test--------------------------
+    public String uploadNewTest(Model model){
+        model.addAttribute("labTestDto", new LabTestDto());
+
+        // load lab details
+        List<Lab> labList = labService.getAllLabs();
+        model.addAttribute("labList", labList);
+
+        List<String> testTypeList = testTypeService.getAllTestTypesName();
+        model.addAttribute("testTypeList", testTypeList);
+        return "TestUpload";
+    }
+    @PostMapping("/upload_new_test")
+    public String saveLabTest(@ModelAttribute LabTestDto labTestDto) {
+        try {
+            labTestService.uploadLabTest(labTestMapper.mapToEntity(labTestDto));
+        }catch (Exception e){
+            System.out.println("Exception in save lab test = "+e.getMessage());
+        }
+        return "redirect:/"; // success indication
+    }
+    @GetMapping("/lab-test-dashboard")     //-------------------------Lab Test Dashboard ------------------------
+    public String labTestDashboard(Model model){
+        model.addAttribute("allTest",labTestService.getAllLabTest());
+        model.addAttribute("TestAppointmentHistory",labTestAppointmentService.getOneUserHistory(1L));
+        return "LabTestDashBoard";
+    }
+    @GetMapping("/doctor-dashboard")     //-------------------------Doctor Dashboard ------------------------
+    public String doctorDashboard(Model model){
+        model.addAttribute("doctors",doctorService.getAllDoctors());
+        model.addAttribute("appointmentHistory",doctorAppointmentService.getHistory(1L));
+        return "DoctorDashBoard";
     }
 }

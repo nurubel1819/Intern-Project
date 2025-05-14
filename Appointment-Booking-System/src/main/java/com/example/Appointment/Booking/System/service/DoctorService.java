@@ -2,6 +2,8 @@ package com.example.Appointment.Booking.System.service;
 
 import com.example.Appointment.Booking.System.model.entity.CountAppointment;
 import com.example.Appointment.Booking.System.model.entity.Doctor;
+import com.example.Appointment.Booking.System.model.entity.MUser;
+import com.example.Appointment.Booking.System.model.entity.UserRole;
 import com.example.Appointment.Booking.System.repository.CountAppointmentRepository;
 import com.example.Appointment.Booking.System.repository.DoctorRepository;
 import lombok.RequiredArgsConstructor;
@@ -15,12 +17,29 @@ public class DoctorService {
 
     private final DoctorRepository doctorRepository;
     private final CountAppointmentRepository countAppointmentRepository;
+    private final UserService userService;
+    private final RoleService roleService;
 
 
     public Doctor uploadDoctor(Doctor doctor){
 
         try {
-            return doctorRepository.save(doctor);
+            Doctor saveDoctor = doctorRepository.save(doctor);
+            MUser user = userService.getUserByPhone(doctor.getPhone());
+            UserRole role = roleService.findRoleByName("DOCTOR");
+            if(role==null){
+                roleService.addNewRole("DOCTOR");
+                role = roleService.findRoleByName("DOCTOR");
+            }
+            roleService.setUserRole(user.getId(),role.getId());
+            return saveDoctor;
+        }catch (Exception e){
+            return null;
+        }
+    }
+    public Doctor getByPhonNumber(String phonNumber){
+        try {
+            return doctorRepository.findByPhone(phonNumber);
         }catch (Exception e){
             return null;
         }

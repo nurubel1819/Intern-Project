@@ -30,7 +30,11 @@ public class UserService {
         return userRepository.findById(id).get();
     }
     public MUser getUserByPhone(String phone){
-        return userRepository.findByPhonNumber(phone).orElse(null);
+        try {
+            return userRepository.findByPhonNumber(phone).get();
+        }catch (Exception e){
+            return null;
+        }
     }
     // book
     public String bookDoctor(Long doctorId, Long patientId){

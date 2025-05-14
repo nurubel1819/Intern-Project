@@ -20,8 +20,6 @@ public class Doctor {
     @Column(unique = true)
     private String email;
     @Column(nullable = false)
-    private String password;
-    @Column(nullable = false)
     private String gender;
     private String address;
     @Column(nullable = false)

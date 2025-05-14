@@ -5,6 +5,8 @@ import com.example.Appointment.Booking.System.repository.LabTestAppointmentRepos
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class LabTestAppointmentService {
@@ -18,5 +20,8 @@ public class LabTestAppointmentService {
             System.out.println("Exception lab test appointment book save = "+e.getMessage());
             return null;
         }
+    }
+    public List<LabTestAppointment> getOneUserHistory(Long userId){
+        return labTestAppointmentRepository.findByUserId(userId);
     }
 }

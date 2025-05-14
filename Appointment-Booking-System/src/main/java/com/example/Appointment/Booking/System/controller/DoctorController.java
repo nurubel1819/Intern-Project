@@ -4,14 +4,18 @@ import com.example.Appointment.Booking.System.model.dto.DoctorAvailabilityDto;
 import com.example.Appointment.Booking.System.model.dto.DoctorDto;
 import com.example.Appointment.Booking.System.model.entity.CountAppointment;
 import com.example.Appointment.Booking.System.model.entity.Doctor;
+import com.example.Appointment.Booking.System.model.entity.MUser;
 import com.example.Appointment.Booking.System.model.mapper.DoctorMapper;
 import com.example.Appointment.Booking.System.repository.CountAppointmentRepository;
 import com.example.Appointment.Booking.System.service.DoctorService;
+import com.example.Appointment.Booking.System.service.UserService;
 import com.example.Appointment.Booking.System.validation.ImportantValidation;
 import io.swagger.v3.oas.annotations.security.SecurityRequirement;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.Map;
 
 @RestController
 @RequestMapping("/doctors")
@@ -22,25 +26,35 @@ public class DoctorController {
     private final DoctorService doctorService;
     private final DoctorMapper doctorMapper;
     private final CountAppointmentRepository countAppointmentRepository;
+    private final UserService userService;
 
     @PostMapping("/registration")
-    private ResponseEntity<DoctorDto> registration(DoctorDto doctorDto){
-        if(ImportantValidation.isValidBDPhone(doctorDto.getPhone()))
-        {
-            String phonNumber = doctorDto.getPhone();
-            if(phonNumber.length() > 11) phonNumber = phonNumber.substring(3);
-            doctorDto.setPhone(phonNumber);
+    private ResponseEntity<?> registration(DoctorDto doctorDto){
 
-            Doctor doctor = doctorMapper.mapToEntity(doctorDto);
-            if(doctorDto.getEmail()!=null && ImportantValidation.isValidEmail(doctorDto.getEmail()))
+        if(!ImportantValidation.isValidBDPhone(doctorDto.getPhone()))
+            return ResponseEntity.badRequest().body(Map.of("message","invalid phone number"));
+        else {
+            MUser user = userService.getUserByPhone(doctorDto.getPhone());
+            if(user==null) return ResponseEntity.badRequest().body(Map.of("message","User Registration first then doctor registration"));
+            else
             {
-                return ResponseEntity.ok(doctorMapper.mapToDto(doctorService.uploadDoctor(doctor)));
+                if(doctorService.getByPhonNumber(doctorDto.getPhone())!=null)
+                    return ResponseEntity.badRequest().body(Map.of("message","Phone or email already exists in database"));
+                try {
+                    doctorDto.setName(user.getName());
+                    doctorDto.setEmail(user.getEmail());
+                    doctorDto.setGender(user.getGender());
+                    doctorDto.setDateOfBirth(user.getDateOfBirth());
+                    Doctor doctor = doctorMapper.mapToEntity(doctorDto);
+                    Doctor saveDoctor = doctorService.uploadDoctor(doctor);
+
+                    return ResponseEntity.ok(doctorMapper.mapToDto(saveDoctor));
+                }catch (Exception e){
+                    System.out.println("Exception = "+e.getMessage());
+                    return ResponseEntity.badRequest().body(Map.of("message","Save error from doctor controller"));
+                }
             }
-            else if(doctorDto.getEmail()==null)
-                return ResponseEntity.ok(doctorMapper.mapToDto(doctorService.uploadDoctor(doctor)));
-            else return ResponseEntity.badRequest().body(null);
         }
-        else return ResponseEntity.badRequest().body(null);
     }
 
     @PostMapping("/set_appointment_number/doctor_id={id}")

@@ -62,7 +62,7 @@
 <body>
 <div class="form-container">
     <h2>Lab Test Entry Form</h2>
-    <form th:action="@{/test/lab-tests/save}" method="post" th:object="${labTestDto}">
+    <form th:action="@{/upload_new_test}" method="post" th:object="${labTestDto}">
 
         <label for="testName">Test Name:</label>
         <input type="text" id="testName" th:field="*{testName}" placeholder="Enter test name" required>
