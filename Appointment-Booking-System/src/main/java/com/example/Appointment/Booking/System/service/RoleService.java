@@ -47,7 +47,11 @@ public class RoleService {
 
     public UserRole findRoleByName(String roleName)
     {
-        return roleRepository.findByRole(roleName);
+        try {
+            return roleRepository.findByRole(roleName);
+        }catch (Exception e){
+            return null;
+        }
     }
     public String deleteRole(String roleName)
     {

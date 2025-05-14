@@ -16,9 +16,11 @@ public class UserService {
     private final CountAppointmentRepository countAppointmentRepository;
     private final DoctorAppointmentService doctorAppointmentService;
 
-    public MUser saveNewUser(MUser MUser){
+    public MUser saveNewUser(MUser user){
+        if(userRepository.findByPhonNumber(user.getPhonNumber()).isPresent()
+        || userRepository.findByEmail(user.getEmail()).isPresent()) return null;
         try {
-            return userRepository.save(MUser);
+            return userRepository.save(user);
         }catch (Exception e){
             System.out.println("save user Error : "+e.getMessage());
             return null;

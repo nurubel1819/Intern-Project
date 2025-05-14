@@ -76,54 +76,6 @@ public class ThymeleafController {
                 return "registration";
             }
         }
-
-        /*if(ImportantValidation.isValidBDPhone(userDto.getPhonNumber()))
-        {
-            System.out.println( "User phone = "+userDto.getPhonNumber());
-            if(!userDto.getPassword().equals(userDto.getConfirmPassword()))
-                return "registration.html?error=password and confirm password not match";
-            // remove +88 from BD phone number
-            String phonNumber = userDto.getPhonNumber();
-            if(phonNumber.length() > 11) phonNumber = phonNumber.substring(3);
-            userDto.setPhonNumber(phonNumber);
-
-            MUser user = userMapper.mapToEntity(userDto);
-            System.out.println("user = "+user);
-            if(userDto.getEmail() != null && ImportantValidation.isValidEmail(userDto.getEmail()))
-            {
-
-                UserRole userRole = roleRepository.findByRole("USER");
-                if(userRole==null)
-                {
-                    userRole = new UserRole();
-                    userRole.setRole("USER");
-                }
-                Set<MUser> users = userRole.getUsers();
-                users.add(user);
-                userRole.setUsers(users);
-
-                user.setUserRoles(Set.of(userRole));
-
-                try {
-                    authenticationService.sinUp(user);
-                    return "/user_dashboard";
-                }catch (Exception e){
-                    System.out.println("Exception = "+e.getMessage());
-                    return "registration";
-                }
-            }
-            else if(userDto.getEmail() == null){
-                try {
-                    authenticationService.sinUp(user);
-                    return "/user_dashboard";
-                }catch (Exception e){
-                    System.out.println("Exception = "+e.getMessage());
-                    return "registration";
-                }
-            }
-            else return "registration";
-        }
-        else return "registration";*/
     }
     @GetMapping("/login")         //-------------------------Login-------------------
     public String loginPage(Model model){

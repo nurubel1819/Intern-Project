@@ -19,5 +19,4 @@ public class MUserDto {
     private String email;
     private String gender;
     private LocalDate dateOfBirth;
-    private Set<String> roles;
 }

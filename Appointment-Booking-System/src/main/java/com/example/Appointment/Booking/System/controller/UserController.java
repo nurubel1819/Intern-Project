@@ -107,11 +107,15 @@ public class UserController {
     //for testing
     @GetMapping("/get_user_role={id}")
     private ResponseEntity<Set<String>> getUserRole(@PathVariable("id") Long id){
-        MUser user = userService.getUserById(id);
-        Set<String> roles = new HashSet<>();
-        for (UserRole userRole : user.getUserRoles()) {
-            roles.add(userRole.getRole());
+        try {
+            MUser user = userService.getUserById(id);
+            Set<String> roles = new HashSet<>();
+            for (UserRole userRole : user.getUserRoles()) {
+                roles.add(userRole.getRole());
+            }
+            return ResponseEntity.ok(roles);
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(Set.of("User not found"));
         }
-        return ResponseEntity.ok(roles);
     }
 }

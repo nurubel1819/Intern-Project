@@ -18,16 +18,9 @@ public class MUserMapper {
         userDto.setId(user.getId());
         userDto.setName(user.getName());
         userDto.setPhonNumber(user.getPhonNumber());
-        //userDto.setPassword(user.getPassword());
         userDto.setEmail(user.getEmail());
         userDto.setGender(user.getGender());
         userDto.setDateOfBirth(user.getDateOfBirth());
-
-        Set<String> roles = new HashSet<>();
-        for (UserRole userRole : user.getUserRoles()) {
-            roles.add(userRole.getRole());
-        }
-        userDto.setRoles(roles);
         return userDto;
     }
 
@@ -39,13 +32,6 @@ public class MUserMapper {
         user.setEmail(MUserDto.getEmail());
         user.setGender(MUserDto.getGender());
         user.setDateOfBirth(MUserDto.getDateOfBirth());
-
-        /*UserRole userRole = new UserRole();
-        userRole.setRole("USER");
-        userRole.setUsers(Set.of(user));
-
-        user.setUserRoles(Set.of(userRole));*/
-
         return user;
     }
 }
