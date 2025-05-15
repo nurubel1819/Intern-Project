@@ -36,6 +36,10 @@ public class SecurityConfiguration {
 
     public static final String[] PUBLIC_URLS = {
             "/",
+            "/LabTestAppointmentForm",
+            "/lab-test-appointment-book/**",
+            "/doctor_appointment_form",
+            "/doctor-appointment-book/**",
             "/lab-test-dashboard",
             "/doctor-dashboard",
             "/upload_new_test",

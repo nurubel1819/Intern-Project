@@ -23,7 +23,7 @@ public class Lab {
     private String address;
     private double rating;
 
-    @ManyToMany
+    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     @JoinTable(
             name = "lab_test_map",
             joinColumns = @JoinColumn(name = "lab_id"),

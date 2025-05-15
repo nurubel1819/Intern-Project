@@ -58,9 +58,17 @@ public class DoctorService {
     }
 
     public String setAppointment(Long doctorId, int totalAppointment){
+        if(totalAppointment < 0 || totalAppointment>50) return "appointment number must be between 1 and 50";
         CountAppointment countAppointment = countAppointmentRepository.findByDoctorId(doctorId);
         if(countAppointment != null){
-            return "You already set";
+
+            countAppointment.setTotalPatient(totalAppointment+countAppointment.getTotalPatient());
+            try {
+                countAppointmentRepository.save(countAppointment);
+                return "Successfully set appointment to doctor";
+            }catch (Exception e){
+                return "Not set error = "+e.getMessage();
+            }
         }
         else {
             CountAppointment status = new CountAppointment();

@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -17,9 +18,9 @@ public class LabTestAppointment {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column(nullable = false)
-    private LocalDateTime bookingDate;
+    private LocalDate bookingDate;
     @Column(nullable = false)
-    private LocalDateTime appointmentDate;
+    private LocalDate appointmentDate;
     private String note;
     private String labName;
 

@@ -57,24 +57,6 @@ public class DoctorController {
         }
     }
 
-    @PostMapping("/set_appointment_number/doctor_id={id}")
-    private ResponseEntity<String> setAppointmentNumber(@PathVariable("id") Long id){
-        Doctor doctor = doctorService.findDoctorById(id);
-        if(doctor==null) return ResponseEntity.ok("doctor not found");
-        else
-        {
-            CountAppointment countAppointment = new CountAppointment();
-            countAppointment.setDoctorId(doctor.getId());
-            countAppointment.setTotalPatient(10);
-            try {
-                countAppointmentRepository.save(countAppointment);
-                return ResponseEntity.ok("set appointment number successfully");
-            }catch (Exception e){
-                return ResponseEntity.ok("set appointment number failed");
-            }
-        }
-    }
-
     @PostMapping("/set_appointment_status")
     private ResponseEntity<String> setAppointmentStatus(@RequestBody DoctorAvailabilityDto dto){
         return ResponseEntity.ok(doctorService.setAppointment(dto.getDoctorId(),dto.getTotalPossibilityPatient()));
