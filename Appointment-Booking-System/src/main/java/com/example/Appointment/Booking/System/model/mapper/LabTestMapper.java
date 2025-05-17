@@ -18,48 +18,21 @@ import java.util.Set;
 @RequiredArgsConstructor
 public class LabTestMapper {
 
-    private final LabService labService;
     private final LabTestService labTestService;
     private final TestTypeService testTypeService;
-    private final TestTypeRepository testTypeRepository;
 
     public LabTest mapToEntity(LabTestDto dto)
     {
-
-        try {
-
-            if(labTestService.getLabTestByName(dto.getTestName()) != null)
-            {
-                LabTest test = labTestService.getLabTestByName(dto.getTestName());
-                Set<Lab> labs = test.getLabs();
-                labs.add(labService.getLabDetails(dto.getLabName()));
-                test.setLabs(labs);
-                System.out.println("labTest = "+test);
-                return test;
-            }
-            else
-            {
-                LabTest labTest = new LabTest();
-                labTest.setTestName(dto.getTestName());
-                labTest.setPrice(dto.getPrice());
-                labTest.setDescription(dto.getDescription());
-
-                Lab lab = labService.getLabDetails(dto.getLabName());
-                Set<Lab> labs = Set.of(lab);
-                labTest.setLabs(labs);
-
-                TestType testType = testTypeService.getTestTypeByName(dto.getTestType());
-                labTest.setTestType(testType);
-                labTest.setDurationInHours(Duration.ofHours(dto.getDurationInHours()));
-                System.out.println("labTest = "+labTest);
-                return labTest;
-            }
-        }catch (Exception e)
-        {
-            System.out.println("Exception in LabTest Mapper error = "+e.getMessage());
-            //return null;
-        }
-
-        return null;
+        LabTest labTest;
+        if(labTestService.getLabTestByName(dto.getTestName()) != null)
+            labTest = labTestService.getLabTestByName(dto.getTestName());
+        else labTest = new LabTest();
+        labTest.setTestName(dto.getTestName());
+        labTest.setPrice(dto.getPrice());
+        labTest.setDescription(dto.getDescription());
+        labTest.setDurationInHours(Duration.ofHours(dto.getDurationInHours()));
+        TestType testType = testTypeService.getTestTypeByName(dto.getTestType());
+        labTest.setTestType(testType);
+        return labTest;
     }
 }

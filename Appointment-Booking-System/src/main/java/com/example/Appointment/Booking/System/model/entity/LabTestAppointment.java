@@ -20,7 +20,7 @@ public class LabTestAppointment {
     @Column(nullable = false)
     private LocalDate bookingDate;
     @Column(nullable = false)
-    private LocalDate appointmentDate;
+    private LocalDate deliveryDate;
     private String note;
     private String labName;
 

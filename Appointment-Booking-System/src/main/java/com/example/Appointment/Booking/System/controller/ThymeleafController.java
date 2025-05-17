@@ -2,6 +2,7 @@ package com.example.Appointment.Booking.System.controller;
 
 import com.example.Appointment.Booking.System.model.dto.*;
 import com.example.Appointment.Booking.System.model.entity.*;
+import com.example.Appointment.Booking.System.model.mapper.DoctorMapper;
 import com.example.Appointment.Booking.System.model.mapper.LabTestAppointmentMapper;
 import com.example.Appointment.Booking.System.model.mapper.LabTestMapper;
 import com.example.Appointment.Booking.System.model.mapper.MUserMapper;
@@ -10,12 +11,14 @@ import com.example.Appointment.Booking.System.repository.RoleRepository;
 import com.example.Appointment.Booking.System.service.*;
 import com.example.Appointment.Booking.System.validation.ImportantValidation;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 @Controller
@@ -36,6 +39,7 @@ public class ThymeleafController {
     private final LabTestAppointmentService labTestAppointmentService;
     private final CountAppointmentRepository countAppointmentRepository;
     private final LabTestAppointmentMapper labTestAppointmentMapper;
+    private final DoctorMapper doctorMapper;
 
     @GetMapping("/")
     public String homePage() {
@@ -112,12 +116,27 @@ public class ThymeleafController {
     }
     @PostMapping("/upload_new_test")
     public String saveLabTest(@ModelAttribute LabTestDto labTestDto) {
+
         try {
-            labTestService.uploadLabTest(labTestMapper.mapToEntity(labTestDto));
+            Lab lab = labService.getLabDetails(labTestDto.getLabName());
+            if(testTypeService.getTestTypeByName(labTestDto.getTestType()) == null){
+                return "redirect:/upload_new_test?message=test type not found";
+            }
+            if (lab == null) {
+                return "redirect:/upload_new_test?message=lab not found";
+            }
+
+            LabTest labTest = labTestMapper.mapToEntity(labTestDto);
+            labTest.getLabs().add(lab);
+
+            lab.getLabTests().add(labTest);
+            System.out.println("labTest = "+labTest);
+            labService.uploadLabDetails(lab);
+            return "redirect:/?message=upload successful";
         }catch (Exception e){
-            System.out.println("Exception in save lab test = "+e.getMessage());
+            System.out.println("Exception = "+e.getMessage());
+            return "redirect:/upload_new_test?message=upload unsuccessful";
         }
-        return "redirect:/"; // success indication
     }
     @GetMapping("/lab-test-dashboard")     //-------------------------Lab Test Dashboard ------------------------
     public String labTestDashboard(Model model){
@@ -134,7 +153,7 @@ public class ThymeleafController {
             DoctorAvailableStatusDto doctorAvailableStatusDto = new DoctorAvailableStatusDto();
             doctorAvailableStatusDto.setId(doctor.getId());
             doctorAvailableStatusDto.setName(doctor.getName());
-            doctorAvailableStatusDto.setQualification(doctor.getSpecialization());
+            doctorAvailableStatusDto.setQualification(doctor.getQualification());
             doctorAvailableStatusDto.setSpecialization(doctor.getSpecialization());
 
             //add status
@@ -190,7 +209,7 @@ public class ThymeleafController {
         dto.setTestName(labTest.getTestName());
 
         // load lab details
-        List<Lab> labList = labService.getAllLabs();
+        Set<Lab> labList = labTest.getLabs();
         model.addAttribute("labList", labList);
 
         model.addAttribute("labTestAppointmentDto", dto);
@@ -198,16 +217,50 @@ public class ThymeleafController {
     }
     @PostMapping("/lab-test-appointment-book/confirm")
     public String confirmLabTestAppointment(@ModelAttribute LabTestAppointmentDto dto) {
-        Long patientId = userService.getUserByPhone(dto.getUserPhone()).getId();
+        MUser user = userService.getUserByPhone(dto.getUserPhone());
+        Long patientId;
+        if(user!=null) patientId = user.getId();
+        else return "redirect:/lab-test-appointment-book?message=Tish phone not found";
         LabTest labTest = labTestService.getLabTestById(dto.getId());
         dto.setTestName(labTest.getTestName());
         System.out.println("patientId = "+patientId+" labTestId = "+dto.getId());
         try {
-            labTestAppointmentService.bookNewAppointment(labTestAppointmentMapper.mapToEntity(dto));
-            return "redirect:/lab-test-dashboard";
+            LabTestAppointment labTestAppointment = labTestAppointmentMapper.mapToEntity(dto);
+            if(labTestAppointment!=null)
+            {
+                labTestAppointmentService.bookNewAppointment(labTestAppointment);
+                return "redirect:/lab-test-dashboard";
+            }
+            else return "redirect:/lab-test-appointment-book?message=upload unsuccessful";
         }catch (Exception e){
             System.out.println("Exception confirm lab test appointment post mathod = "+e.getMessage());
             return "redirect:/lab-test-dashboard";
+        }
+    }
+    @GetMapping("/doctor-registration")
+    public String showDoctorRegistrationForm(Model model) {
+        model.addAttribute("doctor", new DoctorDto());
+        return "DoctorRegistration";
+    }
+    @PostMapping("/doctor-registration")
+    public String registerDoctor(@ModelAttribute("MUser") DoctorDto doctorDto,Model model) {
+        if(!ImportantValidation.isValidBDPhone(doctorDto.getPhone())) return "DoctorRegistration";
+        MUser user;
+        if(userService.getUserByPhone(doctorDto.getPhone())==null) return "DoctorRegistration";
+        user = userService.getUserByPhone(doctorDto.getPhone());
+        if(doctorService.getByPhonNumber(doctorDto.getPhone())!=null) return "DoctorRegistration";
+        try {
+            doctorDto.setName(user.getName());
+            doctorDto.setEmail(user.getEmail());
+            doctorDto.setGender(user.getGender());
+            doctorDto.setDateOfBirth(user.getDateOfBirth());
+            Doctor doctor = doctorMapper.mapToEntity(doctorDto);
+            Doctor saveDoctor = doctorService.uploadDoctor(doctor);
+
+            return "redirect:/?message=Doctor registration successful";
+        }catch (Exception e){
+            System.out.println("Exception = "+e.getMessage());
+            return "DoctorRegistration";
         }
     }
 

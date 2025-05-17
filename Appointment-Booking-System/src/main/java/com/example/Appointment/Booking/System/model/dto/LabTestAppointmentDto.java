@@ -14,8 +14,8 @@ public class LabTestAppointmentDto {
     private List<String> labNames;
     private String testName;
     private String userPhone;
-    private LocalDate bookingDate; //LocalDateTime
-    private LocalDate  appointmentDate;
+    private LocalDate bookingDate;
+    private LocalDate deliveryDate;
     private String note;
 
 }

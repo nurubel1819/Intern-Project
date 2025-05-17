@@ -135,8 +135,8 @@
         <div class="doctor-card" th:each="test : ${allTest}">
             <img th:src="@{/image/lab_test_image.png}" alt="Doctor" width="180">
             <h3 th:text="${test.testName}"></h3>
-            <p th:text="${test.testType.name}"></p>
-            <p th:text="${test.price}"></p>
+            <p th:text="${'Type = '+test.testType.name}"></p>
+            <p th:text="${'Price = '+test.price+' tk'}"></p>
             <button class="btn" th:onclick="|window.location.href='/lab-test-appointment-book/${test.id}'|">Book Appointment</button>
         </div>
     </div>
@@ -157,7 +157,7 @@
             <tr th:each="history : ${TestAppointmentHistory}">
                 <td th:text="${history.id}"></td>
                 <td th:text="${history.getBookingDate()}"></td>
-                <td th:text="${history.getAppointmentDate()}"></td>
+                <td th:text="${history.getDeliveryDate()}"></td>
                 <td th:text="${history.getLabTest().testName}"></td>
                 <td th:text="${history.getLabName()}"></td>
             </tr>

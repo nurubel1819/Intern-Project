@@ -1,24 +1,23 @@
 package com.example.Appointment.Booking.System.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.time.Duration;
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Data
 @Table(name = "lab_test")
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class LabTest {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String testName;
     @Column(nullable = false)
     private String price;

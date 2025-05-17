@@ -21,14 +21,15 @@ public class LabTestAppointmentMapper {
     public LabTestAppointment mapToEntity(LabTestAppointmentDto dto)
     {
         LabTestAppointment labTestAppointment = new LabTestAppointment();
-        labTestAppointment.setAppointmentDate(dto.getAppointmentDate());
-        labTestAppointment.setBookingDate(LocalDate.now());
+        labTestAppointment.setBookingDate(dto.getBookingDate());
         labTestAppointment.setNote(dto.getNote());
 
         try {
             LabTest labTest = labTestService.getLabTestByName(dto.getTestName());
             labTestAppointment.setLabTest(labTest);
-            System.out.println("labTest = "+labTest);
+            var testDuration = labTest.getDurationInHours().toDays();
+            labTestAppointment.setDeliveryDate(dto.getBookingDate().plusDays(testDuration));
+
             labTestAppointment.setLabName(dto.getLabName()); // selected lab set this lab name
             MUser user = userService.getUserByPhone(dto.getUserPhone());
             labTestAppointment.setUser(user);

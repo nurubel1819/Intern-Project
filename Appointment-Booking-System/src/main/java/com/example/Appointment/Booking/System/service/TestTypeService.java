@@ -34,7 +34,11 @@ public class TestTypeService {
     }
 
     public TestType getTestTypeByName(String testTypeName){
-        return testTypeRepository.findByName(testTypeName);
+        try {
+            return testTypeRepository.findByName(testTypeName);
+        }catch (Exception e){
+            return null;
+        }
     }
 
     public List<TestType> getTestTypeByNameLike(String testTypeName){

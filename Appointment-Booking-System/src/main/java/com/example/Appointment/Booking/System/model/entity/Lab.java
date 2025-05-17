@@ -1,16 +1,15 @@
 package com.example.Appointment.Booking.System.model.entity;
 
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.util.HashSet;
 import java.util.Set;
 
 @Entity
-@Table(name = "hospital")
-@Data
+@Table(name = "lab")
+@Getter
+@Setter
 @NoArgsConstructor
 @AllArgsConstructor
 public class Lab {
@@ -23,9 +22,9 @@ public class Lab {
     private String address;
     private double rating;
 
-    @ManyToMany(cascade = {CascadeType.DETACH, CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
-            name = "lab_test_map",
+            name = "lab_map_lab_test",
             joinColumns = @JoinColumn(name = "lab_id"),
             inverseJoinColumns = @JoinColumn(name = "test_id")
     )
