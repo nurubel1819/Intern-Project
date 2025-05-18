@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 import java.security.Key;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
@@ -27,11 +28,13 @@ public class JwtUtils {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String generateToken(String username) {
-        return createToken(username);
+    public String generateToken(String username, List<String> roles) {
+        return createToken(username, roles);
     }
-    private String createToken(String username) {
-        Map<String,Object> claims=new HashMap<>();
+
+    private String createToken(String username, List<String> roles) {
+        Map<String,Object> claims = new HashMap<>();
+        claims.put("roles", roles); // ✅ Add roles here
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(username)
@@ -61,7 +64,13 @@ public class JwtUtils {
     private boolean isTokenExpired(String token) {
         return extractClaim(token, Claims::getExpiration).before(new Date());
     }
+
     public Boolean extractActiveStatus(String token) {
         return extractClaim(token, claims -> claims.get("active", Boolean.class));
+    }
+
+    // ✅ This is what you asked for
+    public List<String> extractRoles(String token) {
+        return extractClaim(token, claims -> claims.get("roles", List.class));
     }
 }

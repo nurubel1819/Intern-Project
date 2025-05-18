@@ -125,24 +125,10 @@
 </div>
 <div class="content">
   <div class="header">Welcome back, <span th:text="${username}"></span></div>
-  <p>Book an appointment with our doctors.</p>
 
-  <div class="search-bar">
+<!--  <div class="search-bar">
     <input type="text" placeholder="Search">
-  </div>
-
-  <div class="doctor-container">
-    <div class="doctor-card" th:each="doctor : ${doctors}">
-      <img th:src="@{/image/doctor_image.jpg}" alt="Doctor" width="180">
-      <h3 th:text="${doctor.getName()}"></h3>
-      <p th:text="${'Qulaificatin = '+doctor.getQualification()}"></p>
-      <p th:text="${'Specialization = '+doctor.getSpecialization()}"></p>
-      <p th:text="${doctor.getStatus()}"></p>
-      <p th:text="${'Appointment available = '+doctor.getTotalPossibilityPatient()}"></p>
-      <button class="btn" th:onclick="|window.location.href='/doctor-appointment-book/${doctor.id}'|">Book Appointment</button>
-    </div>
-  </div>
-  <p>Book an appointment with our doctors.</p>
+  </div>-->
 
   <div class="history-table">
     <h2>Doctor Appointment History</h2>
@@ -157,12 +143,35 @@
       </tr>
       </thead>
       <tbody>
-      <tr th:each="history : ${appointmentHistory}">
+      <tr th:each="history : ${DoctorAppointmentHistory}">
         <td th:text="${history.id}"></td>
         <td th:text="${history.getBookingDate()}"></td>
         <td th:text="${history.appointmentDate}"></td>
         <td th:text="${history.getDoctor().specialization}"></td>
         <td th:text="${history.getDoctor().name}"></td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="history-table">
+    <h2>Test Appointment History</h2>
+    <table>
+      <thead>
+      <tr>
+        <th>Appointment ID</th>
+        <th>Order Date</th>
+        <th>Delivery date</th>
+        <th>Test Name</th>
+        <th>Hospital Name</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr th:each="history : ${TestAppointmentHistory}">
+        <td th:text="${history.id}"></td>
+        <td th:text="${history.getBookingDate()}"></td>
+        <td th:text="${history.getDeliveryDate()}"></td>
+        <td th:text="${history.getLabTest().testName}"></td>
+        <td th:text="${history.getLabName()}"></td>
       </tr>
       </tbody>
     </table>

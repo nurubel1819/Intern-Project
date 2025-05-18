@@ -1,10 +1,10 @@
 package com.example.Appointment.Booking.System.jwt;
 
-import com.example.Appointment.Booking.System.exception.UserNotFoundException;
 import com.example.Appointment.Booking.System.model.entity.MUser;
 import com.example.Appointment.Booking.System.repository.UserRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
@@ -30,27 +30,37 @@ public class JwtAuthFilter extends OncePerRequestFilter {
 
     @SneakyThrows
     @Override
-    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
+            throws ServletException, IOException {
 
-        //System.out.println("Inside Filter");
+        System.out.println("Come doFilterInternal");
+        String token = null;
+
+        // Try to get token from Header
         String authHeader = request.getHeader("Authorization");
-        String requestURI = request.getRequestURI();
+        if (authHeader != null && authHeader.startsWith("Bearer ")) {
+            token = authHeader.substring(7);
+        }
 
-        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+        // Or try to get token from Cookie
+        if (token == null && request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("jwt".equals(cookie.getName())) {
+                    token = cookie.getValue();
+                    break;
+                }
+            }
+        }
+
+        if (token == null || token.isBlank()) {
             filterChain.doFilter(request, response);
             return;
         }
 
-        String token = authHeader.substring(7);
         String username = jwtUtils.extractUsername(token);
-
-        if (username != null && SecurityContextHolder.getContext().getAuthentication() == null) {
+        MUser user = userRepo.findByPhonNumber(username).orElse(null);
+        if (user!=null && SecurityContextHolder.getContext().getAuthentication() == null) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(username);
-            Optional<MUser> user = userRepo.findByPhonNumber(username);
-            if(user.isEmpty())
-            {
-                throw new Throwable("User doesn't exit..");
-            }
             if (jwtUtils.validateToken(token, username)) {
                 System.out.println("Inner auth filter");
                 UsernamePasswordAuthenticationToken authToken =
@@ -60,7 +70,7 @@ public class JwtAuthFilter extends OncePerRequestFilter {
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
         }
-        filterChain.doFilter(request, response);
 
+        filterChain.doFilter(request, response);
     }
 }

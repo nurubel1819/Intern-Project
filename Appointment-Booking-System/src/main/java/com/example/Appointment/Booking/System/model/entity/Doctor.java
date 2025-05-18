@@ -31,14 +31,6 @@ public class Doctor {
     private LocalDate dateOfBirth;
     private String image;//optional
 
-    @ManyToMany
-    @JoinTable(
-            name = "doctor_patient",
-            joinColumns = @JoinColumn(name = "doctor_id"),
-            inverseJoinColumns = @JoinColumn(name = "patient_id")
-    )
-    private Set<MUser> users = new HashSet<>();
-
     @OneToMany
     private Set<DoctorAppointment> appointments = new HashSet<>();
 

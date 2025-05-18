@@ -12,6 +12,8 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class AuthenticationService {
@@ -56,7 +58,7 @@ public class AuthenticationService {
                     ));
 
             var user = userRepository.findByPhonNumber(signInRequestDto.getPhone()).orElseThrow(()-> new IllegalArgumentException("Invalid username or password"));
-            var token = jwtUtils.generateToken(user.getPhonNumber());
+            var token = jwtUtils.generateToken(user.getPhonNumber(), List.of(user.getUserRoles().stream().map(UserRole::getRole).toArray(String[]::new)));
             //var refreshToken = jwtService.generateRefreshToken(new HashMap<>(),user);
 
             System.out.println("Token: "+token);

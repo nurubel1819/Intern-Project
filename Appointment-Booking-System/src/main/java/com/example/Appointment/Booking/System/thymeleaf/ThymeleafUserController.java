@@ -1,30 +1,33 @@
-package com.example.Appointment.Booking.System.controller;
+package com.example.Appointment.Booking.System.thymeleaf;
 
+import com.example.Appointment.Booking.System.jwt.JwtUtils;
 import com.example.Appointment.Booking.System.model.dto.*;
 import com.example.Appointment.Booking.System.model.entity.*;
 import com.example.Appointment.Booking.System.model.mapper.DoctorMapper;
 import com.example.Appointment.Booking.System.model.mapper.LabTestAppointmentMapper;
-import com.example.Appointment.Booking.System.model.mapper.LabTestMapper;
 import com.example.Appointment.Booking.System.model.mapper.MUserMapper;
 import com.example.Appointment.Booking.System.repository.CountAppointmentRepository;
 import com.example.Appointment.Booking.System.repository.RoleRepository;
 import com.example.Appointment.Booking.System.service.*;
 import com.example.Appointment.Booking.System.validation.ImportantValidation;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 @Controller
 @RequestMapping("")
 @RequiredArgsConstructor
-public class ThymeleafController {
+public class ThymeleafUserController {
 
     private final UserService userService;
     private final MUserMapper userMapper;
@@ -33,13 +36,23 @@ public class ThymeleafController {
     private final DoctorAppointmentService doctorAppointmentService;
     private final AuthenticationService authenticationService;
     private final RoleRepository roleRepository;
-    private final LabTestMapper labTestMapper;
-    private final LabService labService;
-    private final TestTypeService testTypeService;
     private final LabTestAppointmentService labTestAppointmentService;
     private final CountAppointmentRepository countAppointmentRepository;
     private final LabTestAppointmentMapper labTestAppointmentMapper;
     private final DoctorMapper doctorMapper;
+    private final JwtUtils jwtUtils;
+
+    private String getJwtFromCookies(HttpServletRequest request) {
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("jwt".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
+    }
+
 
     @GetMapping("/")
     public String homePage() {
@@ -75,7 +88,7 @@ public class ThymeleafController {
                 user.setUserRoles(Set.of(userRole));
 
                 authenticationService.sinUp(user);
-                return "redirect:/doctor-dashboard";
+                return "redirect:/?message=Registration successful";
 
             }catch (Exception e){
                 System.out.println("Exception = "+e.getMessage());
@@ -89,64 +102,75 @@ public class ThymeleafController {
         return "Login";
     }
     @PostMapping("/login")
-    public String loginUser(@ModelAttribute("login_request") SignInRequestDto signInRequestDto,Model model){
+    public String loginUser(@ModelAttribute("login_request") SignInRequestDto signInRequestDto,
+                            HttpServletResponse response,
+                            Model model) {
 
-
-        System.out.println("User phone = "+signInRequestDto.getPhone() );
-        System.out.println("User password = "+signInRequestDto.getPassword());
-
-        // Authenticate
         JwtAuthenticationResponseDto status = authenticationService.signIn(signInRequestDto);
-        if(status.getToken()!=null) return "redirect:/doctor-dashboard";
+
+        if (status.getToken() != null) {
+            // Set JWT in HTTP-only cookie
+            ResponseCookie cookie = ResponseCookie.from("jwt", status.getToken())
+                    .httpOnly(true)
+                    .path("/")
+                    .maxAge(24 * 60 * 60)
+                    .build();
+
+            response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+
+            //Extract role from token
+            List<String> roles = jwtUtils.extractRoles(status.getToken());
+
+            //Role-based redirect
+            if (roles.contains("ADMIN")) {
+                return "redirect:/admin/dashboard";
+            } else if (roles.contains("DOCTOR")) {
+                return "redirect:/doctor-dashboard";
+            } else if (roles.contains("USER")) {
+                return "redirect:/lab-test-dashboard";
+            } else {
+                // যদি role না মেলে, fallback
+                return "redirect:/";
+            }
+        }
+
         model.addAttribute("login_request", signInRequestDto);
         model.addAttribute("errorMessage", "Invalid phone number or password");
         return "Login";
     }
-    @GetMapping("/upload_new_test")    //-------------------------Upload New Test--------------------------
-    public String uploadNewTest(Model model){
-        model.addAttribute("labTestDto", new LabTestDto());
 
-        // load lab details
-        List<Lab> labList = labService.getAllLabs();
-        model.addAttribute("labList", labList);
+    @GetMapping("/user-logout")
+    public String logout(HttpServletResponse response) {
+        ResponseCookie cookie = ResponseCookie.from("jwt", "")
+                .httpOnly(true)
+                .path("/")
+                .maxAge(0)
+                .sameSite("Lax")
+                .secure(false)
+                .build();
 
-        List<String> testTypeList = testTypeService.getAllTestTypesName();
-        model.addAttribute("testTypeList", testTypeList);
-        return "LabTestUpload";
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+        return "redirect:/login?logout";
     }
-    @PostMapping("/upload_new_test")
-    public String saveLabTest(@ModelAttribute LabTestDto labTestDto) {
 
+
+    @GetMapping("/lab-test-dashboard")     //-------------------------Lab Test Dashboard ------------------------
+    public String labTestDashboard(Model model,HttpServletRequest request){
+        model.addAttribute("allTest",labTestService.getAllLabTest());
         try {
-            Lab lab = labService.getLabDetails(labTestDto.getLabName());
-            if(testTypeService.getTestTypeByName(labTestDto.getTestType()) == null){
-                return "redirect:/upload_new_test?message=test type not found";
-            }
-            if (lab == null) {
-                return "redirect:/upload_new_test?message=lab not found";
-            }
-
-            LabTest labTest = labTestMapper.mapToEntity(labTestDto);
-            labTest.getLabs().add(lab);
-
-            lab.getLabTests().add(labTest);
-            System.out.println("labTest = "+labTest);
-            labService.uploadLabDetails(lab);
-            return "redirect:/?message=upload successful";
+            String token = getJwtFromCookies(request);
+            String phone = jwtUtils.extractUsername(token);
+            MUser user = userService.getUserByPhone(phone);
+            model.addAttribute("username",user.getName());
+            model.addAttribute("TestAppointmentHistory",labTestAppointmentService.getOneUserHistory(user.getId()));
+            return "LabTestDashBoard";
         }catch (Exception e){
             System.out.println("Exception = "+e.getMessage());
-            return "redirect:/upload_new_test?message=upload unsuccessful";
+            return "redirect:/login";
         }
     }
-    @GetMapping("/lab-test-dashboard")     //-------------------------Lab Test Dashboard ------------------------
-    public String labTestDashboard(Model model){
-        model.addAttribute("allTest",labTestService.getAllLabTest());
-        model.addAttribute("TestAppointmentHistory",labTestAppointmentService.getOneUserHistory(1L));
-        System.out.println("TestAppointmentHistory = "+labTestAppointmentService.getOneUserHistory(1L));
-        return "LabTestDashBoard";
-    }
     @GetMapping("/doctor-dashboard")     //-------------------------Doctor Dashboard ------------------------
-    public String doctorDashboard(Model model){
+    public String doctorDashboard(Model model,HttpServletRequest request){
         List<Doctor> allDoctorList = doctorService.getAllDoctors();
         List<DoctorAvailableStatusDto> allDoctorWithStatus = new ArrayList<>();
         for(Doctor doctor:allDoctorList){
@@ -170,20 +194,43 @@ public class ThymeleafController {
 
         }
         model.addAttribute("doctors",allDoctorWithStatus);
-        model.addAttribute("appointmentHistory",doctorAppointmentService.getHistory(1L));
-        return "DoctorDashBoard";
+        // get cookies
+        try {
+            String token = getJwtFromCookies(request);
+            String phone = jwtUtils.extractUsername(token);
+            MUser user = userService.getUserByPhone(phone);
+            model.addAttribute("username",user.getName());
+            model.addAttribute("appointmentHistory",doctorAppointmentService.getHistory(user.getId()));
+            return "DoctorDashBoard";
+        }catch (Exception e){
+            System.out.println("Exception = "+e.getMessage());
+            return "redirect:/login";
+        }
+
+
     }
     @GetMapping("/doctor-appointment-book/{doctorId}")  //---------------Doctor Appointment confirm ----------------
-    public String showDoctorAppointmentForm(@PathVariable Long doctorId, Model model) {
-        Doctor doctor = doctorService.findDoctorById(doctorId);
-        model.addAttribute("doctor", doctor);
+    public String showDoctorAppointmentForm(@PathVariable Long doctorId, Model model, HttpServletRequest request) {
+        try {
+            //find user from cookies
+            String token = getJwtFromCookies(request);
+            String phone = jwtUtils.extractUsername(token);
+            MUser user = userService.getUserByPhone(phone);
 
-        // create dto and set doctor id
-        DoctorAppointmentConfirmDto dto = new DoctorAppointmentConfirmDto();
-        dto.setDoctorId(doctorId);
+            Doctor doctor = doctorService.findDoctorById(doctorId);
+            model.addAttribute("doctor", doctor);
 
-        model.addAttribute("doctorAppointmentConfirmDto", dto);
-        return "DoctorAppointmentForm";
+            // create dto and set doctor id
+            DoctorAppointmentConfirmDto dto = new DoctorAppointmentConfirmDto();
+            dto.setDoctorId(doctorId);
+            dto.setUserPhone(user.getPhonNumber());
+
+            model.addAttribute("doctorAppointmentConfirmDto", dto);
+            return "DoctorAppointmentForm";
+        }catch (Exception e){
+            System.out.println("Exception = "+e.getMessage());
+            return "redirect:/login";
+        }
     }
 
     @PostMapping("/doctor-appointment-book/confirm")
@@ -200,20 +247,33 @@ public class ThymeleafController {
         }
     }
     @GetMapping("/lab-test-appointment-book/{labTestId}")   //-------------------Lab test appointment confirm-------------
-    public String showLabTestAppointmentForm(@PathVariable Long labTestId, Model model) {
-        LabTest labTest = labTestService.getLabTestById(labTestId);
-        model.addAttribute("labTest", labTest);
+    public String showLabTestAppointmentForm(@PathVariable Long labTestId, Model model, HttpServletRequest request) {
 
-        LabTestAppointmentDto dto = new LabTestAppointmentDto();
-        dto.setId(labTestId);
-        dto.setTestName(labTest.getTestName());
+        try {
+            //find user from cookies
+            String token = getJwtFromCookies(request);
+            String phone = jwtUtils.extractUsername(token);
+            MUser user = userService.getUserByPhone(phone);
 
-        // load lab details
-        Set<Lab> labList = labTest.getLabs();
-        model.addAttribute("labList", labList);
+            LabTest labTest = labTestService.getLabTestById(labTestId);
+            model.addAttribute("labTest", labTest);
 
-        model.addAttribute("labTestAppointmentDto", dto);
-        return "LabTestAppointmentForm";
+            LabTestAppointmentDto dto = new LabTestAppointmentDto();
+            dto.setId(labTestId);
+            dto.setTestName(labTest.getTestName());
+            dto.setUserPhone(user.getPhonNumber());
+
+            // load lab details
+            Set<Lab> labList = labTest.getLabs();
+            model.addAttribute("labList", labList);
+
+            model.addAttribute("labTestAppointmentDto", dto);
+            return "LabTestAppointmentForm";
+        }catch (Exception e){
+            System.out.println("Exception = "+e.getMessage());
+            return "redirect:/login";
+        }
+
     }
     @PostMapping("/lab-test-appointment-book/confirm")
     public String confirmLabTestAppointment(@ModelAttribute LabTestAppointmentDto dto) {
@@ -237,7 +297,7 @@ public class ThymeleafController {
             return "redirect:/lab-test-dashboard";
         }
     }
-    @GetMapping("/doctor-registration")
+    @GetMapping("/doctor-registration")  //-------------------------Doctor Registration-----------------------
     public String showDoctorRegistrationForm(Model model) {
         model.addAttribute("doctor", new DoctorDto());
         return "DoctorRegistration";
@@ -255,12 +315,26 @@ public class ThymeleafController {
             doctorDto.setGender(user.getGender());
             doctorDto.setDateOfBirth(user.getDateOfBirth());
             Doctor doctor = doctorMapper.mapToEntity(doctorDto);
-            Doctor saveDoctor = doctorService.uploadDoctor(doctor);
-
+            doctorService.uploadDoctor(doctor);
             return "redirect:/?message=Doctor registration successful";
         }catch (Exception e){
             System.out.println("Exception = "+e.getMessage());
             return "DoctorRegistration";
+        }
+    }
+    @GetMapping("/user-history")  //-------------------------- Show User History---------------------------
+    public String userHistory(Model model,HttpServletRequest request){
+        try {
+            String token = getJwtFromCookies(request);
+            String phone = jwtUtils.extractUsername(token);
+            MUser user = userService.getUserByPhone(phone);
+            model.addAttribute("username",user.getName());
+            model.addAttribute("DoctorAppointmentHistory",doctorAppointmentService.getHistory(user.getId()));
+            model.addAttribute("TestAppointmentHistory",labTestAppointmentService.getOneUserHistory(user.getId()));
+            return "UserHistory";
+        }catch (Exception e){
+            System.out.println("Exception = "+e.getMessage());
+            return "redirect:/login";
         }
     }
 

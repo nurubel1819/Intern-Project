@@ -21,7 +21,4 @@ public class TestType {
     @Column(nullable = false, unique = true)
     private String name;
     private String description;
-
-    /*@OneToMany(mappedBy = "testType")
-    private Set<LabTest> tests = new HashSet<>();*/
 }

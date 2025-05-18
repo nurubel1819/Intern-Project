@@ -21,14 +21,20 @@ public class SecurityConfiguration {
     @Autowired
     JwtAuthFilter jwtAuthFilter;
     public static final String[] ADMIN_URLS = {
+            "/admin/**",
             "/roles/**",
             "/labs/**",
             "/test-types/**",
             "/lab_test/**"
     };
     public static final String[] PATIENT_URLS = {
-
-
+            "/users/**",
+            "/lab-test-dashboard",
+            "/doctor-dashboard",
+            "/LabTestAppointmentForm",
+            "/lab-test-appointment-book/**",
+            "/doctor_appointment_form",
+            "/doctor-appointment-book/**"
     };
     public static final String[] DOCTOR_URLS = {
            "/doctors/**"
@@ -37,19 +43,9 @@ public class SecurityConfiguration {
     public static final String[] PUBLIC_URLS = {
             "/",
             "/doctor-registration",
-            "/LabTestAppointmentForm",
-            "/lab-test-appointment-book/**",
-            "/doctor_appointment_form",
-            "/doctor-appointment-book/**",
-            "/lab-test-dashboard",
-            "/doctor-dashboard",
-            "/upload_new_test",
-            "/user_dashboard",
             "/registration",
             "/login",
             "/image/**",
-            "/test/**",
-            "/users/**",
             "/swagger-ui/**",
             "/v3/api-docs/**",
             "/swagger-ui.html"
@@ -58,7 +54,7 @@ public class SecurityConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception
     {
-        //System.out.println("inside Security Filer Chain");
+        System.out.println("inside Security Filer Chain");
         http.
                 csrf(AbstractHttpConfigurer::disable)
                 .authorizeHttpRequests(auth -> auth
