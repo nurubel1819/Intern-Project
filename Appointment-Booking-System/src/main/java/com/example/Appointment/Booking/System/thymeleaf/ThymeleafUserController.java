@@ -73,7 +73,9 @@ public class ThymeleafUserController {
         else
         {
             try {
-                MUser user = userMapper.mapToEntity(userDto);
+                MUser user = userMapper.mapToEntityWithRoles(userDto);
+                authenticationService.sinUp(user);
+                /*MUser user = userMapper.mapToEntity(userDto);
 
                 UserRole userRole = roleRepository.findByRole("USER");
                 if(userRole==null)
@@ -87,7 +89,7 @@ public class ThymeleafUserController {
 
                 user.setUserRoles(Set.of(userRole));
 
-                authenticationService.sinUp(user);
+                authenticationService.sinUp(user);*/
                 return "redirect:/?message=Registration successful";
 
             }catch (Exception e){

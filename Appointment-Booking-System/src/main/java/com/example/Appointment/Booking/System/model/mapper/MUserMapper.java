@@ -3,6 +3,8 @@ package com.example.Appointment.Booking.System.model.mapper;
 import com.example.Appointment.Booking.System.model.dto.MUserDto;
 import com.example.Appointment.Booking.System.model.entity.MUser;
 import com.example.Appointment.Booking.System.model.entity.UserRole;
+import com.example.Appointment.Booking.System.service.RoleService;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -12,6 +14,8 @@ import java.util.Set;
 @Component
 @RequiredArgsConstructor
 public class MUserMapper {
+
+    private final RoleService roleService;
 
     public MUserDto mapToDto(MUser user) {
         MUserDto userDto = new MUserDto();
@@ -32,6 +36,28 @@ public class MUserMapper {
         user.setEmail(MUserDto.getEmail());
         user.setGender(MUserDto.getGender());
         user.setDateOfBirth(MUserDto.getDateOfBirth());
+        return user;
+    }
+    public MUser mapToEntityWithRoles(MUserDto MUserDto){
+
+        MUser user = new MUser();
+        user.setName(MUserDto.getName());
+        user.setPhonNumber(MUserDto.getPhonNumber());
+        user.setPassword(MUserDto.getPassword());
+        user.setEmail(MUserDto.getEmail());
+        user.setGender(MUserDto.getGender());
+        user.setDateOfBirth(MUserDto.getDateOfBirth());
+
+        UserRole userRole = roleService.findRoleByName("USER");
+        if(userRole==null)
+        {
+            userRole = new UserRole();
+            userRole.setRole("USER");
+        }
+        Set<MUser> users = userRole.getUsers();
+        users.add(user);
+        userRole.setUsers(users);
+        user.setUserRoles(Set.of(userRole));
         return user;
     }
 }
