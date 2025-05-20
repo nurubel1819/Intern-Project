@@ -9,7 +9,15 @@
             padding: 20px;
             background: #f0f2f5;
         }
-
+        .alert-box {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 12px 20px;
+            border: 1px solid #f5c6cb;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
         .container {
             max-width: 500px;
             margin: auto;
@@ -77,6 +85,7 @@
 <body>
 
 <div class="container">
+    <div th:if="${param.message}" class="alert-box" th:text="${param.message}"></div>
     <img th:src="@{/image/loginLogo.png}" alt="Logo" class="logo">
     <h2>Create an account</h2>
     <form th:action="@{/registration}" method="post" th:object="${MUser}">

@@ -9,6 +9,7 @@ import com.example.Appointment.Booking.System.model.mapper.LabTestAppointmentMap
 import com.example.Appointment.Booking.System.model.mapper.MUserMapper;
 import com.example.Appointment.Booking.System.repository.CountAppointmentRepository;
 import com.example.Appointment.Booking.System.repository.RoleRepository;
+import com.example.Appointment.Booking.System.repository.UserRepository;
 import com.example.Appointment.Booking.System.service.*;
 import com.example.Appointment.Booking.System.validation.ImportantValidation;
 import jakarta.servlet.http.Cookie;
@@ -42,6 +43,7 @@ public class ThymeleafUserController {
     private final DoctorMapper doctorMapper;
     private final JwtUtils jwtUtils;
     private final UploadSomeData uploadSomeData;
+    private final UserRepository userRepository;
 
     private String getJwtFromCookies(HttpServletRequest request) {
         if (request.getCookies() != null) {
@@ -67,19 +69,19 @@ public class ThymeleafUserController {
     public String registerUser(@ModelAttribute("MUser") MUserDto userDto,Model model) {
         System.out.println("user = "+userDto);
         model.addAttribute("MUser", userDto);
-        if(!userDto.getPassword().equals(userDto.getConfirmPassword())) return "Registration";
-        else if(!ImportantValidation.isValidBDPhone(userDto.getPhonNumber())) return "Registration";
-        else if(userDto.getEmail()!=null && !ImportantValidation.isValidEmail(userDto.getEmail())) return "Registration";
+        if(!userDto.getPassword().equals(userDto.getConfirmPassword())) return "redirect:/registration?message=Passwords do not match";
+        else if(!ImportantValidation.isValidBDPhone(userDto.getPhonNumber())) return "redirect:/registration?message=Invalid phone number";
+        else if(userDto.getEmail()!=null && !ImportantValidation.isValidEmail(userDto.getEmail())) return "redirect:/registration?message=Invalid email";
         else
         {
             try {
                 MUser user = userMapper.mapToEntity(userDto);
                 authenticationService.sinUp(user);
-                return "redirect:/?message=Registration successful";
+                return "redirect:/login?message=Registration successful";
 
             }catch (Exception e){
                 System.out.println("Exception = "+e.getMessage());
-                return "Registration";
+                return "redirect:/registration?message=Registration failed";
             }
         }
     }
@@ -90,45 +92,65 @@ public class ThymeleafUserController {
         return "redirect:/login?message=Dummy data uploaded";
     }
     @GetMapping("/login")         //-------------------------Login-------------------
-    public String loginPage(Model model){
+    public String loginPage(Model model, HttpServletRequest request){
         model.addAttribute("login_request", new SignInRequestDto());
+        try {
+            String token = getJwtFromCookies(request);
+            if(token!=null){
+                //Extract role from token
+                List<String> roles = jwtUtils.extractRoles(token);
+
+                //Role-based redirect
+                if (roles.contains("ADMIN")) {
+                    return "redirect:/admin/dashboard";
+                } else if (roles.contains("DOCTOR")) {
+                    return "redirect:/doctor-dashboard";
+                } else if (roles.contains("USER")) {
+                    return "redirect:/lab-test-dashboard";
+                } else {
+                    return "redirect:/login?message=Invalid token";
+                }
+            }
+        }catch (Exception e){
+            System.out.println("Exception = "+e.getMessage());
+            return "redirect:/login?message=Login failed. Please check your phone and password, try again.";
+        }
         return "Login";
     }
     @PostMapping("/login")
-    public String loginUser(@ModelAttribute("login_request") SignInRequestDto signInRequestDto,
-                            HttpServletResponse response,
-                            Model model) {
+    public String loginUser(@ModelAttribute("login_request") SignInRequestDto signInRequestDto, HttpServletResponse response)
+    {
+        try {
+            JwtAuthenticationResponseDto status = authenticationService.signIn(signInRequestDto);
+            if (status.getToken() != null) {
+                // Set JWT in HTTP-only cookie
+                ResponseCookie cookie = ResponseCookie.from("jwt", status.getToken())
+                        .httpOnly(true)
+                        .path("/")
+                        .maxAge(24 * 60 * 60)
+                        .build();
 
-        JwtAuthenticationResponseDto status = authenticationService.signIn(signInRequestDto);
+                response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
-        if (status.getToken() != null) {
-            // Set JWT in HTTP-only cookie
-            ResponseCookie cookie = ResponseCookie.from("jwt", status.getToken())
-                    .httpOnly(true)
-                    .path("/")
-                    .maxAge(24 * 60 * 60)
-                    .build();
+                //Extract role from token
+                List<String> roles = jwtUtils.extractRoles(status.getToken());
 
-            response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-
-            //Extract role from token
-            List<String> roles = jwtUtils.extractRoles(status.getToken());
-
-            //Role-based redirect
-            if (roles.contains("ADMIN")) {
-                return "redirect:/admin/dashboard";
-            } else if (roles.contains("DOCTOR")) {
-                return "redirect:/doctor-dashboard";
-            } else if (roles.contains("USER")) {
-                return "redirect:/lab-test-dashboard";
-            } else {
-                return "redirect:/";
+                //Role-based redirect
+                if (roles.contains("ADMIN")) {
+                    return "redirect:/admin/dashboard";
+                } else if (roles.contains("DOCTOR")) {
+                    return "redirect:/doctor-dashboard";
+                } else if (roles.contains("USER")) {
+                    return "redirect:/lab-test-dashboard";
+                } else {
+                    return "redirect:/login?message=Invalid token";
+                }
             }
+            else return "redirect:/login?message=Login failed. Please check your phone and password, try again.";
+        }catch (Exception e){
+            System.out.println("Exception = "+e.getMessage());
+            return "redirect:/login?message=Login failed. Please check your phone and password, try again.";
         }
-
-        model.addAttribute("login_request", signInRequestDto);
-        model.addAttribute("errorMessage", "Invalid phone number or password");
-        return "Login";
     }
 
     @GetMapping("/user-logout")
@@ -148,8 +170,8 @@ public class ThymeleafUserController {
 
     @GetMapping("/lab-test-dashboard")     //-------------------------Lab Test Dashboard ------------------------
     public String labTestDashboard(Model model,HttpServletRequest request){
-        model.addAttribute("allTest",labTestService.getAllLabTest());
         try {
+            model.addAttribute("allTest",labTestService.getAllLabTest());
             String token = getJwtFromCookies(request);
             String phone = jwtUtils.extractUsername(token);
             MUser user = userService.getUserByPhone(phone);
@@ -287,31 +309,6 @@ public class ThymeleafUserController {
         }catch (Exception e){
             System.out.println("Exception confirm lab test appointment post mathod = "+e.getMessage());
             return "redirect:/lab-test-dashboard";
-        }
-    }
-    @GetMapping("/doctor-registration")  //-------------------------Doctor Registration-----------------------
-    public String showDoctorRegistrationForm(Model model) {
-        model.addAttribute("doctor", new DoctorDto());
-        return "DoctorRegistration";
-    }
-    @PostMapping("/doctor-registration")
-    public String registerDoctor(@ModelAttribute("MUser") DoctorDto doctorDto,Model model) {
-        if(!ImportantValidation.isValidBDPhone(doctorDto.getPhone())) return "DoctorRegistration";
-        MUser user;
-        if(userService.getUserByPhone(doctorDto.getPhone())==null) return "DoctorRegistration";
-        user = userService.getUserByPhone(doctorDto.getPhone());
-        if(doctorService.getByPhonNumber(doctorDto.getPhone())!=null) return "DoctorRegistration";
-        try {
-            doctorDto.setName(user.getName());
-            doctorDto.setEmail(user.getEmail());
-            doctorDto.setGender(user.getGender());
-            doctorDto.setDateOfBirth(user.getDateOfBirth());
-            Doctor doctor = doctorMapper.mapToEntity(doctorDto);
-            doctorService.uploadDoctor(doctor);
-            return "redirect:/?message=Doctor registration successful";
-        }catch (Exception e){
-            System.out.println("Exception = "+e.getMessage());
-            return "DoctorRegistration";
         }
     }
     @GetMapping("/user-history")  //-------------------------- Show User History---------------------------

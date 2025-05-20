@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <title>Doctor Profile</title>
     <style>
+        .alert-box {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 12px 20px;
+            border: 1px solid #f5c6cb;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
         body {
             font-family: Arial, sans-serif;
             background-color: #f4f6f8;
@@ -80,8 +89,9 @@
 </head>
 <body>
 <div class="form-container">
+    <div th:if="${param.message}" class="alert-box" th:text="${param.message}"></div>
     <h2>Doctor Information</h2>
-    <form th:action="@{/doctor-registration}" th:object="${doctor}" method="post">
+    <form th:action="@{/admin/doctor-registration}" th:object="${doctor}" method="post">
         <div class="form-group">
             <label for="phone">Phone</label>
             <input type="text" th:field="*{phone}" id="phone" placeholder="Enter phone number" required>

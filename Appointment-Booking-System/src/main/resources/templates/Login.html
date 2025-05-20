@@ -4,6 +4,15 @@
     <meta charset="UTF-8">
     <title>Login</title>
     <style>
+        .alert-box {
+            background-color: #f8d7da;
+            color: #721c24;
+            padding: 12px 20px;
+            border: 1px solid #f5c6cb;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-weight: bold;
+        }
         body {
             font-family: Arial, sans-serif;
             background: #f4f4f4;
@@ -94,6 +103,7 @@
 </head>
 <body>
 <div class="login-container">
+    <div th:if="${param.message}" class="alert-box" th:text="${param.message}"></div>
     <img th:src="@{/image/loginLogo.png}" alt="Logo" class="logo">
     <h2>Log in to your account</h2>
     <p>Welcome back! Please enter your details.</p>

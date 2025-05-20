@@ -4,6 +4,25 @@
     <meta charset="UTF-8">
     <title>AlphaHealth Dashboard</title>
     <style>
+        .logout-button {
+            background-color: #e74c3c; /* Red base */
+            color: #fff;
+            padding: 12px 16px;
+            border: none;
+            border-radius: 6px;
+            text-align: center;
+            text-decoration: none;
+            display: block;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .logout-button:hover {
+            background-color: #c0392b; /* Darker red on hover */
+            transform: translateY(-2px); /* Slight lift on hover */
+        }
         .sidebar {
             width: 200px;
             padding: 20px;
@@ -122,6 +141,8 @@
     <a class="menu-item" th:href="@{/lab-test-dashboard}">Lab Test Appointment</a>
     <a class="menu-item">Notifications</a>
     <a class="menu-item" th:href="@{/user-history}">History</a>
+    <a class="logout-button" th:href="@{/user-logout}">Logout</a>
+
 </div>
 <div class="content">
     <div class="header">Welcome back, <span th:text="${username}"></span></div>

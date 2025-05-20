@@ -1,16 +1,19 @@
 package com.example.Appointment.Booking.System.thymeleaf;
 
+import com.example.Appointment.Booking.System.model.dto.DoctorDto;
 import com.example.Appointment.Booking.System.model.dto.LabDto;
 import com.example.Appointment.Booking.System.model.dto.LabTestDto;
 import com.example.Appointment.Booking.System.model.dto.TestTypeDto;
-import com.example.Appointment.Booking.System.model.entity.Lab;
-import com.example.Appointment.Booking.System.model.entity.LabTest;
-import com.example.Appointment.Booking.System.model.entity.TestType;
+import com.example.Appointment.Booking.System.model.entity.*;
+import com.example.Appointment.Booking.System.model.mapper.DoctorMapper;
 import com.example.Appointment.Booking.System.model.mapper.LabMapper;
 import com.example.Appointment.Booking.System.model.mapper.LabTestMapper;
 import com.example.Appointment.Booking.System.model.mapper.TestTypeMapper;
+import com.example.Appointment.Booking.System.service.DoctorService;
 import com.example.Appointment.Booking.System.service.LabService;
 import com.example.Appointment.Booking.System.service.TestTypeService;
+import com.example.Appointment.Booking.System.service.UserService;
+import com.example.Appointment.Booking.System.validation.ImportantValidation;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -33,6 +36,9 @@ public class ThymeleafAdminController {
     private final LabService labService1;
     private final TestTypeService testTypeService1;
     private final TestTypeMapper testTypeMapper;
+    private final DoctorService doctorService;
+    private final DoctorMapper doctorMapper;
+    private final UserService userService;
 
     @GetMapping("/dashboard")
     public String adminPage(){
@@ -107,6 +113,31 @@ public class ThymeleafAdminController {
         }catch (Exception e){
             System.out.println("Exception = "+e.getMessage());
             return "redirect:/upload_new_test?message=upload unsuccessful";
+        }
+    }
+    @GetMapping("/doctor-registration")  //-------------------------Doctor Registration-----------------------
+    public String showDoctorRegistrationForm(Model model) {
+        model.addAttribute("doctor", new DoctorDto());
+        return "DoctorRegistration";
+    }
+    @PostMapping("/doctor-registration")
+    public String registerDoctor(@ModelAttribute("MUser") DoctorDto doctorDto,Model model) {
+        if(!ImportantValidation.isValidBDPhone(doctorDto.getPhone())) return "redirect:/admin/doctor-registration?message=invalid phone number";
+        MUser user;
+        if(userService.getUserByPhone(doctorDto.getPhone())==null) return "redirect:/admin/doctor-registration?message=User Registration first then doctor registration";
+        user = userService.getUserByPhone(doctorDto.getPhone());
+        if(doctorService.getByPhonNumber(doctorDto.getPhone())!=null) return "redirect:/admin/doctor-registration?message=Phone or email already exists in database";
+        try {
+            doctorDto.setName(user.getName());
+            doctorDto.setEmail(user.getEmail());
+            doctorDto.setGender(user.getGender());
+            doctorDto.setDateOfBirth(user.getDateOfBirth());
+            Doctor doctor = doctorMapper.mapToEntity(doctorDto);
+            doctorService.uploadDoctor(doctor);
+            return "redirect:/admin/dashboard?message=Doctor registration successful";
+        }catch (Exception e){
+            System.out.println("Exception = "+e.getMessage());
+            return "redirect:/admin/doctor-registration?message=Doctor registration failed";
         }
     }
 }
