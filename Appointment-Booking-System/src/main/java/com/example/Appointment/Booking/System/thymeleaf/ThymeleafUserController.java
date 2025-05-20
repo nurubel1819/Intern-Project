@@ -1,5 +1,6 @@
 package com.example.Appointment.Booking.System.thymeleaf;
 
+import com.example.Appointment.Booking.System.dummyData.UploadSomeData;
 import com.example.Appointment.Booking.System.jwt.JwtUtils;
 import com.example.Appointment.Booking.System.model.dto.*;
 import com.example.Appointment.Booking.System.model.entity.*;
@@ -35,12 +36,12 @@ public class ThymeleafUserController {
     private final LabTestService labTestService;
     private final DoctorAppointmentService doctorAppointmentService;
     private final AuthenticationService authenticationService;
-    private final RoleRepository roleRepository;
     private final LabTestAppointmentService labTestAppointmentService;
     private final CountAppointmentRepository countAppointmentRepository;
     private final LabTestAppointmentMapper labTestAppointmentMapper;
     private final DoctorMapper doctorMapper;
     private final JwtUtils jwtUtils;
+    private final UploadSomeData uploadSomeData;
 
     private String getJwtFromCookies(HttpServletRequest request) {
         if (request.getCookies() != null) {
@@ -52,7 +53,6 @@ public class ThymeleafUserController {
         }
         return null;
     }
-
 
     @GetMapping("/")
     public String homePage() {
@@ -73,23 +73,8 @@ public class ThymeleafUserController {
         else
         {
             try {
-                MUser user = userMapper.mapToEntityWithRoles(userDto);
+                MUser user = userMapper.mapToEntity(userDto);
                 authenticationService.sinUp(user);
-                /*MUser user = userMapper.mapToEntity(userDto);
-
-                UserRole userRole = roleRepository.findByRole("USER");
-                if(userRole==null)
-                {
-                    userRole = new UserRole();
-                    userRole.setRole("USER");
-                }
-                Set<MUser> users = userRole.getUsers();
-                users.add(user);
-                userRole.setUsers(users);
-
-                user.setUserRoles(Set.of(userRole));
-
-                authenticationService.sinUp(user);*/
                 return "redirect:/?message=Registration successful";
 
             }catch (Exception e){
@@ -97,6 +82,12 @@ public class ThymeleafUserController {
                 return "Registration";
             }
         }
+    }
+    @GetMapping("/login-with-dummy-data")
+    public String loginWithDummyData(){
+        uploadSomeData.uploadSomeUser();
+        uploadSomeData.uploadSomeLabTest();
+        return "redirect:/login?message=Dummy data uploaded";
     }
     @GetMapping("/login")         //-------------------------Login-------------------
     public String loginPage(Model model){
@@ -131,7 +122,6 @@ public class ThymeleafUserController {
             } else if (roles.contains("USER")) {
                 return "redirect:/lab-test-dashboard";
             } else {
-                // যদি role না মেলে, fallback
                 return "redirect:/";
             }
         }

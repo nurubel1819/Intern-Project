@@ -38,26 +38,4 @@ public class MUserMapper {
         user.setDateOfBirth(MUserDto.getDateOfBirth());
         return user;
     }
-    public MUser mapToEntityWithRoles(MUserDto MUserDto){
-
-        MUser user = new MUser();
-        user.setName(MUserDto.getName());
-        user.setPhonNumber(MUserDto.getPhonNumber());
-        user.setPassword(MUserDto.getPassword());
-        user.setEmail(MUserDto.getEmail());
-        user.setGender(MUserDto.getGender());
-        user.setDateOfBirth(MUserDto.getDateOfBirth());
-
-        UserRole userRole = roleService.findRoleByName("USER");
-        if(userRole==null)
-        {
-            userRole = new UserRole();
-            userRole.setRole("USER");
-        }
-        Set<MUser> users = userRole.getUsers();
-        users.add(user);
-        userRole.setUsers(users);
-        user.setUserRoles(Set.of(userRole));
-        return user;
-    }
 }

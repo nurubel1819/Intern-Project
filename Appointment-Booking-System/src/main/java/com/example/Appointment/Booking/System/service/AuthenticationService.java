@@ -28,6 +28,7 @@ public class AuthenticationService {
     public MUser sinUp(MUser user){
         user.setPassword(passwordEncoder.encode(user.getPassword()));
         MUser saveUser = userService.saveNewUser(user);
+        //System.out.println("saveUser id = "+user.getId()+" role = "+user.getUserRoles());
         if(saveUser.getId()==1L) // here make first user is admin
         {
             UserRole role = roleService.findRoleByName("ADMIN");
@@ -46,7 +47,6 @@ public class AuthenticationService {
             }
         }
         return saveUser;
-        //return userService.saveNewUser(user);
     }
 
     public JwtAuthenticationResponseDto signIn(SignInRequestDto signInRequestDto) {

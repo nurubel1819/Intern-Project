@@ -34,6 +34,7 @@ public class DoctorService {
             roleService.setUserRole(user.getId(),role.getId());
             return saveDoctor;
         }catch (Exception e){
+            System.out.println("Exception = "+e.getMessage());
             return null;
         }
     }
