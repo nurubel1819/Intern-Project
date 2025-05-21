@@ -58,7 +58,7 @@ public class AuthenticationService {
                     ));
 
             var user = userRepository.findByPhonNumber(signInRequestDto.getPhone()).orElseThrow(()-> new IllegalArgumentException("Invalid username or password"));
-            var token = jwtUtils.generateToken(user.getPhonNumber(), List.of(user.getUserRoles().stream().map(UserRole::getRole).toArray(String[]::new)));
+            var token = jwtUtils.generateToken(user.getId(), user.getPhonNumber(), List.of(user.getUserRoles().stream().map(UserRole::getRole).toArray(String[]::new)));
             //var refreshToken = jwtService.generateRefreshToken(new HashMap<>(),user);
 
             System.out.println("Token: "+token);

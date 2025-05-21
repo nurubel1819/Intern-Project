@@ -28,12 +28,13 @@ public class JwtUtils {
         return Keys.hmacShaKeyFor(secret.getBytes());
     }
 
-    public String generateToken(String username, List<String> roles) {
-        return createToken(username, roles);
+    public String generateToken(Long userId, String username, List<String> roles) {
+        return createToken(userId,username, roles);
     }
 
-    private String createToken(String username, List<String> roles) {
+    private String createToken(Long userId,String username, List<String> roles) {
         Map<String,Object> claims = new HashMap<>();
+        claims.put("userId", userId);
         claims.put("roles", roles); // ✅ Add roles here
         return Jwts.builder()
                 .setClaims(claims)
@@ -46,6 +47,9 @@ public class JwtUtils {
 
     public String extractUsername(String token) {
         return extractClaim(token, Claims::getSubject);
+    }
+    public Long extractUserId(String token) {
+        return extractClaim(token, claims -> claims.get("userId", Long.class));
     }
 
     public <T> T extractClaim(String token, Function<Claims, T> claimsResolver) {

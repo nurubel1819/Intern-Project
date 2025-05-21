@@ -43,7 +43,6 @@ public class ThymeleafUserController {
     private final DoctorMapper doctorMapper;
     private final JwtUtils jwtUtils;
     private final UploadSomeData uploadSomeData;
-    private final UserRepository userRepository;
 
     private String getJwtFromCookies(HttpServletRequest request) {
         if (request.getCookies() != null) {
@@ -111,7 +110,7 @@ public class ThymeleafUserController {
                     if (roles.contains("ADMIN")) {
                         return "redirect:/admin/dashboard";
                     } else if (roles.contains("DOCTOR")) {
-                        return "redirect:/doctor-dashboard";
+                        return "redirect:/doctor/panel";
                     } else if (roles.contains("USER")) {
                         return "redirect:/lab-test-dashboard";
                     } else {
@@ -147,7 +146,7 @@ public class ThymeleafUserController {
                 if (roles.contains("ADMIN")) {
                     return "redirect:/admin/dashboard";
                 } else if (roles.contains("DOCTOR")) {
-                    return "redirect:/doctor-dashboard";
+                    return "redirect:/doctor/panel";
                 } else if (roles.contains("USER")) {
                     return "redirect:/lab-test-dashboard";
                 } else {

@@ -37,7 +37,7 @@ public class SecurityConfiguration {
             "/doctor-appointment-book/**"
     };
     public static final String[] DOCTOR_URLS = {
-           "/doctors/**"
+           "/doctor/**"
     };
 
     public static final String[] PUBLIC_URLS = {

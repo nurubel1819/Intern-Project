@@ -1,11 +1,11 @@
 package com.example.Appointment.Booking.System.controller;
 
 import com.example.Appointment.Booking.System.model.dto.*;
-import com.example.Appointment.Booking.System.model.entity.LabTestAppointment;
-import com.example.Appointment.Booking.System.model.entity.MUser;
-import com.example.Appointment.Booking.System.model.entity.UserRole;
+import com.example.Appointment.Booking.System.model.entity.*;
 import com.example.Appointment.Booking.System.model.mapper.LabTestAppointmentMapper;
 import com.example.Appointment.Booking.System.model.mapper.MUserMapper;
+import com.example.Appointment.Booking.System.repository.AppointmentSlotRepository;
+import com.example.Appointment.Booking.System.repository.DoctorAvailabilityRepository;
 import com.example.Appointment.Booking.System.repository.RoleRepository;
 import com.example.Appointment.Booking.System.service.AuthenticationService;
 import com.example.Appointment.Booking.System.service.LabTestAppointmentService;
@@ -15,9 +15,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.time.LocalDate;
+import java.util.*;
 
 @RestController
 @RequiredArgsConstructor
@@ -29,6 +28,8 @@ public class UserController {
     private final RoleRepository roleRepository;
     private final LabTestAppointmentMapper labTestAppointmentMapper;
     private final LabTestAppointmentService labTestAppointmentService;
+    private final DoctorAvailabilityRepository doctorAvailabilityRepository;
+    private final AppointmentSlotRepository slotRepository;
 
     @PostMapping("/registration")
     private ResponseEntity<?> registration(MUserDto userDto){
@@ -118,4 +119,69 @@ public class UserController {
             return ResponseEntity.badRequest().body(Set.of("User not found"));
         }
     }
+
+    @GetMapping("/slots/{doctorId}")
+    public ResponseEntity<?> getAvailableSlots(@PathVariable Long doctorId,
+                                               @RequestParam String date) {
+        LocalDate localDate = LocalDate.parse(date);
+
+        // Step 1: Check if doctor is available that day
+        Optional<DoctorAvailability> availability = doctorAvailabilityRepository
+                .findByDoctorIdAndDate(doctorId, localDate);
+
+        if (availability.isPresent() && !availability.get().isAvailable()) {
+            return ResponseEntity.ok("Doctor is not available on this date.");
+        }
+
+        // Step 2: Load available slots
+        List<AppointmentSlot> slots = slotRepository.findByDoctorIdAndDateAndBookedFalse(doctorId, localDate);
+        return ResponseEntity.ok(slots);
+    }
+    @PostMapping("/book-slot/{slotId}")
+    public ResponseEntity<String> bookSlot(@PathVariable Long slotId,
+                                           @RequestParam Long patientId) {
+        AppointmentSlot slot = slotRepository.findById(slotId)
+                .orElseThrow(() -> new RuntimeException("Slot not found"));
+
+        // Check doctor availability on that day
+        Optional<DoctorAvailability> availability = doctorAvailabilityRepository
+                .findByDoctorIdAndDate(slot.getDoctorId(), slot.getDate());
+
+        if (availability.isPresent() && !availability.get().isAvailable()) {
+            return ResponseEntity.badRequest().body("Doctor is not available on this date.");
+        }
+
+        if (slot.isBooked()) {
+            return ResponseEntity.badRequest().body("Slot already booked!");
+        }
+
+        slot.setBooked(true);
+        slot.setPatientId(patientId);
+        slotRepository.save(slot);
+
+        return ResponseEntity.ok("Slot booked successfully!");
+    }
+    /*@PostMapping("/doctorDateSave")
+    public ResponseEntity<?> doctorDateSave(@RequestParam Long doctorId,@RequestParam LocalDate date){
+        try {
+            DoctorAvailability availability = new DoctorAvailability();
+            availability.setDoctorId(doctorId);
+            availability.setDate(date);
+            availability.setAvailable(true);
+            doctorAvailabilityRepository.save(availability);
+
+            for(int i=0;i<3;i++){
+                AppointmentSlot slot = new AppointmentSlot();
+                slot.setDoctorId(doctorId);
+                slot.setDate(date);
+                slotRepository.save(slot);
+            }
+            return ResponseEntity.ok("Successfully saved");
+        }catch (Exception e){
+            System.out.println("Exception = "+e.getMessage()+"");
+            return ResponseEntity.badRequest().body("Not saved = "+e.getMessage());
+        }
+    }*/
+
+
 }
