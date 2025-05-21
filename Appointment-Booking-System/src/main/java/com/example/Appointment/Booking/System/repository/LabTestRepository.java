@@ -8,4 +8,5 @@ import java.util.List;
 public interface LabTestRepository extends JpaRepository<LabTest,Long> {
     LabTest findByTestName(String name);
     List<LabTest> findByTestNameLike(String name);
+    List<LabTest> findByTestNameContaining(String name);
 }

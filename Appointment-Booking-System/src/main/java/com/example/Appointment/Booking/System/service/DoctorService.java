@@ -45,6 +45,13 @@ public class DoctorService {
             return null;
         }
     }
+    public List<Doctor> getDoctorByNameLike(String name){
+        try {
+            return doctorRepository.findByNameContaining(name);
+        }catch (Exception e){
+            return null;
+        }
+    }
 
     public List<Doctor> getAllDoctors(){
         return doctorRepository.findAll();

@@ -43,9 +43,9 @@ public class SecurityConfiguration {
     public static final String[] PUBLIC_URLS = {
             "/",
             "/login-with-dummy-data",
-            "/doctor-registration",
             "/registration",
             "/login",
+            "/user-logout",
             "/image/**",
             "/swagger-ui/**",
             "/v3/api-docs/**",

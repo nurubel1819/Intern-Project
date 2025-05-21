@@ -94,26 +94,34 @@ public class ThymeleafUserController {
     @GetMapping("/login")         //-------------------------Login-------------------
     public String loginPage(Model model, HttpServletRequest request){
         model.addAttribute("login_request", new SignInRequestDto());
-        try {
-            String token = getJwtFromCookies(request);
-            if(token!=null){
-                //Extract role from token
-                List<String> roles = jwtUtils.extractRoles(token);
-
-                //Role-based redirect
-                if (roles.contains("ADMIN")) {
-                    return "redirect:/admin/dashboard";
-                } else if (roles.contains("DOCTOR")) {
-                    return "redirect:/doctor-dashboard";
-                } else if (roles.contains("USER")) {
-                    return "redirect:/lab-test-dashboard";
-                } else {
-                    return "redirect:/login?message=Invalid token";
+        String token = getJwtFromCookies(request);
+        if(token!=null){
+            try {
+                String phone = jwtUtils.extractUsername(token);
+                MUser user = userService.getUserByPhone(phone);
+                if(user==null)
+                {
+                    return "redirect:/user-logout?message=User not found. Please check your phone and try again.";
                 }
+                else {
+                    //Extract role from token
+                    List<String> roles = jwtUtils.extractRoles(token);
+
+                    //Role-based redirect
+                    if (roles.contains("ADMIN")) {
+                        return "redirect:/admin/dashboard";
+                    } else if (roles.contains("DOCTOR")) {
+                        return "redirect:/doctor-dashboard";
+                    } else if (roles.contains("USER")) {
+                        return "redirect:/lab-test-dashboard";
+                    } else {
+                        return "redirect:/login?message=Invalid token";
+                    }
+                }
+            }catch (Exception e){
+                System.out.println("Exception = "+e.getMessage());
+                return "redirect:/login?message=Login failed. Please check your phone and password, try again.";
             }
-        }catch (Exception e){
-            System.out.println("Exception = "+e.getMessage());
-            return "redirect:/login?message=Login failed. Please check your phone and password, try again.";
         }
         return "Login";
     }
@@ -155,23 +163,26 @@ public class ThymeleafUserController {
 
     @GetMapping("/user-logout")
     public String logout(HttpServletResponse response) {
+        // remove JWT from cookie
         ResponseCookie cookie = ResponseCookie.from("jwt", "")
                 .httpOnly(true)
                 .path("/")
-                .maxAge(0)
+                .maxAge(0)  //  give 0 then cookie will be deleted immediately
                 .sameSite("Lax")
                 .secure(false)
                 .build();
 
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
-        return "redirect:/login?logout";
+        return "redirect:/login?message=You are logged out";
     }
 
-
     @GetMapping("/lab-test-dashboard")     //-------------------------Lab Test Dashboard ------------------------
-    public String labTestDashboard(Model model,HttpServletRequest request){
+    public String labTestDashboard(@RequestParam(value = "search", required = false) String search,Model model,HttpServletRequest request){
+        List<LabTest> allLabTestList;
+        if (search != null && !search.isEmpty()) allLabTestList = labTestService.getLabTestContain(search);
+        else allLabTestList = labTestService.getAllLabTest();
         try {
-            model.addAttribute("allTest",labTestService.getAllLabTest());
+            model.addAttribute("allTest",allLabTestList);
             String token = getJwtFromCookies(request);
             String phone = jwtUtils.extractUsername(token);
             MUser user = userService.getUserByPhone(phone);
@@ -184,8 +195,12 @@ public class ThymeleafUserController {
         }
     }
     @GetMapping("/doctor-dashboard")     //-------------------------Doctor Dashboard ------------------------
-    public String doctorDashboard(Model model,HttpServletRequest request){
-        List<Doctor> allDoctorList = doctorService.getAllDoctors();
+    public String doctorDashboard(@RequestParam(value = "search", required = false) String search,Model model,HttpServletRequest request){
+        List<Doctor> allDoctorList;
+
+        if (search != null && !search.isEmpty()) allDoctorList = doctorService.getDoctorByNameLike(search);
+        else allDoctorList = doctorService.getAllDoctors();
+        //List<Doctor> allDoctorList = doctorService.getAllDoctors();
         List<DoctorAvailableStatusDto> allDoctorWithStatus = new ArrayList<>();
         for(Doctor doctor:allDoctorList){
             DoctorAvailableStatusDto doctorAvailableStatusDto = new DoctorAvailableStatusDto();
@@ -193,7 +208,6 @@ public class ThymeleafUserController {
             doctorAvailableStatusDto.setName(doctor.getName());
             doctorAvailableStatusDto.setQualification(doctor.getQualification());
             doctorAvailableStatusDto.setSpecialization(doctor.getSpecialization());
-
             //add status
             CountAppointment status = countAppointmentRepository.findByDoctorId(doctor.getId());
             if(status!=null){
@@ -205,7 +219,6 @@ public class ThymeleafUserController {
                 doctorAvailableStatusDto.setTotalPossibilityPatient(0);
             }
             allDoctorWithStatus.add(doctorAvailableStatusDto);
-
         }
         model.addAttribute("doctors",allDoctorWithStatus);
         // get cookies
@@ -220,8 +233,6 @@ public class ThymeleafUserController {
             System.out.println("Exception = "+e.getMessage());
             return "redirect:/login";
         }
-
-
     }
     @GetMapping("/doctor-appointment-book/{doctorId}")  //---------------Doctor Appointment confirm ----------------
     public String showDoctorAppointmentForm(@PathVariable Long doctorId, Model model, HttpServletRequest request) {
@@ -237,7 +248,7 @@ public class ThymeleafUserController {
             // create dto and set doctor id
             DoctorAppointmentConfirmDto dto = new DoctorAppointmentConfirmDto();
             dto.setDoctorId(doctorId);
-            dto.setUserPhone(user.getPhonNumber());
+            dto.setPatientId(user.getId());
 
             model.addAttribute("doctorAppointmentConfirmDto", dto);
             return "DoctorAppointmentForm";
@@ -249,10 +260,8 @@ public class ThymeleafUserController {
 
     @PostMapping("/doctor-appointment-book/confirm")
     public String confirmDoctorAppointment(@ModelAttribute DoctorAppointmentConfirmDto dto) {
-        Long patientId = userService.getUserByPhone(dto.getUserPhone()).getId();
-        System.out.println("patientId = "+patientId+" doctorId = "+dto.getDoctorId());
         try {
-            String book_status =  userService.bookDoctor(dto.getDoctorId(), patientId);
+            String book_status =  userService.bookDoctor(dto.getDoctorId(), dto.getPatientId());
             if(book_status.equals("doctor appointment booked")) return "redirect:/doctor-dashboard";
             return "redirect:/doctor-dashboard";
         }catch (Exception e){
@@ -275,7 +284,7 @@ public class ThymeleafUserController {
             LabTestAppointmentDto dto = new LabTestAppointmentDto();
             dto.setId(labTestId);
             dto.setTestName(labTest.getTestName());
-            dto.setUserPhone(user.getPhonNumber());
+            dto.setUserId(user.getId());
 
             // load lab details
             Set<Lab> labList = labTest.getLabs();
@@ -291,13 +300,8 @@ public class ThymeleafUserController {
     }
     @PostMapping("/lab-test-appointment-book/confirm")
     public String confirmLabTestAppointment(@ModelAttribute LabTestAppointmentDto dto) {
-        MUser user = userService.getUserByPhone(dto.getUserPhone());
-        Long patientId;
-        if(user!=null) patientId = user.getId();
-        else return "redirect:/lab-test-appointment-book?message=Tish phone not found";
         LabTest labTest = labTestService.getLabTestById(dto.getId());
         dto.setTestName(labTest.getTestName());
-        System.out.println("patientId = "+patientId+" labTestId = "+dto.getId());
         try {
             LabTestAppointment labTestAppointment = labTestAppointmentMapper.mapToEntity(dto);
             if(labTestAppointment!=null)

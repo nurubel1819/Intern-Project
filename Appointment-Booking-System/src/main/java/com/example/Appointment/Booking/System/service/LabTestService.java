@@ -22,6 +22,13 @@ public class LabTestService {
     public List<LabTest> getAllLabTest(){
         return labTestRepository.findAll();
     }
+    public List<LabTest> getLabTestContain(String labTestName){
+        try {
+            return labTestRepository.findByTestNameContaining(labTestName);
+        }catch (Exception e){
+            return null;
+        }
+    }
     public LabTest getLabTestByName(String labTestName){
         return labTestRepository.findByTestName(labTestName);
     }

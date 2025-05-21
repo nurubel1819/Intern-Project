@@ -10,6 +10,7 @@ import java.util.List;
 public class LabTestAppointmentDto {
     @Schema(hidden = true)
     private Long id;
+    private Long userId;
     private String labName;
     private List<String> labNames;
     private String testName;

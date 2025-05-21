@@ -31,7 +31,7 @@ public class LabTestAppointmentMapper {
             labTestAppointment.setDeliveryDate(dto.getBookingDate().plusDays(testDuration));
 
             labTestAppointment.setLabName(dto.getLabName()); // selected lab set this lab name
-            MUser user = userService.getUserByPhone(dto.getUserPhone());
+            MUser user = userService.getUserById(dto.getUserId());
             labTestAppointment.setUser(user);
             return labTestAppointment;
         }catch (Exception e){

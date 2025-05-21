@@ -8,5 +8,6 @@ public class DoctorAppointmentConfirmDto {
     private LocalDateTime date;
     private String note;
     private Long doctorId;
+    private Long patientId;
     private String userPhone;
 }

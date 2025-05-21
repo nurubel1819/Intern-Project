@@ -150,9 +150,12 @@
   </div>
   <p>Book an appointment with our doctors.</p>
 
-  <div class="search-bar">
-    <input type="text" placeholder="Search">
-  </div>
+  <form th:action="@{/doctor-dashboard}" method="get">
+    <div class="search-bar">
+      <input type="text" name="search" placeholder="Search doctor..." />
+    </div>
+  </form>
+
 
   <div class="doctor-container">
     <div class="doctor-card" th:each="doctor : ${doctors}">

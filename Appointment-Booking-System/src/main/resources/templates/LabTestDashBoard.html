@@ -148,9 +148,11 @@
     <div class="header">Welcome back, <span th:text="${username}"></span></div>
     <p>Book an appointment with our doctors.</p>
 
-    <div class="search-bar">
-        <input type="text" placeholder="Search">
-    </div>
+    <form th:action="@{/lab-test-dashboard}" method="get">
+        <div class="search-bar">
+            <input type="text" name="search" placeholder="Search Lab test name..." />
+        </div>
+    </form>
 
     <div class="doctor-container">
         <div class="doctor-card" th:each="test : ${allTest}">

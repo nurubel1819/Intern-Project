@@ -124,10 +124,11 @@
     <form th:action="@{/doctor-appointment-book/confirm}" th:object="${doctorAppointmentConfirmDto}" method="post">
         <!-- Hidden doctorId -->
         <input type="hidden" th:field="*{doctorId}"/>
+        <input type="hidden" th:field="*{patientId}"/>
 
         <!-- User phone -->
-        <label for="userPhone">Phone Number</label>
-        <input type="text" id="userPhone" th:field="*{userPhone}" placeholder="Enter your phone number" required>
+        <label for="userPhone">Your phone Number</label>
+        <span th:text="*{userPhone}" id="userPhone"></span>
 
         <!-- Date -->
         <label for="date">Appointment Date</label>

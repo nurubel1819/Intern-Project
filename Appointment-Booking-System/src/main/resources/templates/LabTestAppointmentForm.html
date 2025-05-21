@@ -124,6 +124,7 @@
     <form th:action="@{/lab-test-appointment-book/confirm}" th:object="${labTestAppointmentDto}" method="post">
         <!-- Hidden doctorId -->
         <input type="hidden" th:field="*{id}"/>
+        <input type="hidden" th:field="*{userId}"/>
         <!-- select lab name-->
         <label for="labName">Lab Name:</label>
         <select  id="labName" th:field="*{labName}">
@@ -134,8 +135,8 @@
         </select>
 
         <!-- User phone -->
-        <label for="userPhone">Phone Number</label>
-        <input type="text" id="userPhone" th:field="*{userPhone}" placeholder="Enter your phone number" required>
+        <label for="userPhone">Your phone Number</label>
+        <span th:text="*{userPhone}" id="userPhone"></span>
 
         <!-- Date -->
         <label for="date">Appointment Date</label>
