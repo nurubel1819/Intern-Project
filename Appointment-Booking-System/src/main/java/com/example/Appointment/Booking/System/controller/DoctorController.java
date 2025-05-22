@@ -2,11 +2,9 @@ package com.example.Appointment.Booking.System.controller;
 
 import com.example.Appointment.Booking.System.model.dto.DoctorAvailabilityDto;
 import com.example.Appointment.Booking.System.model.dto.DoctorDto;
-import com.example.Appointment.Booking.System.model.entity.CountAppointment;
 import com.example.Appointment.Booking.System.model.entity.Doctor;
 import com.example.Appointment.Booking.System.model.entity.MUser;
 import com.example.Appointment.Booking.System.model.mapper.DoctorMapper;
-import com.example.Appointment.Booking.System.repository.CountAppointmentRepository;
 import com.example.Appointment.Booking.System.service.DoctorService;
 import com.example.Appointment.Booking.System.service.UserService;
 import com.example.Appointment.Booking.System.validation.ImportantValidation;
@@ -25,7 +23,6 @@ public class DoctorController {
 
     private final DoctorService doctorService;
     private final DoctorMapper doctorMapper;
-    private final CountAppointmentRepository countAppointmentRepository;
     private final UserService userService;
 
     @PostMapping("/registration")
@@ -56,10 +53,4 @@ public class DoctorController {
             }
         }
     }
-
-    @PostMapping("/set_appointment_status")
-    private ResponseEntity<String> setAppointmentStatus(@RequestBody DoctorAvailabilityDto dto){
-        return ResponseEntity.ok(doctorService.setAppointment(dto.getDoctorId(),dto.getTotalPossibilityPatient()));
-    }
-
 }

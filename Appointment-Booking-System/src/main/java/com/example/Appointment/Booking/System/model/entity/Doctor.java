@@ -31,8 +31,4 @@ public class Doctor {
     private LocalDate dateOfBirth;
     private String image;//optional
 
-    @OneToMany(mappedBy = "doctor")
-    private Set<DoctorAppointment> appointments = new HashSet<>();
-
-
 }

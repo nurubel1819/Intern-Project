@@ -56,8 +56,7 @@ public class UploadSomeData {
             doctorDto.setQualification("MBBS,FCPS");
             Doctor doctor = doctorMapper.mapToEntity(doctorDto);
             doctor = doctorService.uploadDoctor(doctor);
-            //here set how much appointment can be set by doctor
-            doctorService.setAppointment(doctor.getId(),15);
+
 
 
             //create second user as a USER Role
@@ -83,7 +82,6 @@ public class UploadSomeData {
             doctor = doctorMapper.mapToEntity(doctorDto);
             doctor = doctorService.uploadDoctor(doctor);
             //here set how much appointment can be set by doctor
-            doctorService.setAppointment(doctor.getId(),10);
 
             //3rd User
             MUserDto dto3 = new MUserDto();

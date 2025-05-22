@@ -30,6 +30,4 @@ public class MUser {
     @ToString.Exclude
     @EqualsAndHashCode.Exclude
     private Set<UserRole> userRoles=new HashSet<>();
-    @OneToMany
-    private Set<DoctorAppointment> doctorAppointments = new HashSet<>();
 }

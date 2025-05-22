@@ -86,12 +86,6 @@ public class UserController {
         else return ResponseEntity.badRequest().body(Map.of("message","invalid phone number"));
     }
 
-    @PostMapping("/doctor_appointment")
-    private ResponseEntity<String> doctorAppointment(@RequestBody DoctorAppointmentDto doctorAppointmentDto){
-        return ResponseEntity.ok(userService.bookDoctor(doctorAppointmentDto.getDoctorId(),doctorAppointmentDto.getPatientId()));
-
-    }
-
     @PostMapping("/lab-test-appointment")
     private ResponseEntity<String> bookNewAppointment(LabTestAppointmentDto labTestAppointmentDto){
         System.out.println("labTestAppointmentDto = "+labTestAppointmentDto);
@@ -119,69 +113,4 @@ public class UserController {
             return ResponseEntity.badRequest().body(Set.of("User not found"));
         }
     }
-
-    /*@GetMapping("/slots/{doctorId}")
-    public ResponseEntity<?> getAvailableSlots(@PathVariable Long doctorId,
-                                               @RequestParam String date) {
-        LocalDate localDate = LocalDate.parse(date);
-
-        // Step 1: Check if doctor is available that day
-        Optional<DoctorAvailability> availability = doctorAvailabilityRepository
-                .findByDoctorIdAndDate(doctorId, localDate);
-
-        if (availability.isPresent() && !availability.get().isAvailable()) {
-            return ResponseEntity.ok("Doctor is not available on this date.");
-        }
-
-        // Step 2: Load available slots
-        List<AppointmentSlot> slots = slotRepository.findByDoctorIdAndDateAndBookedFalse(doctorId, localDate);
-        return ResponseEntity.ok(slots);
-    }*/
-    @PostMapping("/book-slot/{slotId}")
-    public ResponseEntity<String> bookSlot(@PathVariable Long slotId,
-                                           @RequestParam Long patientId) {
-        AppointmentSlot slot = slotRepository.findById(slotId)
-                .orElseThrow(() -> new RuntimeException("Slot not found"));
-
-        // Check doctor availability on that day
-        Optional<DoctorAvailability> availability = doctorAvailabilityRepository
-                .findByDoctorIdAndDate(slot.getDoctorId(), slot.getDate());
-
-        if (availability.isPresent() && !availability.get().isAvailable()) {
-            return ResponseEntity.badRequest().body("Doctor is not available on this date.");
-        }
-
-        if (slot.isBooked()) {
-            return ResponseEntity.badRequest().body("Slot already booked!");
-        }
-
-        slot.setBooked(true);
-        slot.setPatientId(patientId);
-        slotRepository.save(slot);
-
-        return ResponseEntity.ok("Slot booked successfully!");
-    }
-    /*@PostMapping("/doctorDateSave")
-    public ResponseEntity<?> doctorDateSave(@RequestParam Long doctorId,@RequestParam LocalDate date){
-        try {
-            DoctorAvailability availability = new DoctorAvailability();
-            availability.setDoctorId(doctorId);
-            availability.setDate(date);
-            availability.setAvailable(true);
-            doctorAvailabilityRepository.save(availability);
-
-            for(int i=0;i<3;i++){
-                AppointmentSlot slot = new AppointmentSlot();
-                slot.setDoctorId(doctorId);
-                slot.setDate(date);
-                slotRepository.save(slot);
-            }
-            return ResponseEntity.ok("Successfully saved");
-        }catch (Exception e){
-            System.out.println("Exception = "+e.getMessage()+"");
-            return ResponseEntity.badRequest().body("Not saved = "+e.getMessage());
-        }
-    }*/
-
-
 }

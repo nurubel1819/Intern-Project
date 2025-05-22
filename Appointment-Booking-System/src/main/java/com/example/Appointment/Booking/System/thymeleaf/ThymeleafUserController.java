@@ -41,7 +41,6 @@ public class ThymeleafUserController {
     private final DoctorAppointmentService doctorAppointmentService;
     private final AuthenticationService authenticationService;
     private final LabTestAppointmentService labTestAppointmentService;
-    private final CountAppointmentRepository countAppointmentRepository;
     private final LabTestAppointmentMapper labTestAppointmentMapper;
     private final DoctorMapper doctorMapper;
     private final JwtUtils jwtUtils;
@@ -213,16 +212,6 @@ public class ThymeleafUserController {
             doctorAvailableStatusDto.setName(doctor.getName());
             doctorAvailableStatusDto.setQualification(doctor.getQualification());
             doctorAvailableStatusDto.setSpecialization(doctor.getSpecialization());
-            //add status
-            CountAppointment status = countAppointmentRepository.findByDoctorId(doctor.getId());
-            if(status!=null){
-                doctorAvailableStatusDto.setStatus("Doctor on duty");
-                doctorAvailableStatusDto.setTotalPossibilityPatient(status.getTotalPatient());
-            }
-            else{
-                doctorAvailableStatusDto.setStatus("Not present today");
-                doctorAvailableStatusDto.setTotalPossibilityPatient(0);
-            }
             allDoctorWithStatus.add(doctorAvailableStatusDto);
         }
         model.addAttribute("doctors",allDoctorWithStatus);
@@ -390,7 +379,7 @@ public class ThymeleafUserController {
             String phone = jwtUtils.extractUsername(token);
             MUser user = userService.getUserByPhone(phone);
             model.addAttribute("username",user.getName());
-            model.addAttribute("DoctorAppointmentHistory",doctorAppointmentService.getHistory(user.getId()));
+            model.addAttribute("DoctorAppointmentHistory",doctorAppointmentService.getHistoryByPatientId(user.getId()));
             model.addAttribute("TestAppointmentHistory",labTestAppointmentService.getOneUserHistory(user.getId()));
             return "UserHistory";
         }catch (Exception e){

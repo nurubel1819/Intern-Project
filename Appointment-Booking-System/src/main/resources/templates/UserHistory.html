@@ -158,17 +158,17 @@
         <th>Appointment ID</th>
         <th>Order Date</th>
         <th>Appointment Date</th>
-        <th>specialization</th>
+        <th>Status</th>
         <th>Doctor</th>
       </tr>
       </thead>
       <tbody>
       <tr th:each="history : ${DoctorAppointmentHistory}">
-        <td th:text="${history.id}"></td>
+        <td th:text="${history.getId()}"></td>
         <td th:text="${history.getBookingDate()}"></td>
-        <td th:text="${history.appointmentDate}"></td>
-        <td th:text="${history.getDoctor().specialization}"></td>
-        <td th:text="${history.getDoctor().name}"></td>
+        <td th:text="${history.getAppointmentDate()}"></td>
+        <td th:text="${history.getStatus()}"></td>
+        <td th:utext="${history.getDoctorName() + '<br/>' + history.getDoctorSpecialization()}"></td>
       </tr>
       </tbody>
     </table>

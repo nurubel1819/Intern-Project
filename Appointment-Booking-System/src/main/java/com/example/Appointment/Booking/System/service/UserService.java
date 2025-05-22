@@ -1,7 +1,6 @@
 package com.example.Appointment.Booking.System.service;
 
 import com.example.Appointment.Booking.System.model.entity.*;
-import com.example.Appointment.Booking.System.repository.CountAppointmentRepository;
 import com.example.Appointment.Booking.System.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -10,7 +9,6 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;
-    private final CountAppointmentRepository countAppointmentRepository;
     private final DoctorAppointmentService doctorAppointmentService;
     private final RoleService roleService;
 
@@ -39,27 +37,6 @@ public class UserService {
             return userRepository.findByPhonNumber(phone).get();
         }catch (Exception e){
             return null;
-        }
-    }
-    // book
-    public String bookDoctor(Long doctorId, Long patientId){
-        CountAppointment countAppointment = countAppointmentRepository.findByDoctorId(doctorId);
-        if(countAppointment == null){
-            return "This doctor are not available write now";
-        }
-        else if(countAppointment.getTotalPatient()<=0){
-            return "all appointment is booked. try another one";
-        }
-        else{
-            //DoctorAppointment doctorAppointment = new DoctorAppointment();
-            try {
-                doctorAppointmentService.addDoctorAppointment(doctorId,patientId,countAppointment.getTotalPatient());
-                countAppointment.setTotalPatient(countAppointment.getTotalPatient()-1);
-                countAppointmentRepository.save(countAppointment);
-                return "doctor appointment booked";
-            }catch (Exception e){
-                return "doctor appointment not booked";
-            }
         }
     }
 }

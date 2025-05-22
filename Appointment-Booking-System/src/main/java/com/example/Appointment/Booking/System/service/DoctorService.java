@@ -1,10 +1,8 @@
 package com.example.Appointment.Booking.System.service;
 
-import com.example.Appointment.Booking.System.model.entity.CountAppointment;
 import com.example.Appointment.Booking.System.model.entity.Doctor;
 import com.example.Appointment.Booking.System.model.entity.MUser;
 import com.example.Appointment.Booking.System.model.entity.UserRole;
-import com.example.Appointment.Booking.System.repository.CountAppointmentRepository;
 import com.example.Appointment.Booking.System.repository.DoctorRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,7 +14,6 @@ import java.util.List;
 public class DoctorService {
 
     private final DoctorRepository doctorRepository;
-    private final CountAppointmentRepository countAppointmentRepository;
     private final UserService userService;
     private final RoleService roleService;
 
@@ -64,32 +61,4 @@ public class DoctorService {
             return null;
         }
     }
-
-    public String setAppointment(Long doctorId, int totalAppointment){
-        if(totalAppointment < 0 || totalAppointment>50) return "appointment number must be between 1 and 50";
-        CountAppointment countAppointment = countAppointmentRepository.findByDoctorId(doctorId);
-        if(countAppointment != null){
-
-            countAppointment.setTotalPatient(totalAppointment+countAppointment.getTotalPatient());
-            try {
-                countAppointmentRepository.save(countAppointment);
-                return "Successfully set appointment to doctor";
-            }catch (Exception e){
-                return "Not set error = "+e.getMessage();
-            }
-        }
-        else {
-            CountAppointment status = new CountAppointment();
-            status.setDoctorId(doctorId);
-            status.setTotalPatient(totalAppointment);
-            try {
-                countAppointmentRepository.save(status);
-                return "Successfully set appointment to doctor";
-            }catch (Exception e){
-                return "Not set error = "+e.getMessage();
-            }
-        }
-    }
-
-
 }
