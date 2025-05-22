@@ -7,9 +7,7 @@ import com.example.Appointment.Booking.System.model.entity.*;
 import com.example.Appointment.Booking.System.model.mapper.DoctorMapper;
 import com.example.Appointment.Booking.System.model.mapper.LabTestAppointmentMapper;
 import com.example.Appointment.Booking.System.model.mapper.MUserMapper;
-import com.example.Appointment.Booking.System.repository.CountAppointmentRepository;
-import com.example.Appointment.Booking.System.repository.RoleRepository;
-import com.example.Appointment.Booking.System.repository.UserRepository;
+import com.example.Appointment.Booking.System.repository.*;
 import com.example.Appointment.Booking.System.service.*;
 import com.example.Appointment.Booking.System.validation.ImportantValidation;
 import jakarta.servlet.http.Cookie;
@@ -18,12 +16,17 @@ import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.ResponseCookie;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 @Controller
@@ -43,6 +46,9 @@ public class ThymeleafUserController {
     private final DoctorMapper doctorMapper;
     private final JwtUtils jwtUtils;
     private final UploadSomeData uploadSomeData;
+    private final DoctorAvailabilityRepository doctorAvailabilityRepository;
+    private final AppointmentSlotRepository slotRepository;
+    private final DoctorAppointmentHistoryRepository doctorAppointmentHistoryRepository;
 
     private String getJwtFromCookies(HttpServletRequest request) {
         if (request.getCookies() != null) {
@@ -226,7 +232,7 @@ public class ThymeleafUserController {
             String phone = jwtUtils.extractUsername(token);
             MUser user = userService.getUserByPhone(phone);
             model.addAttribute("username",user.getName());
-            model.addAttribute("appointmentHistory",doctorAppointmentService.getHistory(user.getId()));
+            model.addAttribute("appointmentHistory",doctorAppointmentService.getHistoryByPatientId(user.getId()));
             return "DoctorDashBoard";
         }catch (Exception e){
             System.out.println("Exception = "+e.getMessage());
@@ -234,12 +240,12 @@ public class ThymeleafUserController {
         }
     }
     @GetMapping("/doctor-appointment-book/{doctorId}")  //---------------Doctor Appointment confirm ----------------
-    public String showDoctorAppointmentForm(@PathVariable Long doctorId, Model model, HttpServletRequest request) {
+    public String showDoctorAppointmentForm(@PathVariable Long doctorId,@RequestParam(required = false) LocalDate date, Model model, HttpServletRequest request) {
         try {
             //find user from cookies
             String token = getJwtFromCookies(request);
             String phone = jwtUtils.extractUsername(token);
-            MUser user = userService.getUserByPhone(phone);
+            Long patientId = jwtUtils.extractUserId(token);
 
             Doctor doctor = doctorService.findDoctorById(doctorId);
             model.addAttribute("doctor", doctor);
@@ -247,26 +253,89 @@ public class ThymeleafUserController {
             // create dto and set doctor id
             DoctorAppointmentConfirmDto dto = new DoctorAppointmentConfirmDto();
             dto.setDoctorId(doctorId);
-            dto.setPatientId(user.getId());
+            dto.setPatientId(patientId);
+            dto.setUserPhone(phone);
+            System.out.println("Today = "+LocalDate.now());
 
+            LoadFormDto loadFormDto = new LoadFormDto();
+            if(date!=null) {
+                loadFormDto.setDate(date);
+                System.out.println("date = "+date);
+            }
+            else loadFormDto.setDate(LocalDate.now());
             model.addAttribute("doctorAppointmentConfirmDto", dto);
+            model.addAttribute("loadFrom", loadFormDto);
+            // Step 1: Check if doctor is available that day
+            Optional<DoctorAvailability> availability = doctorAvailabilityRepository
+                    .findByDoctorIdAndDate(doctorId, date);
+
+            if (availability.isPresent() && !availability.get().isAvailable()) {
+                return "redirect:/doctor-appointment-book/" + doctorId + "?date=" + date + "&message=Doctor is not available on this date.";
+            }
+
+            // Step 2: Load available slots
+            List<AppointmentSlot> slots = slotRepository.findByDoctorIdAndDateAndBookedFalse(doctorId, date);
+            List<TimeSelectDto> times = new ArrayList<>();
+            for(AppointmentSlot slot:slots){
+                TimeSelectDto timeAndSlot = new TimeSelectDto();
+                timeAndSlot.setTime(slot.getStartTime());
+                timeAndSlot.setSlotId(slot.getId());
+                times.add(timeAndSlot);
+            }
+            model.addAttribute("times",times);
             return "DoctorAppointmentForm";
         }catch (Exception e){
             System.out.println("Exception = "+e.getMessage());
             return "redirect:/login";
         }
     }
+    @PostMapping("/doctor-appointment-book/reload")
+    public String reloadDoctorAppointmentForm(@ModelAttribute LoadFormDto loadFormDto) {
+        Long doctorId = loadFormDto.getDoctorId();
+        LocalDate date = loadFormDto.getDate();
+        String redirectUrl = "/doctor-appointment-book/" + doctorId;
+        if (date != null) {
+            redirectUrl += "?date=" + date;
+        }
+        return "redirect:" + redirectUrl;
+    }
+
 
     @PostMapping("/doctor-appointment-book/confirm")
     public String confirmDoctorAppointment(@ModelAttribute DoctorAppointmentConfirmDto dto) {
-        try {
-            String book_status =  userService.bookDoctor(dto.getDoctorId(), dto.getPatientId());
-            if(book_status.equals("doctor appointment booked")) return "redirect:/doctor-dashboard";
-            return "redirect:/doctor-dashboard";
-        }catch (Exception e){
-            System.out.println("Exception confirm doctor appointment post mathod = "+e.getMessage());
-            return "redirect:/doctor-dashboard";
+        System.out.println("selected time = "+dto.getSelectedTimeSlotId());
+        System.out.println("Appointment confirm dto = "+dto);
+        // booking slot
+        AppointmentSlot slot = slotRepository.findById(dto.getSelectedTimeSlotId())
+                .orElseThrow(() -> new RuntimeException("Slot not found"));
+
+        // Check doctor availability on that day
+        Optional<DoctorAvailability> availability = doctorAvailabilityRepository
+                .findByDoctorIdAndDate(slot.getDoctorId(), slot.getDate());
+
+        if (availability.isPresent() && !availability.get().isAvailable()) {
+            return "redirect:/doctor-appointment-book/" + dto.getDoctorId() + "?date=" + slot.getDate() + "&message=Doctor is not available on this date.";
         }
+        if (slot.isBooked()) {
+            return "redirect:/doctor-appointment-book/" + dto.getDoctorId() + "?date=" + slot.getDate() + "&message=Slot already booked!";
+        }
+        slot.setBooked(true);
+        slot.setPatientId(dto.getPatientId());
+        slotRepository.save(slot);
+        // save appointment history
+        DoctorAppointmentHistory history = new DoctorAppointmentHistory();
+        history.setPatientId(dto.getPatientId());
+        history.setBookingDate(LocalDate.now());
+        history.setAppointmentDate(slot.getDate());
+        history.setStatus("Confirmed");
+        Doctor doctor = doctorService.findDoctorById(dto.getDoctorId());
+        history.setDoctorName(doctor.getName());
+        history.setDoctorSpecialization(doctor.getSpecialization());
+        //System.out.println("Appointment date = "+slot.getDate());
+        String historySaveStatus = doctorAppointmentService.saveAppointmentHistory(history);
+
+        return "redirect:/doctor-dashboard?message=Doctor appointment booked successfully!"+historySaveStatus;
+
     }
     @GetMapping("/lab-test-appointment-book/{labTestId}")   //-------------------Lab test appointment confirm-------------
     public String showLabTestAppointmentForm(@PathVariable Long labTestId, Model model, HttpServletRequest request) {

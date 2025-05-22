@@ -4,6 +4,60 @@
     <meta charset="UTF-8">
     <title>Doctor Appointment</title>
     <style>
+        .button-wrapper {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .load-time-button {
+            width: 100%;
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: 600;
+            color: white;
+            background-color: #4CAF50;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: background-color 0.3s ease, transform 0.2s ease;
+        }
+
+        .load-time-button:hover {
+            background-color: #45a049;
+            transform: translateY(-2px);
+        }
+
+        .load-time-button:active {
+            transform: scale(0.98);
+        }
+
+        .time-select-wrapper {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+
+        .time-select-wrapper select {
+            width: 100%;
+            padding: 10px 16px;
+            font-size: 16px;
+            font-weight: 500;
+            border: 2px solid #ccc;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            transition: border-color 0.3s ease, box-shadow 0.3s ease;
+            min-width: 220px;
+        }
+
+        .time-select-wrapper select:focus {
+            border-color: #4CAF50;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(76, 175, 80, 0.3);
+        }
+
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
             background-color: #f8f9fc;
@@ -93,12 +147,12 @@
         }
 
         .cancel-btn {
-            background-color: #e0e0e0;
-            color: #333;
+            background-color: #f60404;
+            color: #f4ecec;
         }
 
         .cancel-btn:hover {
-            background-color: #d5d5d5;
+            background-color: #7a13b1;
         }
 
         .confirm-btn {
@@ -107,7 +161,7 @@
         }
 
         .confirm-btn:hover {
-            background-color: #32408f;
+            background-color: #0fec08;
         }
     </style>
 </head>
@@ -120,24 +174,43 @@
         <p th:text="${doctor.qualification}"></p>
         <p class="specialization" th:text="${doctor.specialization}"></p>
     </div>
+    <form th:action="@{/doctor-appointment-book/reload}" th:object="${loadFrom}" method="post">
+        <!-- Hidden doctorId -->
+        <input type="hidden" th:name="loadStatus" th:value="'reladedDate'"/>
+        <input type="hidden" th:name="doctorId" th:value="${doctor.id}"/>
+
+        <!-- Date -->
+        <label for="date">Appointment Date</label>
+        <input type="date" id="date" th:field="*{date}" required />
+        <div class="button-wrapper">
+            <button type="submit" class="load-time-button">Reload time Slot</button>
+        </div>
+    </form>
 
     <form th:action="@{/doctor-appointment-book/confirm}" th:object="${doctorAppointmentConfirmDto}" method="post">
         <!-- Hidden doctorId -->
         <input type="hidden" th:field="*{doctorId}"/>
         <input type="hidden" th:field="*{patientId}"/>
+        <input type="hidden" th:field="*{date}"/>
+        <!--<input type="hidden" th:name="loadStatus" th:value="'reladedDate'"/>-->
 
         <!-- User phone -->
         <label for="userPhone">Your phone Number</label>
         <span th:text="*{userPhone}" id="userPhone"></span>
-
-        <!-- Date -->
-        <label for="date">Appointment Date</label>
-        <input type="datetime-local" id="date" th:field="*{date}" required>
+        <!-- Available Time Dropdown -->
+        <label for="time">Available Time:</label>
+        <div class="time-select-wrapper">
+            <select id="time" th:field="*{selectedTimeSlotId}" required>
+                <option th:each="t : ${times}"
+                        th:value="${t.slotId}"
+                        th:text="${#temporals.format(t.time,'hh:mm a')}">
+                </option>
+            </select>
+        </div>
 
         <!-- Note -->
         <label for="note">Note</label>
         <textarea id="note" th:field="*{note}" placeholder="Write here..."></textarea>
-
         <!-- Buttons -->
         <div class="button-group">
             <button type="button" class="cancel-btn" onclick="window.history.back()">Cancel</button>

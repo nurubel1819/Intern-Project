@@ -163,8 +163,8 @@
       <h3 th:text="${doctor.getName()}"></h3>
       <p th:text="${'Qulaificatin = '+doctor.getQualification()}"></p>
       <p th:text="${'Specialization = '+doctor.getSpecialization()}"></p>
-      <p th:text="${doctor.getStatus()}"></p>
-      <p th:text="${'Appointment available = '+doctor.getTotalPossibilityPatient()}"></p>
+      <!--<p th:text="${doctor.getStatus()}"></p>
+      <p th:text="${'Appointment available = '+doctor.getTotalPossibilityPatient()}"></p>-->
       <button class="btn" th:onclick="|window.location.href='/doctor-appointment-book/${doctor.id}'|">Book Appointment</button>
     </div>
   </div>
@@ -178,7 +178,7 @@
         <th>Appointment ID</th>
         <th>Order Date</th>
         <th>Appointment Date</th>
-        <th>specialization</th>
+        <th>Status</th>
         <th>Doctor</th>
       </tr>
       </thead>
@@ -187,8 +187,8 @@
         <td th:text="${history.id}"></td>
         <td th:text="${history.getBookingDate()}"></td>
         <td th:text="${history.appointmentDate}"></td>
-        <td th:text="${history.getDoctor().specialization}"></td>
-        <td th:text="${history.getDoctor().name}"></td>
+        <td th:text="${history.getStatus()}"></td>
+        <td th:utext="${history.getDoctorName() + '<br/>' + history.getDoctorSpecialization()}"></td>
       </tr>
       </tbody>
     </table>

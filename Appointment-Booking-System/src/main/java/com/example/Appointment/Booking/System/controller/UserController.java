@@ -120,7 +120,7 @@ public class UserController {
         }
     }
 
-    @GetMapping("/slots/{doctorId}")
+    /*@GetMapping("/slots/{doctorId}")
     public ResponseEntity<?> getAvailableSlots(@PathVariable Long doctorId,
                                                @RequestParam String date) {
         LocalDate localDate = LocalDate.parse(date);
@@ -136,7 +136,7 @@ public class UserController {
         // Step 2: Load available slots
         List<AppointmentSlot> slots = slotRepository.findByDoctorIdAndDateAndBookedFalse(doctorId, localDate);
         return ResponseEntity.ok(slots);
-    }
+    }*/
     @PostMapping("/book-slot/{slotId}")
     public ResponseEntity<String> bookSlot(@PathVariable Long slotId,
                                            @RequestParam Long patientId) {
