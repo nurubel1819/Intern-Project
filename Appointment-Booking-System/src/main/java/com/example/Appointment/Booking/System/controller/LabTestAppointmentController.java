@@ -27,8 +27,8 @@ public class LabTestAppointmentController {
         LabTestAppointment labTestAppointment = labTestAppointmentMapper.mapToEntity(labTestAppointmentDto);
         System.out.println("labTestAppointment = "+labTestAppointment);
         try {
-            labTestAppointmentService.bookNewAppointment(labTestAppointment);
-            return ResponseEntity.ok("Appointment booked successfully");
+            LabTestAppointment appointment = labTestAppointmentService.bookNewAppointment(labTestAppointment);
+            return ResponseEntity.ok("Appointment booked successfully Lab name = "+appointment.getLabName());
         }catch (Exception e){
             System.out.println("Exception lab test appointment book save = "+e.getMessage());
             return ResponseEntity.badRequest().body("Appointment booked unsuccessfully");

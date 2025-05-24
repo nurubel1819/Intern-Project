@@ -45,7 +45,7 @@ public class ThymeleafAdminController {
         return "AdminPage";
     }
 
-    @GetMapping("add-new-test-type")
+    @GetMapping("add-new-test-type")  //--------------------Upload New Test Type--------------------
     public String addNewTestType(Model model){
         model.addAttribute("testTypeDto", new TestTypeDto());
         return "TestTypePage";
