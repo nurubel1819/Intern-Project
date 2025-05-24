@@ -7,5 +7,4 @@ public interface RoleService {
     String setUserRole(Long userId,Long roleId);
     UserRole findRoleByName(String roleName);
     String deleteRole(String roleName);
-    String updateRole(String oldRoleName, String newRoleName);
 }

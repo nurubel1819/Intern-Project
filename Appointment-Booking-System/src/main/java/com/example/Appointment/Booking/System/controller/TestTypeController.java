@@ -42,6 +42,7 @@ public class TestTypeController {
         return ResponseEntity.ok(testTypeMapper.mapToDto(testTypeService.updateTestType(testType)));
     }
 
+    @GetMapping("/get-all-test-types")
     private ResponseEntity<List<TestTypeDto>> getAllTestTypes(){
         return ResponseEntity.ok(
                 testTypeService.getAllTestTypes().stream()

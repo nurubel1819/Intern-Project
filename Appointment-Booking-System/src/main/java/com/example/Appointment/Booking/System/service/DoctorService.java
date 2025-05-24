@@ -10,4 +10,5 @@ public interface DoctorService {
     List<Doctor> getDoctorByNameLike(String name);
     List<Doctor> getAllDoctors();
     Doctor findDoctorById(Long id);
+    Doctor updateDoctorDetails(Doctor doctor);
 }

@@ -26,10 +26,6 @@ public class UserController {
     private final UserService userService;
     private final MUserMapper MUserMapper;
     private final RoleRepository roleRepository;
-    private final LabTestAppointmentMapper labTestAppointmentMapper;
-    private final LabTestAppointmentService labTestAppointmentService;
-    private final DoctorAvailabilityRepository doctorAvailabilityRepository;
-    private final AppointmentSlotRepository slotRepository;
 
     @PostMapping("/registration")
     private ResponseEntity<?> registration(MUserDto userDto){
@@ -85,20 +81,6 @@ public class UserController {
         }
         else return ResponseEntity.badRequest().body(Map.of("message","invalid phone number"));
     }
-
-    @PostMapping("/lab-test-appointment")
-    private ResponseEntity<String> bookNewAppointment(LabTestAppointmentDto labTestAppointmentDto){
-        System.out.println("labTestAppointmentDto = "+labTestAppointmentDto);
-        LabTestAppointment labTestAppointment = labTestAppointmentMapper.mapToEntity(labTestAppointmentDto);
-        System.out.println("labTestAppointment = "+labTestAppointment);
-        try {
-            labTestAppointmentService.bookNewAppointment(labTestAppointment);
-            return ResponseEntity.ok("Appointment booked successfully");
-        }catch (Exception e){
-            System.out.println("Exception lab test appointment book save = "+e.getMessage());
-            return ResponseEntity.badRequest().body("Lab test appointment not booked");
-        }
-    }
     //for testing
     @GetMapping("/get_user_role={id}")
     private ResponseEntity<Set<String>> getUserRole(@PathVariable("id") Long id){
@@ -113,4 +95,16 @@ public class UserController {
             return ResponseEntity.badRequest().body(Set.of("User not found"));
         }
     }
+    @PatchMapping("/update-user-name/{id}")
+    private ResponseEntity<?> updateUserDetails(@PathVariable("id") Long id, @RequestParam String userName){
+        try {
+            MUser user = userService.getUserById(id);
+            user.setName(userName);
+            user = userService.updateUser(user);
+            return ResponseEntity.ok(MUserMapper.mapToDto(user));
+        }catch (Exception e){
+            return ResponseEntity.badRequest().body(Map.of("message","User not found"));
+        }
+    }
+
 }

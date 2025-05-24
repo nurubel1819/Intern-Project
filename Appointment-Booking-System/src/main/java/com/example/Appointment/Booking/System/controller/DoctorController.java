@@ -2,6 +2,7 @@ package com.example.Appointment.Booking.System.controller;
 
 import com.example.Appointment.Booking.System.model.dto.DoctorAvailabilityDto;
 import com.example.Appointment.Booking.System.model.dto.DoctorDto;
+import com.example.Appointment.Booking.System.model.dto.DoctorUpdateDto;
 import com.example.Appointment.Booking.System.model.entity.Doctor;
 import com.example.Appointment.Booking.System.model.entity.MUser;
 import com.example.Appointment.Booking.System.model.mapper.DoctorMapper;
@@ -52,5 +53,27 @@ public class DoctorController {
                 }
             }
         }
+    }
+    @PatchMapping("/update-doctor-information")
+    private ResponseEntity<?> updateDoctorDetails(@RequestBody DoctorUpdateDto dto){
+       if(doctorService.getByPhonNumber(dto.getPhone())==null)
+           return ResponseEntity.badRequest().body(Map.of("message","Phone number is not found in database"));
+       try {
+           Doctor doctor = doctorService.getByPhonNumber(dto.getPhone());
+           doctor.setName(dto.getName());
+           doctor.setQualification(dto.getQualification());
+           doctor.setSpecialization(dto.getSpecialization());
+           doctor.setAddress(dto.getAddress());
+           doctor.setExperience(dto.getExperience());
+           doctor.setImage(dto.getImage());
+           doctor.setImage(dto.getImage());
+
+           doctor = doctorService.updateDoctorDetails(doctor);
+           if(doctor==null) return ResponseEntity.badRequest().body(Map.of("message","Update error from doctor controller"));
+           return ResponseEntity.ok(doctorMapper.mapToDto(doctor));
+       }catch (Exception e){
+           System.out.println("Exception = "+e.getMessage());
+           return ResponseEntity.badRequest().body(Map.of("message","Update error from doctor controller"));
+       }
     }
 }

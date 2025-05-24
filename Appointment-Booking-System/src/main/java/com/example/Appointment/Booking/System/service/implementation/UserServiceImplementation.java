@@ -49,4 +49,13 @@ public class UserServiceImplementation implements UserService {
         }
     }
 
+    @Override
+    public MUser updateUser(MUser user) {
+        try {
+            return userRepository.save(user);
+        }catch (Exception e){
+            return null;
+        }
+    }
+
 }

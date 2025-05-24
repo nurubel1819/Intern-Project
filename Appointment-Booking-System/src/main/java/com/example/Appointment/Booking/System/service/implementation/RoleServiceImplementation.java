@@ -65,16 +65,4 @@ public class RoleServiceImplementation implements RoleService {
         }
         else return "Role Not Found";
     }
-    @Override
-    public String updateRole(String oldRoleName, String newRoleName)
-    {
-        UserRole userRole = roleRepository.findByRole(oldRoleName);
-        if(userRole != null)
-        {
-            userRole.setRole(newRoleName);
-            roleRepository.save(userRole);
-            return "Role Updated Successfully";
-        }
-        else return "Role Not Found";
-    }
 }

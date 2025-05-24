@@ -7,4 +7,5 @@ public interface UserService {
     MUser saveNewUser(MUser user);
     MUser getUserById(Long id);
     MUser getUserByPhone(String phone);
+    MUser updateUser(MUser user);
 }

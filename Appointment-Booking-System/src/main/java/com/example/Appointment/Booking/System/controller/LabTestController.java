@@ -36,6 +36,7 @@ public class LabTestController {
             if (lab == null) {
                 return ResponseEntity.badRequest().body(Map.of("message", "lab not found"));
             }
+            labTestDto.setPrice(String.valueOf(Integer.parseInt(labTestDto.getPrice())));
 
             LabTest labTest = labTestMapper.mapToEntity(labTestDto);
             //labTest.setLabs(Set.of(lab));
@@ -50,20 +51,12 @@ public class LabTestController {
 
         }catch (Exception e){
             System.out.println("Exception = "+e.getMessage());
-            return ResponseEntity.badRequest().body(Map.of("message","Upload error from lab test controller"));
+            return ResponseEntity.badRequest().body(Map.of("message","Upload error\n" +
+                    "Exception is = " +e.getMessage()+"\n"+"input is wrong\n" +
+                    "Exception become from lab test controller"));
         }
     }
-
-    @PostMapping("/update_test")
-    private ResponseEntity<String> updateTest(@RequestBody LabTestDto labTestDto){
-        LabTest labTest = labTestMapper.mapToEntity(labTestDto);
-        LabTest updateLabTest = labTestService.updateLabTest(labTest);
-        return ResponseEntity.ok("Update successful \n"+
-                "Test name = "+updateLabTest.getTestName()+
-                "Test type = "+updateLabTest.getTestType());
-    }
-
-    @DeleteMapping("/delete-test-name={name}")
+    @DeleteMapping("/delete-test-by-name={name}")
     private ResponseEntity<String> deleteTest(@PathVariable("name") String name){
         return ResponseEntity.ok(labTestService.deleteLabTest(labTestService.getLabTestByName(name).getId()));
     }

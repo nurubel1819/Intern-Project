@@ -66,4 +66,13 @@ public class DoctorServiceImplementation implements DoctorService {
             return null;
         }
     }
+
+    @Override
+    public Doctor updateDoctorDetails(Doctor doctor) {
+        try {
+            return doctorRepository.save(doctor);
+        }catch (Exception e){
+            return null;
+        }
+    }
 }
