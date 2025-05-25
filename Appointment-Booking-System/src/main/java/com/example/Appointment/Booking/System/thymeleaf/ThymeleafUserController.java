@@ -42,23 +42,12 @@ public class ThymeleafUserController {
     private final AuthenticationService authenticationService;
     private final LabTestAppointmentService labTestAppointmentService;
     private final LabTestAppointmentMapper labTestAppointmentMapper;
-    private final DoctorMapper doctorMapper;
     private final JwtUtils jwtUtils;
     private final UploadSomeData uploadSomeData;
     private final DoctorAvailabilityRepository doctorAvailabilityRepository;
     private final AppointmentSlotRepository slotRepository;
-    private final DoctorAppointmentHistoryRepository doctorAppointmentHistoryRepository;
 
-    private String getJwtFromCookies(HttpServletRequest request) {
-        if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if ("jwt".equals(cookie.getName())) {
-                    return cookie.getValue();
-                }
-            }
-        }
-        return null;
-    }
+
 
     @GetMapping("/")
     public String homePage() {
@@ -98,7 +87,7 @@ public class ThymeleafUserController {
     @GetMapping("/login")         //-------------------------Login-------------------
     public String loginPage(Model model, HttpServletRequest request){
         model.addAttribute("login_request", new SignInRequestDto());
-        String token = getJwtFromCookies(request);
+        String token = jwtUtils.getJwtFromCookies(request);
         if(token!=null){
             try {
                 String phone = jwtUtils.extractUsername(token);
@@ -187,7 +176,7 @@ public class ThymeleafUserController {
         else allLabTestList = labTestService.getAllLabTest();
         try {
             model.addAttribute("allTest",allLabTestList);
-            String token = getJwtFromCookies(request);
+            String token = jwtUtils.getJwtFromCookies(request);
             String phone = jwtUtils.extractUsername(token);
             MUser user = userService.getUserByPhone(phone);
             model.addAttribute("username",user.getName());
@@ -217,7 +206,7 @@ public class ThymeleafUserController {
         model.addAttribute("doctors",allDoctorWithStatus);
         // get cookies
         try {
-            String token = getJwtFromCookies(request);
+            String token = jwtUtils.getJwtFromCookies(request);
             String phone = jwtUtils.extractUsername(token);
             MUser user = userService.getUserByPhone(phone);
             model.addAttribute("username",user.getName());
@@ -232,7 +221,7 @@ public class ThymeleafUserController {
     public String showDoctorAppointmentForm(@PathVariable Long doctorId,@RequestParam(required = false) LocalDate date, Model model, HttpServletRequest request) {
         try {
             //find user from cookies
-            String token = getJwtFromCookies(request);
+            String token = jwtUtils.getJwtFromCookies(request);
             String phone = jwtUtils.extractUsername(token);
             Long patientId = jwtUtils.extractUserId(token);
 
@@ -331,7 +320,7 @@ public class ThymeleafUserController {
 
         try {
             //find user from cookies
-            String token = getJwtFromCookies(request);
+            String token = jwtUtils.getJwtFromCookies(request);
             String phone = jwtUtils.extractUsername(token);
             MUser user = userService.getUserByPhone(phone);
 
@@ -375,7 +364,7 @@ public class ThymeleafUserController {
     @GetMapping("/user-history")  //-------------------------- Show User History---------------------------
     public String userHistory(Model model,HttpServletRequest request){
         try {
-            String token = getJwtFromCookies(request);
+            String token = jwtUtils.getJwtFromCookies(request);
             String phone = jwtUtils.extractUsername(token);
             MUser user = userService.getUserByPhone(phone);
             model.addAttribute("username",user.getName());

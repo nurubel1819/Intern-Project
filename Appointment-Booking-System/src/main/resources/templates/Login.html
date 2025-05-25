@@ -14,13 +14,18 @@
             font-weight: bold;
         }
         body {
-            font-family: Arial, sans-serif;
-            background: #f4f4f4;
+            font-family: 'Segoe UI', sans-serif;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
-            margin: 0;
+            background-image: url('/image/loginPage.jpg');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            color: #333;
         }
 
         .login-container {
@@ -127,6 +132,7 @@
         <button type="submit" class="login-button">Login</button>
     </form>
     <p class="register-link">Don’t have an account? <a th:href="@{/registration}">Register</a></p>
+    <p class="register-link">Home page = <a th:href="@{/}">HOME</a></p>
     <p class="text-danger" textColor="red">
         If you click Login With Dummy Data your default admin is<br>
         phone = 01753278407<br>

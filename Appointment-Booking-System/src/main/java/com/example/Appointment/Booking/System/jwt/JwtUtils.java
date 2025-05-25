@@ -5,6 +5,8 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import jakarta.servlet.http.Cookie;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -35,7 +37,7 @@ public class JwtUtils {
     private String createToken(Long userId,String username, List<String> roles) {
         Map<String,Object> claims = new HashMap<>();
         claims.put("userId", userId);
-        claims.put("roles", roles); // ✅ Add roles here
+        claims.put("roles", roles); //
         return Jwts.builder()
                 .setClaims(claims)
                 .setSubject(username)
@@ -73,8 +75,18 @@ public class JwtUtils {
         return extractClaim(token, claims -> claims.get("active", Boolean.class));
     }
 
-    // ✅ This is what you asked for
     public List<String> extractRoles(String token) {
         return extractClaim(token, claims -> claims.get("roles", List.class));
+    }
+
+    public String getJwtFromCookies(HttpServletRequest request) {
+        if (request.getCookies() != null) {
+            for (Cookie cookie : request.getCookies()) {
+                if ("jwt".equals(cookie.getName())) {
+                    return cookie.getValue();
+                }
+            }
+        }
+        return null;
     }
 }

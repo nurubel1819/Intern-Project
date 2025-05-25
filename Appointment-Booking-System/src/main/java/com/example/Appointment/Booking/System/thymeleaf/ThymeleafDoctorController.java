@@ -30,26 +30,20 @@ public class ThymeleafDoctorController {
     private final AppointmentSlotRepository slotRepository;
     private final DoctorService doctorService;
 
-    private String getJwtFromCookies(HttpServletRequest request) {
-        if (request.getCookies() != null) {
-            for (Cookie cookie : request.getCookies()) {
-                if ("jwt".equals(cookie.getName())) {
-                    return cookie.getValue();
-                }
-            }
-        }
-        return null;
-    }
-
     @RequestMapping("/panel")
-    public String doctorPanel(){
+    public String doctorPanel(Model model, HttpServletRequest request){
+        String token = jwtUtils.getJwtFromCookies(request);
+        Long id = jwtUtils.extractUserId(token);
+        Doctor doctor = doctorService.findDoctorById(id);
+        String doctorName = doctor.getName();
+        model.addAttribute("doctorName",doctorName);
         return "DoctorPage";
     }
 
     @GetMapping("/set-availability")
     public String setAvailability(Model model,HttpServletRequest request){
         try {
-            String token = getJwtFromCookies(request);
+            String token = jwtUtils.getJwtFromCookies(request);
             Long id = jwtUtils.extractUserId(token);
             DoctorAvailabilityDto dto = new DoctorAvailabilityDto();
             dto.setDoctorId(id);

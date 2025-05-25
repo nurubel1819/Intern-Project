@@ -8,6 +8,7 @@ import com.example.Appointment.Booking.System.service.RoleService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Set;
 
 @Service
@@ -64,5 +65,14 @@ public class RoleServiceImplementation implements RoleService {
             return "Role Deleted Successfully";
         }
         else return "Role Not Found";
+    }
+
+    @Override
+    public List<UserRole> getAllRoles() {
+        try {
+            return roleRepository.findAll();
+        }catch (Exception e){
+            return null;
+        }
     }
 }

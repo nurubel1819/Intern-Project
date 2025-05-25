@@ -9,6 +9,8 @@ import com.example.Appointment.Booking.System.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 @Service
 @RequiredArgsConstructor
 public class UserServiceImplementation implements UserService {
@@ -53,6 +55,15 @@ public class UserServiceImplementation implements UserService {
     public MUser updateUser(MUser user) {
         try {
             return userRepository.save(user);
+        }catch (Exception e){
+            return null;
+        }
+    }
+
+    @Override
+    public List<MUser> getAllUsers() {
+        try {
+            return userRepository.findAll();
         }catch (Exception e){
             return null;
         }

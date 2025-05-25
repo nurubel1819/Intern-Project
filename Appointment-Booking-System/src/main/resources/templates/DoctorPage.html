@@ -3,84 +3,16 @@
 <head>
   <meta charset="UTF-8">
   <title>Doctor Panel</title>
-  <style>
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background-color: #f9f9f9;
-    }
-
-    .header {
-      background-color: #34495e;
-      color: white;
-      padding: 20px 30px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-    }
-
-    .header h1 {
-      margin: 0;
-      font-size: 24px;
-    }
-
-    .logout-form {
-      margin: 0;
-    }
-
-    .logout-btn {
-      background-color: #c0392b;
-      color: white;
-      padding: 10px 20px;
-      border: none;
-      border-radius: 5px;
-      cursor: pointer;
-    }
-
-    .container {
-      padding: 40px 30px;
-    }
-
-    .card-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 30px;
-    }
-
-    .card {
-      background-color: white;
-      padding: 30px;
-      border-radius: 10px;
-      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-      text-align: center;
-      transition: transform 0.2s;
-    }
-
-    .card:hover {
-      transform: translateY(-5px);
-    }
-
-    .card a {
-      background-color: #27ae60;
-      color: white;
-      padding: 10px 15px;
-      border: none;
-      border-radius: 6px;
-      text-decoration: none;
-      display: inline-block;
-      margin-top: 15px;
-    }
-
-    .card a:hover {
-      background-color: #1e8449;
-    }
-  </style>
+  <link rel="stylesheet" th:href="@{/css/Panel.css}">
 </head>
 <body>
 
 <!-- Header -->
 <div class="header">
   <h1>Doctor Dashboard</h1>
+  <div class="welcome-msg">
+    Welcome, <span th:text="${doctorName}">User</span>
+  </div>
   <form class="logout-form" th:action="@{/user-logout}" method="get">
     <button type="submit" class="logout-btn">Logout</button>
   </form>
@@ -93,21 +25,6 @@
       <h3>Set Availability</h3>
       <a th:href="@{/doctor/set-availability}">Go</a>
     </div>
-
-    <!--<div class="card">
-      <h3>My Appointments</h3>
-      <a th:href="@{/doctor/my-appointments}">View</a>
-    </div>-->
-
-    <!--<div class="card">
-      <h3>Update Profile</h3>
-      <a th:href="@{/doctor/update-profile}">Edit</a>
-    </div>-->
-
-    <!--<div class="card">
-      <h3>Appointment History</h3>
-      <a th:href="@{/doctor/appointment-history}">Check</a>
-    </div>-->
   </div>
 </div>
 
