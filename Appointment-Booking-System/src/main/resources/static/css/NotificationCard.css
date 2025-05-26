@@ -1,0 +1,114 @@
+/* Overall container for notifications */
+.notifications-container {
+    font-family: 'Arial', sans-serif; /* Choose a clean, readable font */
+    background-color: #f0f2f5; /* Light grey background for the container */
+    padding: 10px;
+    border-radius: 8px;
+    max-width: 1200px; /* Limit width for better readability on large screens */
+    margin: 10px auto; /* Center the container on the page */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+}
+
+/* Individual notification card */
+.notification-card {
+    display: flex; /* Use flexbox for horizontal layout of avatar and content */
+    align-items: flex-start; /* Align items to the top */
+    background-color: #ffffff; /* White background for each card */
+    border: 1px solid #e0e0e0; /* Light border */
+    border-radius: 10px;
+    padding: 5px 10px;
+    margin-bottom: 5px; /* Space between cards */
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05); /* Softer shadow for cards */
+    transition: transform 0.2s ease-in-out; /* Smooth hover effect */
+}
+
+.notification-card:last-child {
+    margin-bottom: 0; /* No margin after the last card */
+}
+
+.notification-card:hover {
+    transform: translateY(-3px); /* Slightly lift card on hover */
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1); /* Enhance shadow on hover */
+}
+
+/* Avatar image styling */
+.avatar {
+    width: 50px; /* Fixed width for the avatar */
+    height: 50px; /* Fixed height for the avatar */
+    border-radius: 50%; /* Make it circular */
+    object-fit: cover; /* Ensure image covers the area without distortion */
+    margin-right: 15px; /* Space between avatar and content */
+    border: 2px solid #4CAF50; /* Green border for accent */
+    flex-shrink: 0; /* Prevent avatar from shrinking */
+}
+
+/* Content area for notification details */
+.notification-content {
+    flex-grow: 1; /* Allow content to take up available space */
+}
+
+/* Top section of the content (ID and time) */
+.notification-content .top {
+    display: flex;
+    justify-content: space-between; /* Push ID to left, time to right */
+    align-items: center;
+    margin-bottom: 5px; /* Space between top section and message */
+}
+
+.id-label {
+    font-size: 0.9em;
+    color: #555;
+    font-weight: bold;
+}
+
+.time {
+    font-size: 1.12em;
+    color: #ed052f;
+    text-align: right; /* Ensure time is always right-aligned */
+}
+
+/* Message body styling */
+.message {
+    font-size: 0.95em;
+    color: #333;
+    line-height: 1.5; /* Improve readability */
+    margin-top: 0; /* Remove default paragraph top margin */
+    margin-bottom: 10px; /* Space after message body */
+}
+
+.message strong {
+    color: #007bff; /* Highlight important names/bodies */
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+    .notifications-container {
+        padding: 15px;
+        margin: 15px auto;
+    }
+
+    .notification-card {
+        flex-direction: column; /* Stack avatar and content vertically */
+        align-items: center; /* Center items when stacked */
+        padding: 15px;
+    }
+
+    .avatar {
+        margin-right: 0;
+        margin-bottom: 10px; /* Space below avatar when stacked */
+    }
+
+    .notification-content {
+        text-align: center; /* Center text content */
+    }
+
+    .notification-content .top {
+        flex-direction: column; /* Stack ID and time vertically */
+        align-items: center;
+    }
+
+    .id-label, .time {
+        text-align: center;
+        margin-bottom: 5px; /* Space between ID and time when stacked */
+    }
+}

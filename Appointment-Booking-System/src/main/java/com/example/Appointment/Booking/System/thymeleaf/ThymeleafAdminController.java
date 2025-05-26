@@ -33,6 +33,8 @@ public class ThymeleafAdminController {
     private final MUserMapper userMapper;
     private final RoleService roleService;
     private final JwtUtils jwtUtil;
+    private final NotificationMapper notificationMapper;
+    private final NotificationService notificationService;
 
     @GetMapping("/dashboard")
     public String adminPage(Model model, HttpServletRequest request){
@@ -176,7 +178,7 @@ public class ThymeleafAdminController {
             return "redirect:/admin/dashboard?message=User not found";
         }
     }
-    @PostMapping("/set_user_role")
+    @PostMapping("/set_user_role") //--------------------Set User Role--------------------
     public String setUserRole(@ModelAttribute RoleSetDto roleSetDto){
         try {
             Long roleId = roleService.findRoleByName(roleSetDto.getRoleName()).getId();
@@ -186,7 +188,7 @@ public class ThymeleafAdminController {
             return "redirect:/admin/dashboard?message=Role set failed";
         }
     }
-    @GetMapping("/add-new-role")
+    @GetMapping("/add-new-role") //--------------------Add New Role--------------------
     public String addNewRole(Model model){
         model.addAttribute("roleAddDto", new RoleAddDto());
         List<String> AllSystemRole = new ArrayList<>();
@@ -201,9 +203,39 @@ public class ThymeleafAdminController {
         roleAddDto.setRoleName(roleAddDto.getRoleName().toUpperCase());
         if(roleService.findRoleByName(roleAddDto.getRoleName()) == null){
             roleService.addNewRole(roleAddDto.getRoleName());
-            return "redirect:/admin/dashboard?message=Role added successfully";
+            return "redirect:/admin/add-new-role?message=Role added successfully";
         }else{
             return "redirect:/admin/add-new-role?message=Role already exists";
+        }
+    }
+    @GetMapping("/send-notification/userId/{id}") //--------------------Admin Send Notification--------------------
+    public String sendNotification(@PathVariable("id") Long userId, Model model){
+        System.out.println("Notification page");
+        try {
+            NotificationDto notificationDto = new NotificationDto();
+            notificationDto.setUserId(userId);
+            System.out.println("NotificationDto = "+notificationDto);
+
+            model.addAttribute("notificationDto", notificationDto);
+            return "SendNotification";
+        }catch (Exception e){
+            System.out.println("Exception = "+e.getMessage());
+            return "redirect:/doctor/send-notification?message=Error in sending notification";
+        }
+    }
+    @PostMapping("/send-notification")
+    public String sendNotificationConfirm(@ModelAttribute NotificationDto notificationDto, HttpServletRequest request){
+        try {
+            String token = jwtUtil.getJwtFromCookies(request);
+            Long id = jwtUtil.extractUserId(token);
+            MUser user = userService.getUserById(id);
+            Notification notification = notificationMapper.MapToEntity(notificationDto,id,"/image/doctor_image.jpg",user.getName());
+            Notification savedNotification = notificationService.saveNotification(notification);
+            if(savedNotification==null) return "redirect:/admin/send-notification?message=Error: notification not send";
+            return "redirect:/admin/see-all-user?message=Notification sent successfully";
+        }catch (Exception e){
+            System.out.println("Exception = "+e.getMessage());
+            return "redirect:/admin/send-notification?message=Error in sending notification";
         }
     }
 }

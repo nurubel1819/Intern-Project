@@ -1,0 +1,142 @@
+body {
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    display: flex;
+    background-color: #f5f7fa;
+}
+
+.notifications-container {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.notification-card {
+    display: flex;
+    align-items: flex-start;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    padding: 16px;
+    margin-bottom: 16px;
+}
+
+.avatar {
+    width: 60px;
+    height: 60px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-right: 16px;
+}
+
+.content {
+    flex-grow: 1;
+}
+
+.top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 6px;
+}
+
+.id-label {
+    font-weight: 600;
+    color: #3f51b5;
+}
+
+.time {
+    color: gray;
+    font-size: 13px;
+}
+
+.message {
+    margin: 4px 0;
+    font-size: 15px;
+}
+
+.thank {
+    font-size: 14px;
+    color: #555;
+}
+body {
+    font-family: 'Segoe UI', sans-serif;
+    background: linear-gradient(to right, #e0f7fa, #ffffff);
+    min-height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+}
+
+.form-container {
+    background-color: #ffffff;
+    padding: 30px 40px;
+    border-radius: 12px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.1);
+    width: 400px;
+}
+
+h2 {
+    text-align: center;
+    color: #00796b;
+    margin-bottom: 25px;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: bold;
+    color: #333;
+}
+
+input[type="text"],
+textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 6px;
+    border: 1px solid #ccc;
+    margin-bottom: 20px;
+    font-size: 15px;
+    transition: border 0.3s;
+}
+
+input[type="text"]:focus,
+textarea:focus {
+    border-color: #00796b;
+    outline: none;
+}
+
+.button-group {
+    display: flex;
+    justify-content: space-between;
+}
+
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.submit {
+    background-color: #00796b;
+    color: white;
+}
+
+.submit:hover {
+    background-color: #00695c;
+}
+
+.cancel {
+    background-color: #e0e0e0;
+    color: #333;
+}
+
+.cancel:hover {
+    background-color: #bdbdbd;
+}
+
+

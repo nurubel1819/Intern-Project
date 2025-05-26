@@ -61,6 +61,7 @@
 <body>
 <div class="table-container">
     <h1>All Users Information</h1>
+    <a th:href="@{/admin/dashboard}" class="details-btn">Back Admin Dashboard</a>
     <table>
         <thead>
         <tr>
@@ -70,7 +71,8 @@
             <th>Email</th>
             <th>Gender</th>
             <th>Date of Birth</th>
-            <th>Action</th>
+            <th>Action User Details</th>
+            <th>Action Send Notification</th>
         </tr>
         </thead>
         <tbody>
@@ -82,7 +84,10 @@
             <td th:text="${user.gender}">Gender</td>
             <td th:text="${user.dateOfBirth}">DOB</td>
             <td>
-                <a th:href="@{'/admin/single-user-details/userID/' + ${user.id}}" class="details-btn">User details</a>
+                <a th:href="@{'/admin/single-user-details/userID/' + ${user.id}}" class="details-btn">Details</a>
+            </td>
+            <td>
+                <a th:href="@{'/admin/send-notification/userId/' + ${user.id}}" class="details-btn">Notification</a>
             </td>
         </tr>
         </tbody>

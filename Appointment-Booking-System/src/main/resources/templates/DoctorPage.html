@@ -13,6 +13,7 @@
   <div class="welcome-msg">
     Welcome, <span th:text="${doctorName}">User</span>
   </div>
+  <a class="link" th:href="@{/doctor-dashboard}">Go To Patient Panel</a>
   <form class="logout-form" th:action="@{/user-logout}" method="get">
     <button type="submit" class="logout-btn">Logout</button>
   </form>
@@ -24,6 +25,10 @@
     <div class="card">
       <h3>Set Availability</h3>
       <a th:href="@{/doctor/set-availability}">Go</a>
+    </div>
+    <div class="card">
+      <h3>Send Message User</h3>
+      <a th:href="@{/doctor/send-notification}">send</a>
     </div>
   </div>
 </div>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns="http://www.w3.org/1999/html">
+<head>
+    <meta charset="UTF-8">
+    <title>AlphaHealth Dashboard</title>
+    <link rel="stylesheet" th:href="@{/css/DashBoard.css}">
+    <link rel="stylesheet" th:href="@{/css/NotificationCard.css}">
+</head>
+<body>
+<div class="sidebar">
+    <h1>ALPHAHEALTH</h1>
+    <a class="menu-item" th:href="@{/doctor-dashboard}">Doctor Appointment</a>
+    <a class="menu-item" th:href="@{/lab-test-dashboard}">Lab Test Appointment</a>
+    <a class="menu-item" th:href="@{/notification-dashboard}">Notifications</a>
+    <a class="menu-item" th:href="@{/user-history}">History</a>
+    <a class="logout-button" th:href="@{/user-logout}">Logout</a>
+</div>
+<div class="content">
+    <div class="header">Welcome back, <span th:text="${username}"></span></div>
+    <h2>Notification</h2>
+    <p>Follow your appointments notifications and stay updated</p>
+
+    <form th:action="@{/notification-dashboard}" method="get">
+        <div class="search-bar">
+            <input type="text" name="search" placeholder="Search" />
+        </div>
+    </form>
+    <div class="notifications-container">
+        <div class="notification-card" th:each="note : ${notifications}">
+            <img class="avatar" th:src="@{${note.imageUrl}}" alt="User Image" />
+            <div class="notification-content">
+                <div class="top">
+                    <span class="id-label" th:text="${note.type} + ' ID: #' + ${note.id}">Appointment ID: #12345</span>
+                    <span class="time" th:text="${note.timeAgo}">5 minutes ago</span>
+                </div>
+                <p class="message">
+                    message form <strong th:text="${note.senderName}+'  '">Dr. Mahmudul Hasan</strong>
+                    send date <strong th:text="${note.date}">3 May 2025</strong> </br>
+                    <Strong th:text="${note.messageBody}">message body</Strong> </br>
+                    Thank you for choosing Alpha Healthcare. See you soon!
+                </p>
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

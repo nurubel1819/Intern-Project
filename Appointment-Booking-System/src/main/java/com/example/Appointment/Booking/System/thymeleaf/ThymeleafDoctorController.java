@@ -13,10 +13,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.ModelAttribute;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalTime;
 
@@ -40,7 +37,7 @@ public class ThymeleafDoctorController {
         return "DoctorPage";
     }
 
-    @GetMapping("/set-availability")
+    @GetMapping("/set-availability") //--------------------Doctor Set Availability--------------------
     public String setAvailability(Model model,HttpServletRequest request){
         try {
             String token = jwtUtils.getJwtFromCookies(request);

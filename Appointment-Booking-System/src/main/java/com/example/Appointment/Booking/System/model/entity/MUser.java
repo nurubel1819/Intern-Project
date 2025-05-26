@@ -25,6 +25,7 @@ public class MUser {
     private String email;
     private String gender;
     private LocalDate dateOfBirth;
+    private String imageUrl;
 
     @ManyToMany(mappedBy = "users",fetch=FetchType.EAGER, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     @ToString.Exclude

@@ -14,6 +14,7 @@ import org.springframework.stereotype.Component;
 
 import java.time.Duration;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Set;
 
 @Component
@@ -28,6 +29,7 @@ public class UploadSomeData {
     private final DoctorMapper doctorMapper;
     private final TestTypeService testTypeService;
     private final LabService labService;
+    private final NotificationService notificationService;
 
     public void uploadSomeUser(){
         if(userRepository.count() == 0) {
@@ -42,6 +44,18 @@ public class UploadSomeData {
             userDto.setDateOfBirth(LocalDate.now());
 
             MUser user = authenticationService.sinUp(userMapper.mapToEntity(userDto));
+
+            //add one notification to user
+            Notification notification = new Notification();
+            notification.setSenderId(user.getId());
+            notification.setUserId(user.getId());
+            notification.setType("Appointment");
+            notification.setImageUrl("/image/doctor_image.jpg");
+            notification.setSenderName(user.getName());
+            notification.setDate(LocalDateTime.now());
+            notification.setMessageBody("This message set from dummy data");
+            notificationService.saveNotification(notification);
+
 
             //register first user as a doctor
             DoctorDto doctorDto = new DoctorDto();

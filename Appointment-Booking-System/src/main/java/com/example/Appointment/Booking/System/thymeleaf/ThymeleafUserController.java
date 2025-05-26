@@ -7,6 +7,7 @@ import com.example.Appointment.Booking.System.model.entity.*;
 import com.example.Appointment.Booking.System.model.mapper.DoctorMapper;
 import com.example.Appointment.Booking.System.model.mapper.LabTestAppointmentMapper;
 import com.example.Appointment.Booking.System.model.mapper.MUserMapper;
+import com.example.Appointment.Booking.System.model.mapper.NotificationMapper;
 import com.example.Appointment.Booking.System.repository.*;
 import com.example.Appointment.Booking.System.service.*;
 import com.example.Appointment.Booking.System.validation.ImportantValidation;
@@ -46,6 +47,8 @@ public class ThymeleafUserController {
     private final UploadSomeData uploadSomeData;
     private final DoctorAvailabilityRepository doctorAvailabilityRepository;
     private final AppointmentSlotRepository slotRepository;
+    private final NotificationService notificationService;
+    private final NotificationMapper notificationMapper;
 
 
 
@@ -376,5 +379,27 @@ public class ThymeleafUserController {
             return "redirect:/login";
         }
     }
-
+    @GetMapping("/notification-dashboard") //-------------------------- Show Notification Dashboard---------------------------
+    public String notificationDashboard(@RequestParam(value = "search", required = false) String search,Model model,HttpServletRequest request){
+        try {
+            String token = jwtUtils.getJwtFromCookies(request);
+            Long userId = jwtUtils.extractUserId(token);
+            model.addAttribute("username",userService.getUserById(userId).getName());
+            List<Notification> allNotifications;
+            if (search != null && !search.isEmpty())
+                allNotifications = notificationService.getOneUserContainNotification(userId,search);
+            else allNotifications = notificationService.getOneUserNotification(userId);
+            List<NotificationDto> notificationDtoList = new ArrayList<>();
+            for(Notification notification:allNotifications){
+                NotificationDto notificationDto = notificationMapper.MapToDto(notification);
+                notificationDtoList.add(notificationDto);
+            }
+            //System.out.println("Notification dto list = "+notificationDtoList);
+            model.addAttribute("notifications",notificationDtoList);
+            return "NotificationDashboard";
+        }catch (Exception e){
+            System.out.println("Exception = "+e.getMessage());
+            return "redirect:/login";
+        }
+    }
 }
