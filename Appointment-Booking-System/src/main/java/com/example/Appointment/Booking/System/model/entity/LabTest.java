@@ -23,6 +23,7 @@ public class LabTest {
     private String price;
     private String description;
     private Duration durationInHours;
+    private String imagePath;
 
     @ManyToMany(mappedBy = "labTests")
     private Set<Lab> labs = new HashSet<>();

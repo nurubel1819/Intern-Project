@@ -2,6 +2,7 @@ package com.example.Appointment.Booking.System.model.dto;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 import java.util.Set;
@@ -19,4 +20,5 @@ public class MUserDto {
     private String email;
     private String gender;
     private LocalDate dateOfBirth;
+    private MultipartFile imageFile;
 }

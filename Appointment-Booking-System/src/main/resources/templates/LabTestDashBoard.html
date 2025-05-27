@@ -26,7 +26,7 @@
 
     <div class="doctor-container">
         <div class="doctor-card" th:each="test : ${allTest}">
-            <img th:src="@{/image/lab_test_image.png}" alt="Doctor" width="180">
+            <img th:src="@{${test.imagePath}}" alt="Lab Image" width="200px"/>
             <h3 th:text="${test.testName}"></h3>
             <p th:text="${'Type = '+test.testType.name}"></p>
             <p th:text="${'Price = '+test.price+' tk'}"></p>

@@ -23,5 +23,5 @@ public class DoctorDto {
     @Schema(hidden = true)
     private LocalDate dateOfBirth;
     @Schema(hidden = true)
-    private String image;
+    private String imageUrl;
 }

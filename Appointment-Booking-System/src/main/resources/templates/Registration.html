@@ -3,6 +3,7 @@
 <head>
     <title>Create an account</title>
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" th:href="@{/css/SingleImageUpload.css}">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -88,7 +89,7 @@
     <div th:if="${param.message}" class="alert-box" th:text="${param.message}"></div>
     <img th:src="@{/image/loginLogo.png}" alt="Logo" class="logo">
     <h2>Create an account</h2>
-    <form th:action="@{/registration}" method="post" th:object="${MUser}">
+    <form th:action="@{/registration}" method="post" th:object="${MUser}" enctype="multipart/form-data">
         <input type="text" th:field="*{name}" placeholder="Full Name" required>
         <input type="text" th:field="*{phonNumber}" placeholder="Phone Number" required>
         <input type="email" th:field="*{email}" placeholder="Email" required>
@@ -101,6 +102,8 @@
             <option value="Other">Other</option>
         </select>
         <input type="date" th:field="*{dateOfBirth}" placeholder="Date of Birth" required>
+        <label for="image">User Image</label>
+        <input class="image-upload" type="file" id="image" name="imageFile" accept="image/*">
 
         <div class="btn-group">
             <button type="submit" class="btn btn-register">Register</button>

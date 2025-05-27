@@ -3,6 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <title>Lab Test Form</title>
+    <link rel="stylesheet" th:href="@{/css/SingleImageUpload.css}">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -62,7 +63,7 @@
 <body>
 <div class="form-container">
     <h2>Lab Test Entry Form</h2>
-    <form th:action="@{/admin/upload_new_test}" method="post" th:object="${labTestDto}">
+    <form th:action="@{/admin/upload_new_test}" method="post" th:object="${labTestDto}" enctype="multipart/form-data">
 
         <label for="testName">Test Name:</label>
         <input type="text" id="testName" th:field="*{testName}" placeholder="Enter test name" required>
@@ -91,6 +92,8 @@
 
         <label for="durationInHours">Duration (in hours):</label>
         <input type="number" id="durationInHours" th:field="*{durationInHours}" placeholder="Enter duration" required>
+        <label for="image">Lab Test Image</label>
+        <input class="image-upload" type="file" id="image" name="imageFile" accept="image/*">
 
         <button type="submit">Submit</button>
     </form>

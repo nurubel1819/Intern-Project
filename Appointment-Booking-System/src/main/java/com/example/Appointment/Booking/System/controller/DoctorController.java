@@ -65,8 +65,8 @@ public class DoctorController {
            doctor.setSpecialization(dto.getSpecialization());
            doctor.setAddress(dto.getAddress());
            doctor.setExperience(dto.getExperience());
-           doctor.setImage(dto.getImage());
-           doctor.setImage(dto.getImage());
+           doctor.setImageUrl(dto.getImage());
+           doctor.setImageUrl(dto.getImage());
 
            doctor = doctorService.updateDoctorDetails(doctor);
            if(doctor==null) return ResponseEntity.badRequest().body(Map.of("message","Update error from doctor controller"));

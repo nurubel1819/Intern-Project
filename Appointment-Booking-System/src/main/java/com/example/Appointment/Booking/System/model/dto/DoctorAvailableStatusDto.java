@@ -10,4 +10,5 @@ public class DoctorAvailableStatusDto {
     private String specialization;
     private String status;
     private int totalPossibilityPatient;
+    private String imageUrl;
 }

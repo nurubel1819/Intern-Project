@@ -1,0 +1,26 @@
+.image-upload {
+    display: block;
+    width: 100%;
+    max-width: 400px;
+    padding: 12px;
+    border: 2px dashed #021301;
+    border-radius: 8px;
+    background-color: #f8f8f8;
+    font-size: 14px;
+    color: #021301;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+/* Hover effect */
+.image-upload:hover {
+    border-color: #f60404;
+    background-color: #0fefd1;
+}
+
+/* Focus outline remove for better UI */
+.image-upload:focus {
+    outline: none;
+    border-color: #66bb6a;
+    box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+}

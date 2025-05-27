@@ -20,7 +20,7 @@ public class DoctorMapper {
         doctorDto.setExperience(doctor.getExperience());
         doctorDto.setQualification(doctor.getQualification());
         doctorDto.setDateOfBirth(doctor.getDateOfBirth());
-        doctorDto.setImage(doctor.getImage());
+        doctorDto.setImageUrl(doctor.getImageUrl());
         return doctorDto;
     }
 
@@ -36,7 +36,7 @@ public class DoctorMapper {
         doctor.setExperience(doctorDto.getExperience());
         doctor.setQualification(doctorDto.getQualification());
         doctor.setDateOfBirth(doctorDto.getDateOfBirth());
-        doctor.setImage(doctorDto.getImage());
+        doctor.setImageUrl(doctorDto.getImageUrl());
         return doctor;
     }
 }

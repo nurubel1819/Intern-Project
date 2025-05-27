@@ -5,9 +5,11 @@ import com.example.Appointment.Booking.System.model.dto.DoctorAvailabilityDto;
 import com.example.Appointment.Booking.System.model.entity.AppointmentSlot;
 import com.example.Appointment.Booking.System.model.entity.Doctor;
 import com.example.Appointment.Booking.System.model.entity.DoctorAvailability;
+import com.example.Appointment.Booking.System.model.entity.MUser;
 import com.example.Appointment.Booking.System.repository.AppointmentSlotRepository;
 import com.example.Appointment.Booking.System.repository.DoctorAvailabilityRepository;
 import com.example.Appointment.Booking.System.service.DoctorService;
+import com.example.Appointment.Booking.System.service.UserService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
@@ -26,13 +28,14 @@ public class ThymeleafDoctorController {
     private final DoctorAvailabilityRepository doctorAvailabilityRepository;
     private final AppointmentSlotRepository slotRepository;
     private final DoctorService doctorService;
+    private final UserService userService;
 
     @RequestMapping("/panel")
     public String doctorPanel(Model model, HttpServletRequest request){
         String token = jwtUtils.getJwtFromCookies(request);
         Long id = jwtUtils.extractUserId(token);
-        Doctor doctor = doctorService.findDoctorById(id);
-        String doctorName = doctor.getName();
+        MUser user = userService.getUserById(id);
+        String doctorName = user.getName();
         model.addAttribute("doctorName",doctorName);
         return "DoctorPage";
     }
@@ -42,11 +45,13 @@ public class ThymeleafDoctorController {
         try {
             String token = jwtUtils.getJwtFromCookies(request);
             Long id = jwtUtils.extractUserId(token);
+            String phone = jwtUtils.extractUsername(token);
             DoctorAvailabilityDto dto = new DoctorAvailabilityDto();
-            dto.setDoctorId(id);
+            Long doctorId = doctorService.getByPhonNumber(phone).getId();
+            dto.setDoctorId(doctorId);
             model.addAttribute("doctorAvailabilityDto", dto);
 
-            Doctor doctor = doctorService.findDoctorById(id);
+            Doctor doctor = doctorService.findDoctorById(doctorId);
             model.addAttribute("doctor", doctor);
         }catch (Exception e){
             System.out.println("Exception = "+e.getMessage());

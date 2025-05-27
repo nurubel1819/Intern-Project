@@ -1,6 +1,8 @@
 package com.example.Appointment.Booking.System.thymeleaf;
 
 import com.example.Appointment.Booking.System.dummyData.UploadSomeData;
+import com.example.Appointment.Booking.System.helper.AppConstants;
+import com.example.Appointment.Booking.System.helper.ImageHandle;
 import com.example.Appointment.Booking.System.jwt.JwtUtils;
 import com.example.Appointment.Booking.System.model.dto.*;
 import com.example.Appointment.Booking.System.model.entity.*;
@@ -63,6 +65,7 @@ public class ThymeleafUserController {
     }
     @PostMapping("/registration")
     public String registerUser(@ModelAttribute("MUser") MUserDto userDto,Model model) {
+        String saveImageUrl = ImageHandle.uploadImage(userDto.getImageFile(), AppConstants.USER_IMAG);
         System.out.println("user = "+userDto);
         model.addAttribute("MUser", userDto);
         if(!userDto.getPassword().equals(userDto.getConfirmPassword())) return "redirect:/registration?message=Passwords do not match";
@@ -72,6 +75,7 @@ public class ThymeleafUserController {
         {
             try {
                 MUser user = userMapper.mapToEntity(userDto);
+                user.setImageUrl(saveImageUrl);
                 authenticationService.sinUp(user);
                 return "redirect:/login?message=Registration successful";
 
@@ -178,6 +182,8 @@ public class ThymeleafUserController {
         if (search != null && !search.isEmpty()) allLabTestList = labTestService.getLabTestContain(search);
         else allLabTestList = labTestService.getAllLabTest();
         try {
+            for (LabTest labTest : allLabTestList)
+                if (labTest.getImagePath() == null) labTest.setImagePath("/image/lab_test_image.png");
             model.addAttribute("allTest",allLabTestList);
             String token = jwtUtils.getJwtFromCookies(request);
             String phone = jwtUtils.extractUsername(token);
@@ -204,6 +210,8 @@ public class ThymeleafUserController {
             doctorAvailableStatusDto.setName(doctor.getName());
             doctorAvailableStatusDto.setQualification(doctor.getQualification());
             doctorAvailableStatusDto.setSpecialization(doctor.getSpecialization());
+            if(doctor.getImageUrl()==null) doctorAvailableStatusDto.setImageUrl("/image/doctor_image.jpg");
+            else doctorAvailableStatusDto.setImageUrl(doctor.getImageUrl());
             allDoctorWithStatus.add(doctorAvailableStatusDto);
         }
         model.addAttribute("doctors",allDoctorWithStatus);

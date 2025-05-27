@@ -29,6 +29,6 @@ public class Doctor {
     @Column(nullable = false)
     private String qualification;//description
     private LocalDate dateOfBirth;
-    private String image;//optional
+    private String imageUrl;//optional
 
 }

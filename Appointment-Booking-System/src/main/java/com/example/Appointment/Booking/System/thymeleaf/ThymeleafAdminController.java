@@ -1,5 +1,7 @@
 package com.example.Appointment.Booking.System.thymeleaf;
 
+import com.example.Appointment.Booking.System.helper.AppConstants;
+import com.example.Appointment.Booking.System.helper.ImageHandle;
 import com.example.Appointment.Booking.System.jwt.JwtUtils;
 import com.example.Appointment.Booking.System.model.dto.*;
 import com.example.Appointment.Booking.System.model.entity.*;
@@ -73,16 +75,19 @@ public class ThymeleafAdminController {
         return "LabPage";
     }
     @PostMapping("/add-new-lab-or-hospital")
-    public String saveLab(@ModelAttribute LabDto labDto){
+    public String saveLab(@ModelAttribute LabDto labDto) {
+        String saveImagePath = ImageHandle.uploadImage(labDto.getImageFile(), AppConstants.LAB_IMAG);
         try {
             Lab lab = labMapper.mapToEntity(labDto);
+            lab.setImagePath(saveImagePath);
             labService1.uploadLabDetails(lab);
             return "redirect:/admin/dashboard?message=upload successful";
-        }catch (Exception e){
-            System.out.println("Exception = "+e.getMessage());
-            return "redirect:/add-new-lab-or-hospital?message=upload failed";
+        } catch (Exception e) {
+            System.out.println("Exception = " + e.getMessage());
+            return "redirect:/admin/add-new-lab-or-hospital?message=upload failed";
         }
     }
+
 
     @GetMapping("/upload_new_test")    //-------------------------Upload New Test--------------------------
     public String uploadNewTest(Model model){
@@ -99,6 +104,8 @@ public class ThymeleafAdminController {
     @PostMapping("/upload_new_test")
     public String saveLabTest(@ModelAttribute LabTestDto labTestDto) {
 
+        String saveImagePath = ImageHandle.uploadImage(labTestDto.getImageFile(), AppConstants.LAB_TEST_IMAG);
+
         try {
             Lab lab = labService.getLabDetails(labTestDto.getLabName());
             if(testTypeService.getTestTypeByName(labTestDto.getTestType()) == null){
@@ -109,6 +116,7 @@ public class ThymeleafAdminController {
             }
 
             LabTest labTest = labTestMapper.mapToEntity(labTestDto);
+            labTest.setImagePath(saveImagePath);
             labTest.getLabs().add(lab);
 
             lab.getLabTests().add(labTest);
@@ -137,6 +145,7 @@ public class ThymeleafAdminController {
             doctorDto.setEmail(user.getEmail());
             doctorDto.setGender(user.getGender());
             doctorDto.setDateOfBirth(user.getDateOfBirth());
+            doctorDto.setImageUrl(user.getImageUrl());
             Doctor doctor = doctorMapper.mapToEntity(doctorDto);
             doctorService.uploadDoctor(doctor);
             return "redirect:/admin/dashboard?message=Doctor registration successful";

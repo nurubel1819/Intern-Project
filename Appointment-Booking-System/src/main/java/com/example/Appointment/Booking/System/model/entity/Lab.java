@@ -21,6 +21,7 @@ public class Lab {
     @Column(nullable = false)
     private String address;
     private double rating;
+    private String imagePath;
 
     @ManyToMany(cascade = CascadeType.ALL)
     @JoinTable(
