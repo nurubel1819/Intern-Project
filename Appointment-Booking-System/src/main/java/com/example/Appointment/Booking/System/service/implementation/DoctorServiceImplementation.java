@@ -1,8 +1,9 @@
 package com.example.Appointment.Booking.System.service.implementation;
 
-import com.example.Appointment.Booking.System.model.entity.Doctor;
-import com.example.Appointment.Booking.System.model.entity.MUser;
-import com.example.Appointment.Booking.System.model.entity.UserRole;
+import com.example.Appointment.Booking.System.model.dto.DoctorAvailabilityDto;
+import com.example.Appointment.Booking.System.model.entity.*;
+import com.example.Appointment.Booking.System.repository.AppointmentSlotRepository;
+import com.example.Appointment.Booking.System.repository.DoctorAvailabilityRepository;
 import com.example.Appointment.Booking.System.repository.DoctorRepository;
 import com.example.Appointment.Booking.System.service.DoctorService;
 import com.example.Appointment.Booking.System.service.RoleService;
@@ -10,6 +11,7 @@ import com.example.Appointment.Booking.System.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -18,6 +20,8 @@ public class DoctorServiceImplementation implements DoctorService {
     private final DoctorRepository doctorRepository;
     private final UserService userService;
     private final RoleService roleService;
+    private final DoctorAvailabilityRepository doctorAvailabilityRepository;
+    private final AppointmentSlotRepository appointmentSlotRepository;
 
     @Override
     public Doctor uploadDoctor(Doctor doctor){
@@ -73,6 +77,42 @@ public class DoctorServiceImplementation implements DoctorService {
             return doctorRepository.save(doctor);
         }catch (Exception e){
             return null;
+        }
+    }
+
+    @Override
+    public boolean setDoctorAvailability(DoctorAvailabilityDto dto) {
+        try {
+            DoctorAvailability availability = new DoctorAvailability();
+            availability.setDoctorId(dto.getDoctorId());
+            availability.setDate(dto.getDate());
+            availability.setAvailable(true);
+            doctorAvailabilityRepository.save(availability);
+
+            LocalTime startTime = LocalTime.of(16, 0); // 16:00 means 4:00 PM
+
+            int totalSlots = 20;
+            int slotDurationInMinutes = 15;
+
+            for (int i = 0; i < totalSlots; i++) {
+                AppointmentSlot slot = new AppointmentSlot();
+                slot.setDoctorId(dto.getDoctorId());
+                slot.setDate(dto.getDate());
+
+                // Start and end time per slot
+                LocalTime slotStartTime = startTime.plusMinutes(i * slotDurationInMinutes);
+                LocalTime slotEndTime = slotStartTime.plusMinutes(slotDurationInMinutes);
+
+                slot.setStartTime(slotStartTime);
+                slot.setEndTime(slotEndTime);
+                slot.setBooked(false); // slot initially not booked
+
+                appointmentSlotRepository.save(slot);
+            }
+            return true;
+        }catch (Exception e){
+            System.out.println("Exception = "+e.getMessage());
+            return false;
         }
     }
 }

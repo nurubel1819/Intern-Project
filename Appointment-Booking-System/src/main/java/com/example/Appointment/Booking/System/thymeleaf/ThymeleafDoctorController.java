@@ -65,39 +65,8 @@ public class ThymeleafDoctorController {
 
         if(doctorAvailabilityRepository.existsByDoctorIdAndDate(dto.getDoctorId(),dto.getDate()))
             return "redirect:/doctor/set-availability?message=Your availability already exists for this date";
-        try {
-            DoctorAvailability availability = new DoctorAvailability();
-            availability.setDoctorId(dto.getDoctorId());
-            availability.setDate(dto.getDate());
-            availability.setAvailable(true);
-            doctorAvailabilityRepository.save(availability);
-
-            // Start time: 4:00 PM
-            LocalTime startTime = LocalTime.of(16, 0); // 16:00 means 4:00 PM
-
-            int totalSlots = 20;
-            int slotDurationInMinutes = 15;
-
-            for (int i = 0; i < totalSlots; i++) {
-                AppointmentSlot slot = new AppointmentSlot();
-                slot.setDoctorId(dto.getDoctorId());
-                slot.setDate(dto.getDate());
-
-                // Start and end time per slot
-                LocalTime slotStartTime = startTime.plusMinutes(i * slotDurationInMinutes);
-                LocalTime slotEndTime = slotStartTime.plusMinutes(slotDurationInMinutes);
-
-                slot.setStartTime(slotStartTime);
-                slot.setEndTime(slotEndTime);
-                slot.setBooked(false); // slot initially not booked
-
-                slotRepository.save(slot);
-            }
-
+        if(doctorService.setDoctorAvailability(dto))
             return "redirect:/doctor/panel?message=Availability set successfully";
-        }catch (Exception e){
-            System.out.println("Exception in doctor set-availability = "+e.getMessage());
-            return "redirect:/doctor/set-availability?message=Error in setting availability";
-        }
+        else return "redirect:/doctor/set-availability?message=Error in setting availability";
     }
 }

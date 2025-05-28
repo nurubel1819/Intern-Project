@@ -29,7 +29,7 @@
 
   <div class="doctor-container">
     <div class="doctor-card" th:each="doctor : ${doctors}">
-      <img th:src="@{${doctor.imageUrl}}" alt="Lab Image" width="200px"/>
+      <img th:src="@{${doctor.imageUrl}}" alt="Lab Image" height="100px" width="200px"/>
       <!--<img th:src="@{/image/doctor_image.jpg}" alt="Doctor" width="180">-->
       <h3 th:text="${doctor.getName()}"></h3>
       <p th:text="${'Qulaificatin = '+doctor.getQualification()}"></p>

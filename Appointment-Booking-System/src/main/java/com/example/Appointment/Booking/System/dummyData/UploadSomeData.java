@@ -1,5 +1,6 @@
 package com.example.Appointment.Booking.System.dummyData;
 
+import com.example.Appointment.Booking.System.model.dto.DoctorAvailabilityDto;
 import com.example.Appointment.Booking.System.model.dto.DoctorDto;
 import com.example.Appointment.Booking.System.model.dto.LabTestAppointmentDto;
 import com.example.Appointment.Booking.System.model.dto.MUserDto;
@@ -71,6 +72,11 @@ public class UploadSomeData {
             Doctor doctor = doctorMapper.mapToEntity(doctorDto);
             doctor = doctorService.uploadDoctor(doctor);
 
+            //add time slot for this doctor
+            DoctorAvailabilityDto dto = new DoctorAvailabilityDto();
+            dto.setDoctorId(doctor.getId());
+            dto.setDate(LocalDate.now());// add today available
+            doctorService.setDoctorAvailability(dto);
 
 
             //create second user as a USER Role
