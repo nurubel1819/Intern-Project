@@ -7,7 +7,10 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.stereotype.Component;
 
 import java.security.Key;
@@ -88,5 +91,22 @@ public class JwtUtils {
             }
         }
         return null;
+    }
+
+    public boolean setJwtToCookies(HttpServletResponse response, String jwt) {
+        try {
+            //set jwt token to cookies
+            ResponseCookie cookie = ResponseCookie.from("jwt", jwt)
+                    .httpOnly(true)
+                    .path("/")
+                    .maxAge(24 * 60 * 60)
+                    .build();
+
+            response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+            return true;
+        }catch (Exception e) {
+            System.out.println("Exception form jwt set token to cookies"+e.getMessage());
+            return false;
+        }
     }
 }

@@ -132,13 +132,9 @@ public class ThymeleafUserController {
             JwtAuthenticationResponseDto status = authenticationService.signIn(signInRequestDto);
             if (status.getToken() != null) {
                 // Set JWT in HTTP-only cookie
-                ResponseCookie cookie = ResponseCookie.from("jwt", status.getToken())
-                        .httpOnly(true)
-                        .path("/")
-                        .maxAge(24 * 60 * 60)
-                        .build();
-
-                response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
+                boolean tokenSetStatus = jwtUtils.setJwtToCookies(response, status.getToken());
+                if (!tokenSetStatus)
+                    return "redirect:/login?message=Login failed. Please check your phone and password, try again.";
 
                 //Extract role from token
                 List<String> roles = jwtUtils.extractRoles(status.getToken());
