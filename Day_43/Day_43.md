@@ -3,7 +3,8 @@
 A simple web-based application for managing medical prescriptions using **Spring Boot**, **JWT-based authentication**, and **H2 in-memory database**.
 
 ---
-## Project repository Link = [https://github.com/nurubel1819/CMED-Technical-Skills-Exam](Click here)
+## 🔗 Project Repository Link
+[Click here to view the repository](https://github.com/nurubel1819/CMED-Technical-Skills-Exam)
 ## 🚀 How to Run the Project
 
 1. **Start the Spring Boot application** (`PrescriptionManagementSystemApplication.java`)
