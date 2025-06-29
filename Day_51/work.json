@@ -1,0 +1,543 @@
+[
+    {
+        "disease":"unknown",
+        "questions":[
+            {
+                "question":"Select the Member",
+                "options":[
+                    {
+                        "option":"list of family members"
+                    }
+                ],
+                "field_type":"Dropdown - Single Select",
+                "field_input":"Mandatory"
+            },
+            {
+                "question":"Select the Disease ",
+                "options":[
+                    {
+                        "option":"Anaemia"
+                    },
+                    {
+                        "option":"Diabetes"
+                    },
+                    {
+                        "option":"Respiratory"
+                    },
+                    {
+                        "option":"Hypertension"
+                    },
+                    {
+                        "option":"Musculoskeletal diseases"
+                    },
+                    {
+                        "option":"Seasonal illness"
+                    }
+                ],
+                "field_type":"Dropdown - Single Select",
+                "field_input":"Mandatory"
+            }
+        ]
+    },
+    {
+        "disease":"Anemia",
+        "questions":[
+            {
+                "question":"Do you often feel tired, dizziness, or short of breath even when you haven't done much physical work?",
+                "options":[
+                    {
+                        "option":"Yes"
+                    },
+                    {
+                        "option":"No"
+                    }
+                ],
+                "field_type":"Dropdown - Single Select",
+                "field_input":"Mandatory"
+            },
+            {
+                "question":"Have you seen your skin, lips, or nails look paler than usual recently?",
+                "options":[
+                    {
+                        "option":"Yes"
+                    },
+                    {
+                        "option":"No"
+                    }
+                ],
+                "field_type":"Dropdown - Single Select",
+                "field_input":"Mandatory"
+            },
+            {
+                "question":"Do your hands or feet feel cold even when the weather is warm?",
+                "options":[
+                    {
+                        "option":"Yes"
+                    },
+                    {
+                        "option":"No"
+                    }
+                ],
+                "field_type":"Dropdown - Single Select",
+                "field_input":"Mandatory"
+            },
+            {
+                "question":"Validation Rule for Result-Low Risk: Only one response has response Yes.- Moderate Risk: Two responses are Yes- High Risk: All the responses are Yes.-No Risk: None of the responses are Yes",
+                "options":[
+                    {
+                        "option":"Low Risk"
+                    },
+                    {
+                        "option":"No Risk: No significant symptoms, maintain a balanced diet."
+                    },
+                    {
+                        "option":"Moderate Risk: Possible mild anemia, monitor symptoms, increase iron intake."
+                    },
+                    {
+                        "option":"High Risk: Severe symptoms, consult a doctor for blood tests."
+                    }
+                ],
+                "field_type":"null",
+                "field_input":"null"
+            }
+        ]
+    },
+    {
+        "disease":"Diabetes",
+        "questions":[
+            {
+                "question":"Do you have a family history of Diabetes",
+                "options":[
+                    {
+                        "option":"Yes"
+                    },
+                    {
+                        "option":"No"
+                    }
+                ],
+                "field_type":"Dropdown - Single Select",
+                "field_input":"Mandatory"
+            },
+            {
+                "question":"Do you often feel very thirsty even after drinking enough water?",
+                "options":[
+                    {
+                        "option":"Yes"
+                    },
+                    {
+                        "option":"No"
+                    }
+                ],
+                "field_type":"Dropdown - Single Select",
+                "field_input":"Mandatory"
+            },
+            {
+                "question":"Do you need to urinate very often, including during the night?",
+                "options":[
+                    {
+                        "option":"Yes"
+                    },
+                    {
+                        "option":"No"
+                    }
+                ],
+                "field_type":"Dropdown - Single Select",
+                "field_input":"Mandatory"
+            },
+            {
+                "question":"Have you lost or gained weight recently without any clear reason?",
+                "options":[
+                    {
+                        "option":"Yes"
+                    },
+                    {
+                        "option":"No"
+                    }
+                ],
+                "field_type":"Dropdown - Single Select",
+                "field_input":"Mandatory"
+            },
+            {
+                "question":"Validation Rule for Result-Low Risk: Only one response has response Yes.- Moderate Risk: Two responses are Yes- High Risk: All the responses are Yes.-No Risk: None of the responses are Yes",
+                "options":[
+                    {
+                        "option":"Low Risk"
+                    },
+                    {
+                        "option":"No Risk: No significant symptoms, maintain a balanced diet."
+                    },
+                    {
+                        "option":"Moderate Risk: Possible mild anemia, monitor symptoms, increase iron intake."
+                    },
+                    {
+                        "option":"High Risk: Severe symptoms, consult a doctor for blood tests."
+                    }
+                ],
+                "field_type":"null",
+                "field_input":"null"
+            }
+        ]
+    },
+    {
+        "disease":"Hypertension",
+        "questions":[
+            {
+                "question":"Do you often have headaches or blurred vision?",
+                "options":[
+                    {
+                        "option":"Yes"
+                    },
+                    {
+                        "option":"No"
+                    }
+                ],
+                "field_type":"Dropdown - Single Select",
+                "field_input":"Mandatory"
+            },
+            {
+                "question":"Do you feel chest pain or tightness when doing physical work or exercise?",
+                "options":[
+                    {
+                        "option":"Yes"
+                    },
+                    {
+                        "option":"No"
+                    }
+                ],
+                "field_type":"Dropdown - Single Select",
+                "field_input":"Mandatory"
+            },
+            {
+                "question":"Have you ever been told by a doctor that you have high blood pressure?",
+                "options":[
+                    {
+                        "option":"Yes"
+                    },
+                    {
+                        "option":"No"
+                    }
+                ],
+                "field_type":"Dropdown - Single Select",
+                "field_input":"Mandatory"
+            },
+            {
+                "question":"Do you often feel stressed or anxious?",
+                "options":[
+                    {
+                        "option":"Yes"
+                    },
+                    {
+                        "option":"No"
+                    }
+                ],
+                "field_type":"Dropdown - Single Select",
+                "field_input":"Mandatory"
+            },
+            {
+                "question":"Validation Rule for Result-Low Risk: Only one response has response Yes.- Moderate Risk: Two responses are Yes- High Risk: All the responses are Yes.-No Risk: None of the responses are Yes",
+                "options":[
+                    {
+                        "option":"Low Risk"
+                    },
+                    {
+                        "option":"No Risk: No significant symptoms, maintain a balanced diet."
+                    },
+                    {
+                        "option":"Moderate Risk: Possible mild anemia, monitor symptoms, increase iron intake."
+                    },
+                    {
+                        "option":"High Risk: Severe symptoms, consult a doctor for blood tests."
+                    }
+                ],
+                "field_type":"null",
+                "field_input":"null"
+            }
+        ]
+    },
+    {
+        "disease":"Respiratory diseases",
+        "questions":[
+            {
+                "question":"Do you feel short of breath even with light physical activity (like walking or climbing stairs)?",
+                "options":[
+                    {
+                        "option":"Yes"
+                    },
+                    {
+                        "option":"No"
+                    }
+                ],
+                "field_type":"Dropdown - Single Select",
+                "field_input":"Mandatory"
+            },
+            {
+                "question":"Do you often have a cough, with or without phlegm?",
+                "options":[
+                    {
+                        "option":"Yes"
+                    },
+                    {
+                        "option":"No"
+                    }
+                ],
+                "field_type":"Dropdown - Single Select",
+                "field_input":"Mandatory"
+            },
+            {
+                "question":"Do you hear a wheezing or whistling sound when you breathe?",
+                "options":[
+                    {
+                        "option":"Yes"
+                    },
+                    {
+                        "option":"No"
+                    }
+                ],
+                "field_type":"Dropdown - Single Select",
+                "field_input":"Mandatory"
+            },
+            {
+                "question":"Do you often feel tightness or heaviness in your chest?",
+                "options":[
+                    {
+                        "option":"Yes"
+                    },
+                    {
+                        "option":"No"
+                    }
+                ],
+                "field_type":"Dropdown - Single Select",
+                "field_input":"Mandatory"
+            },
+            {
+                "question":"Validation Rule for Result-Low Risk: Only one response has response Yes.- Moderate Risk: Two responses are Yes- High Risk: All the responses are Yes.-No Risk: None of the responses are Yes",
+                "options":[
+                    {
+                        "option":"Low Risk"
+                    },
+                    {
+                        "option":"No Risk: No significant symptoms, maintain a balanced diet."
+                    },
+                    {
+                        "option":"Moderate Risk: Possible mild anemia, monitor symptoms, increase iron intake."
+                    },
+                    {
+                        "option":"High Risk: Severe symptoms, consult a doctor for blood tests."
+                    }
+                ],
+                "field_type":"null",
+                "field_input":"null"
+            }
+        ]
+    },
+    {
+        "disease":"Musculoskeletal diseases",
+        "questions":[
+            {
+                "question":"Do you have joint or muscle pain while doing everyday tasks?",
+                "options":[
+                    {
+                        "option":"Yes"
+                    },
+                    {
+                        "option":"No"
+                    }
+                ],
+                "field_type":"Dropdown - Single Select",
+                "field_input":"Mandatory"
+            },
+            {
+                "question":"Do you feel stiffness in your body at any time during the day?",
+                "options":[
+                    {
+                        "option":"Yes"
+                    },
+                    {
+                        "option":"No"
+                    }
+                ],
+                "field_type":"Dropdown - Single Select",
+                "field_input":"Mandatory"
+            },
+            {
+                "question":"Do you have  joint or muscle pain that lasts for many hours?",
+                "options":[
+                    {
+                        "option":"Yes"
+                    },
+                    {
+                        "option":"No"
+                    }
+                ],
+                "field_type":"Dropdown - Single Select",
+                "field_input":"Mandatory"
+            },
+            {
+                "question":"Validation Rule for Result-Low Risk: Only one response has response Yes.- Moderate Risk: Two responses are Yes- High Risk: All the responses are Yes.-No Risk: None of the responses are Yes",
+                "options":[
+                    {
+                        "option":"Low Risk"
+                    },
+                    {
+                        "option":"No Risk: No significant symptoms, maintain a balanced diet."
+                    },
+                    {
+                        "option":"Moderate Risk: Possible mild anemia, monitor symptoms, increase iron intake."
+                    },
+                    {
+                        "option":"High Risk: Severe symptoms, consult a doctor for blood tests."
+                    }
+                ],
+                "field_type":"null",
+                "field_input":"null"
+            }
+        ]
+    },
+    {
+        "disease":"Seasonal illnesses",
+        "questions":[
+            {
+                "question":"Do you get sneezing, itchy eyes, or a runny nose when the weather changes?",
+                "options":[
+                    {
+                        "option":"Yes"
+                    },
+                    {
+                        "option":"No"
+                    }
+                ],
+                "field_type":"Dropdown - Single Select",
+                "field_input":"Mandatory"
+            },
+            {
+                "question":"Do you get skin rashes, irritation, or sunburn when you stay in the sun for a long time?",
+                "options":[
+                    {
+                        "option":"Yes"
+                    },
+                    {
+                        "option":"No"
+                    }
+                ],
+                "field_type":"Dropdown - Single Select",
+                "field_input":"Mandatory"
+            },
+            {
+                "question":"Do you feel dizzy, sweat a lot, or feel sick during very hot weather?",
+                "options":[
+                    {
+                        "option":"Yes"
+                    },
+                    {
+                        "option":"No"
+                    }
+                ],
+                "field_type":"Dropdown - Single Select",
+                "field_input":"Mandatory"
+            },
+            {
+                "question":"Do your joints or muscles hurt more during cold or rainy weather?",
+                "options":[
+                    {
+                        "option":"Yes"
+                    },
+                    {
+                        "option":"No"
+                    }
+                ],
+                "field_type":"Dropdown - Single Select",
+                "field_input":"Mandatory"
+            },
+            {
+                "question":"Validation Rule for Result-Low Risk: Only one response has response Yes.- Moderate Risk: Two responses are Yes- High Risk: All the responses are Yes.-No Risk: None of the responses are Yes",
+                "options":[
+                    {
+                        "option":"Low Risk"
+                    },
+                    {
+                        "option":"No Risk: No significant symptoms, maintain a balanced diet."
+                    },
+                    {
+                        "option":"Moderate Risk: Possible mild anemia, monitor symptoms, increase iron intake."
+                    },
+                    {
+                        "option":"High Risk: Severe symptoms, consult a doctor for blood tests."
+                    }
+                ],
+                "field_type":"null",
+                "field_input":"null"
+            }
+        ]
+    },
+    {
+        "disease":"Mental Health",
+        "questions":[
+            {
+                "question":"On average, how many hours do you sleep in a day?",
+                "options":[
+                    {
+                        "option":"Textbox"
+                    }
+                ],
+                "field_type":"Numeric - Less than 24",
+                "field_input":"null"
+            },
+            {
+                "question":"In the past 2 weeks, have you experienced feelings of anxiety or uneasiness? If yes, describe briefly.",
+                "options":[
+                    {
+                        "option":"Textbox"
+                    }
+                ],
+                "field_type":"Text - Less than 30 words",
+                "field_input":"null"
+            },
+            {
+                "question":"Have you felt low, hopeless, or unusually sad in the past 2 weeks? If yes, share briefly.",
+                "options":[
+                    {
+                        "option":"Textbox"
+                    }
+                ],
+                "field_type":"Text - Less than 30 words",
+                "field_input":"null"
+            },
+            {
+                "question":"Have you lost interest in daily activities you usually enjoy? If yes, explain briefly.",
+                "options":[
+                    {
+                        "option":"Textbox"
+                    }
+                ],
+                "field_type":"Text - Less than 30 words",
+                "field_input":"null"
+            },
+            {
+                "question":"Who do you usually turn to for emotional support or to talk when feeling low?",
+                "options":[
+                    {
+                        "option":"Textbox"
+                    }
+                ],
+                "field_type":"Text - Less than 30 words",
+                "field_input":"null"
+            },
+            {
+                "question":"No Validation, Risk Level Interpretation (only question 1)",
+                "options":[
+                    {
+                        "option":"< 6 hours/day → Sleep duration is below recommended levels and may impact mental and physical well-being."
+                    },
+                    {
+                        "option":"6 to 8 hours/day → Sleep duration is within the recommended range for most adults."
+                    },
+                    {
+                        "option":"> 9 hours/day → Longer sleep duration may be linked to underlying health or psychological conditions."
+                    }
+                ],
+                "field_type":"null",
+                "field_input":"null"
+            }
+        ]
+    }
+]
